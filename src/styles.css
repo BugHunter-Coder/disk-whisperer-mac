@@ -4,6 +4,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-ink: #191925;
+  --color-paper: #fdf3e7;
+  --color-cream: #fff9f1;
+  --color-mint: #34d399;
+  --color-sky: #38bdf8;
+  --color-sun: #ffc93c;
+  --color-coral: #ff6b6b;
+  --color-lilac: #a78bfa;
+  --color-peach: #ffd8a8;
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
+}
+
 /*
  * Design system definition.
  *
