@@ -26,8 +26,47 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const startCheckout = useServerFn(createDodoCheckout);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("subscribed") === "1") {
+      setSubscribed(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  const handleSubscribe = async () => {
+    if (!email || !name) {
+      toast.error("Enter your name and email to subscribe.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const result = await startCheckout({ data: { email, name } });
+      if (result.ok) {
+        window.location.href = result.checkoutUrl;
+      } else {
+        toast.error(result.error);
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-paper font-sans text-ink antialiased">
+      {subscribed && (
+        <div className="bg-mint px-6 py-3 text-center text-sm font-bold text-ink">
+          You're subscribed! Your MacDissect Pro access is being activated — check your email.
+        </div>
+      )}
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
         <div className="flex items-center gap-2.5">
           <div className="grid size-9 place-items-center rounded-xl bg-ink font-display text-lg font-extrabold text-cream">
