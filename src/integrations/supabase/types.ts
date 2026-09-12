@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          customer_id: string | null
+          dodo_subscription_id: string | null
+          email: string
+          id: string
+          product_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          customer_id?: string | null
+          dodo_subscription_id?: string | null
+          email: string
+          id?: string
+          product_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          customer_id?: string | null
+          dodo_subscription_id?: string | null
+          email?: string
+          id?: string
+          product_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

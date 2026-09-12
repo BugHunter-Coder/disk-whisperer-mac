@@ -1,4 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useServerFn } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { createDodoCheckout } from "@/lib/dodo.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
