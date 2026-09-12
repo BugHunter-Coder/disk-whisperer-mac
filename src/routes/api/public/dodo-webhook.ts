@@ -65,9 +65,6 @@ export const Route = createFileRoute("/api/public/dodo-webhook")({
               ? "failed"
               : "active");
 
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        void supabaseAdmin; // kept for parity; table writes use service client below
-
         const supabase = createClient(
           process.env["SUPABASE_URL"]!,
           process.env["SUPABASE_SERVICE_ROLE_KEY"]!,
