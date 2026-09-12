@@ -1,4 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { createDodoCheckout } from "@/lib/dodo.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,8 +27,47 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const startCheckout = useServerFn(createDodoCheckout);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("subscribed") === "1") {
+      setSubscribed(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  const handleSubscribe = async () => {
+    if (!email || !name) {
+      toast.error("Enter your name and email to subscribe.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const result = await startCheckout({ data: { email, name } });
+      if (result.ok) {
+        window.location.href = result.checkoutUrl;
+      } else {
+        toast.error(result.error);
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-paper font-sans text-ink antialiased">
+      {subscribed && (
+        <div className="bg-mint px-6 py-3 text-center text-sm font-bold text-ink">
+          You're subscribed! Your MacDissect Pro access is being activated — check your email.
+        </div>
+      )}
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
         <div className="flex items-center gap-2.5">
           <div className="grid size-9 place-items-center rounded-xl bg-ink font-display text-lg font-extrabold text-cream">
@@ -219,21 +262,45 @@ function Index() {
             Ready to dissect your disk?
           </h2>
           <p className="mx-auto mt-4 max-w-md text-lg text-ink/75">
-            Give your Mac back a few hundred GB today. Free download, no sign-up required.
+            MacDissect Pro — one simple subscription, every feature unlocked. Secure checkout by
+            Dodo Payments.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <a
-              href="#download"
-              className="rounded-2xl bg-ink px-8 py-4 text-lg font-bold text-cream shadow-[4px_4px_0_0_#A78BFA] transition-transform hover:-translate-y-1"
+          <div className="mx-auto mt-8 max-w-md rounded-3xl border-2 border-ink/10 bg-cream p-6 text-left shadow-[6px_6px_0_0_#191925]">
+            <div className="flex items-baseline justify-between">
+              <span className="font-display text-lg font-bold">MacDissect Pro</span>
+              <span className="text-sm font-semibold text-ink/50">billed yearly · cancel anytime</span>
+            </div>
+            <label className="mt-5 block text-xs font-bold tracking-wide text-ink/60 uppercase">
+              Name
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ada Lovelace"
+                className="mt-1.5 w-full rounded-xl border-2 border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case outline-none focus:border-mint"
+              />
+            </label>
+            <label className="mt-3 block text-xs font-bold tracking-wide text-ink/60 uppercase">
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ada@example.com"
+                className="mt-1.5 w-full rounded-xl border-2 border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case outline-none focus:border-mint"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={handleSubscribe}
+              disabled={busy}
+              className="mt-5 w-full rounded-2xl bg-ink px-8 py-4 text-lg font-bold text-cream shadow-[4px_4px_0_0_#A78BFA] transition-transform hover:-translate-y-1 disabled:opacity-50 disabled:hover:translate-y-0"
             >
-              Download for macOS
-            </a>
-            <a
-              href="#features"
-              className="rounded-2xl border-2 border-ink/15 bg-cream px-8 py-4 text-lg font-bold transition-colors hover:bg-cream/70"
-            >
-              macOS 13 or later
-            </a>
+              {busy ? "Opening secure checkout…" : "Subscribe with Dodo Payments"}
+            </button>
+            <p className="mt-3 text-center text-xs text-ink/50">
+              You'll be redirected to Dodo's secure checkout to finish payment.
+            </p>
           </div>
         </div>
         <footer className="mt-12 flex flex-col items-center justify-between gap-3 text-sm text-ink/50 sm:flex-row">
