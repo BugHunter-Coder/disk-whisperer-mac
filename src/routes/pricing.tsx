@@ -1,0 +1,364 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import {
+  ArrowRight,
+  Check,
+  CreditCard,
+  Laptop,
+  Loader2,
+  Minus,
+  PartyPopper,
+  Sparkles,
+} from "lucide-react";
+import {
+  PRO_PLAN_DEFAULT,
+  createDodoCheckout,
+  getProPlan,
+  type ProPlan,
+} from "@/lib/dodo.functions";
+import { billingFaqs, plans } from "@/components/landing/content";
+import { FaqList } from "@/components/site/FaqList";
+import { PageShell } from "@/components/site/SiteFooter";
+import {
+  Reveal,
+  Stagger,
+  StaggerItem,
+  WordReveal,
+  fadeUp,
+  staggerParent,
+} from "@/components/site/motion";
+
+export const Route = createFileRoute("/pricing")({
+  head: () => ({
+    meta: [
+      { title: "Pricing — MacDissect Pro" },
+      {
+        name: "description",
+        content:
+          "MacDissect Pro is $10 a year: full-Mac scans, Smart Cleanup, History and monitoring on up to 3 Macs.",
+      },
+      { property: "og:title", content: "Pricing — MacDissect Pro" },
+      {
+        property: "og:description",
+        content: "$10 a year for every Pro feature, on up to 3 Macs.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  loader: () => getProPlan(),
+  component: PricingPage,
+});
+
+function formatPrice(plan: ProPlan) {
+  const whole = plan.amount % 100 === 0;
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: plan.currency,
+    minimumFractionDigits: whole ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(plan.amount / 100);
+}
+
+function formatMonthly(plan: ProPlan) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: plan.currency,
+    maximumFractionDigits: 2,
+  }).format(plan.amount / 100 / 12);
+}
+
+function intervalLabel(plan: ProPlan) {
+  if (!plan.interval) return "one-time";
+  return plan.intervalCount > 1
+    ? `every ${plan.intervalCount} ${plan.interval}s`
+    : `per ${plan.interval}`;
+}
+
+const proHighlights = [
+  "Scan your entire Mac, not just one folder",
+  "Smart Cleanup across 14 categories",
+  "History with size-over-time charts",
+  "Menu bar monitor and low-space alerts",
+  "Use on up to 3 Macs",
+];
+
+function PricingPage() {
+  // Live price from Dodo when configured, otherwise the advertised $10/year plan.
+  const plan = Route.useLoaderData() ?? PRO_PLAN_DEFAULT;
+  const startCheckout = useServerFn(createDodoCheckout);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("subscribed") === "1") {
+      setSubscribed(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !name) {
+      toast.error("Enter your name and email to subscribe.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const result = await startCheckout({ data: { email, name } });
+      if (result.ok) {
+        window.location.href = result.checkoutUrl;
+      } else {
+        toast.error(result.error);
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <PageShell>
+      <section className="relative isolate overflow-hidden px-6 pt-36 pb-10 text-center sm:pt-44">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_50%_0%,rgba(255,201,60,0.28),transparent)]"
+        />
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-xs font-bold tracking-[0.2em] text-ink/45 uppercase"
+        >
+          Pricing
+        </motion.span>
+        <h1 className="mx-auto mt-3 max-w-3xl font-display text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.95] font-extrabold tracking-tight">
+          <WordReveal text="Free to explore." />
+          <br />
+          <WordReveal text="Pro to clean up." className="text-coral" delay={0.2} />
+        </h1>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+          className="mx-auto mt-5 max-w-xl text-lg text-ink/65"
+        >
+          The essentials are always free. Pro is $10 a year for every feature, on up to 3 Macs.
+        </motion.p>
+      </section>
+
+      <AnimatePresence>
+        {subscribed && (
+          <motion.div
+            initial={{ opacity: 0, y: -12, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="mx-auto mb-6 flex max-w-4xl items-center gap-3 rounded-2xl bg-mint px-5 py-4 font-semibold"
+            role="status"
+          >
+            <PartyPopper className="size-5 shrink-0" />
+            <span className="flex-1">
+              You're subscribed! Sign in with the same email to get your license key and download.
+            </span>
+            <Link to="/auth" className="rounded-xl bg-ink px-4 py-2 text-sm text-cream">
+              Sign in
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.section
+        initial="hidden"
+        animate="show"
+        variants={staggerParent(0.12, 0.3)}
+        className="mx-auto grid max-w-5xl gap-5 px-6 pb-20 md:grid-cols-5"
+      >
+        {/* Free */}
+        <motion.div
+          variants={fadeUp}
+          className="flex flex-col rounded-[2rem] border border-ink/10 bg-cream p-8 md:col-span-2"
+        >
+          <span className="grid size-11 place-items-center rounded-2xl bg-sky">
+            <Laptop className="size-5" />
+          </span>
+          <h2 className="mt-5 font-display text-2xl font-bold">Free</h2>
+          <p className="mt-1 text-ink/60">What keeps working without Pro.</p>
+          <p className="mt-6 font-display text-5xl font-extrabold">Included</p>
+          <ul className="mt-6 space-y-3 text-sm">
+            {plans
+              .filter((p) => p.free)
+              .map((p) => (
+                <li key={p.feature} className="flex gap-3">
+                  <Check className="mt-0.5 size-4 shrink-0 text-mint" strokeWidth={3} />
+                  {p.feature}
+                </li>
+              ))}
+          </ul>
+          <p className="mt-auto pt-8 text-sm text-ink/50">
+            If your subscription ends, these features keep working in the app.
+          </p>
+        </motion.div>
+
+        {/* Pro */}
+        <motion.div
+          variants={fadeUp}
+          className="relative overflow-hidden rounded-[2rem] bg-ink p-8 text-cream shadow-[6px_6px_0_0_#FFC93C] sm:shadow-[10px_10px_0_0_#FFC93C] md:col-span-3"
+        >
+          <motion.div
+            aria-hidden
+            className="absolute -top-32 -right-32 size-80 rounded-full bg-[conic-gradient(from_0deg,#34d399,#38bdf8,#a78bfa,#ff6b6b,#ffc93c,#34d399)] opacity-25 blur-3xl"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          />
+          <div className="relative">
+            <div className="flex items-center justify-between">
+              <span className="grid size-11 place-items-center rounded-2xl bg-sun text-ink">
+                <Sparkles className="size-5" />
+              </span>
+              {plan.trialDays > 0 && (
+                <span className="rounded-full border border-cream/20 px-3 py-1 text-xs font-bold">
+                  {plan.trialDays}-day free trial
+                </span>
+              )}
+            </div>
+            <h2 className="mt-5 font-display text-2xl font-bold">MacDissect Pro</h2>
+            <div className="mt-4 flex items-baseline gap-2">
+              <span className="font-display text-6xl font-extrabold tracking-tight">
+                {formatPrice(plan)}
+              </span>
+              <span className="text-cream/60">{intervalLabel(plan)}</span>
+            </div>
+            <p className="mt-1 text-sm text-cream/50">
+              {plan.interval === "year" && plan.intervalCount === 1 && !plan.taxInclusive
+                ? `Billed yearly · that's ${formatMonthly(plan)}/month · plus applicable tax`
+                : plan.taxInclusive
+                  ? "Tax included · cancel anytime"
+                  : "Plus applicable tax · cancel anytime"}
+            </p>
+
+            <Stagger as="ul" className="mt-6 grid gap-2.5 text-sm sm:grid-cols-2" gap={0.05}>
+              {proHighlights.map((h) => (
+                <StaggerItem as="li" key={h} className="flex gap-2.5">
+                  <Check className="mt-0.5 size-4 shrink-0 text-sun" strokeWidth={3} />
+                  {h}
+                </StaggerItem>
+              ))}
+            </Stagger>
+
+            <form onSubmit={handleSubscribe} className="mt-8 grid gap-3 sm:grid-cols-2">
+              <label className="text-xs font-bold tracking-wide text-cream/60 uppercase">
+                Name
+                <input
+                  type="text"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ada Lovelace"
+                  className="mt-1.5 w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm font-medium text-cream normal-case outline-none placeholder:text-cream/30 focus:border-sun focus:bg-cream/10"
+                />
+              </label>
+              <label className="text-xs font-bold tracking-wide text-cream/60 uppercase">
+                Email
+                <input
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ada@example.com"
+                  className="mt-1.5 w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm font-medium text-cream normal-case outline-none placeholder:text-cream/30 focus:border-sun focus:bg-cream/10"
+                />
+              </label>
+              <motion.button
+                type="submit"
+                disabled={busy}
+                whileHover={busy ? {} : { y: -2 }}
+                whileTap={busy ? {} : { scale: 0.98 }}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-sun px-6 py-4 text-lg font-bold text-ink disabled:opacity-60 sm:col-span-2"
+              >
+                {busy ? (
+                  <>
+                    <Loader2 className="size-5 animate-spin" /> Opening secure checkout…
+                  </>
+                ) : (
+                  <>
+                    Subscribe <ArrowRight className="size-5" />
+                  </>
+                )}
+              </motion.button>
+            </form>
+            <p className="mt-3 flex items-center justify-center gap-2 text-center text-xs text-cream/45">
+              <CreditCard className="size-3.5" /> Secure checkout by Dodo Payments
+            </p>
+          </div>
+        </motion.div>
+      </motion.section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-20">
+        <Reveal>
+          <h2 className="font-display text-3xl font-extrabold tracking-tight">Compare plans</h2>
+        </Reveal>
+        <Reveal
+          delay={0.1}
+          className="mt-6 overflow-x-auto rounded-3xl border border-ink/10 bg-cream"
+        >
+          <table className="w-full min-w-[30rem] text-left text-sm">
+            <thead>
+              <tr className="border-b border-ink/10">
+                <th className="px-6 py-4 font-display text-base font-bold">Feature</th>
+                <th className="w-24 px-6 py-4 text-center font-display text-base font-bold">
+                  Free
+                </th>
+                <th className="w-24 px-6 py-4 text-center font-display text-base font-bold">Pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              {plans.map((p, i) => (
+                <motion.tr
+                  key={p.feature}
+                  initial={{ opacity: 0, x: -12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.04 }}
+                  className="border-b border-ink/5 transition-colors last:border-0 hover:bg-paper"
+                >
+                  <td className="px-6 py-4 font-medium">{p.feature}</td>
+                  <td className="px-6 py-4 text-center">
+                    {p.free ? (
+                      <Check className="mx-auto size-4 text-ink" strokeWidth={3} />
+                    ) : (
+                      <Minus className="mx-auto size-4 text-ink/25" />
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <Check className="mx-auto size-4 text-mint" strokeWidth={3} />
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </Reveal>
+      </section>
+
+      <section id="billing" className="mx-auto max-w-3xl scroll-mt-24 px-6 pb-16">
+        <Reveal className="text-center">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight">Billing questions</h2>
+        </Reveal>
+        <Reveal delay={0.1} className="mt-8">
+          <FaqList items={billingFaqs} />
+        </Reveal>
+        <p className="mt-6 text-center text-sm text-ink/55">
+          Already subscribed?{" "}
+          <Link to="/account" className="font-semibold text-ink underline underline-offset-4">
+            Get your license key
+          </Link>
+        </p>
+      </section>
+    </PageShell>
+  );
+}

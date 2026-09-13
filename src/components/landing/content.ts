@@ -1,13 +1,13 @@
-// Copy for the MacDissect landing page. Mirrors what the macOS app actually ships.
+// Copy for the MacDissect website. Mirrors what the macOS app actually ships.
 
 export type Tint = "mint" | "sky" | "sun" | "coral" | "lilac";
 
-export const tintClasses: Record<Tint, { card: string; chip: string; dot: string }> = {
-  mint: { card: "border-mint/40 bg-mint/20", chip: "bg-mint", dot: "bg-mint" },
-  sky: { card: "border-sky/40 bg-sky/20", chip: "bg-sky", dot: "bg-sky" },
-  sun: { card: "border-sun/50 bg-sun/25", chip: "bg-sun", dot: "bg-sun" },
-  coral: { card: "border-coral/40 bg-coral/20", chip: "bg-coral", dot: "bg-coral" },
-  lilac: { card: "border-lilac/40 bg-lilac/20", chip: "bg-lilac", dot: "bg-lilac" },
+export const tintClasses: Record<Tint, { soft: string; solid: string; ring: string }> = {
+  mint: { soft: "bg-mint/15", solid: "bg-mint", ring: "group-hover:ring-mint/60" },
+  sky: { soft: "bg-sky/15", solid: "bg-sky", ring: "group-hover:ring-sky/60" },
+  sun: { soft: "bg-sun/20", solid: "bg-sun", ring: "group-hover:ring-sun/70" },
+  coral: { soft: "bg-coral/15", solid: "bg-coral", ring: "group-hover:ring-coral/60" },
+  lilac: { soft: "bg-lilac/15", solid: "bg-lilac", ring: "group-hover:ring-lilac/60" },
 };
 
 export const sections: {
@@ -16,62 +16,124 @@ export const sections: {
   body: string;
   tint: Tint;
   pro?: boolean;
+  wide?: boolean;
 }[] = [
-  {
-    title: "Overview",
-    shortcut: "⌘1",
-    body: "Free and used space on your startup disk, the largest items in your last scan, and what changed since the scan before it.",
-    tint: "mint",
-  },
   {
     title: "Explore",
     shortcut: "⌘2",
-    body: "Switch between a treemap, a sunburst and a folder list. Click any block to drill in, press ⌘↑ to climb back out.",
+    body: "Switch between a treemap, a sunburst and a folder list. Click any block to drill in, press ⌘↑ to climb back out. Protected folders are flagged so you know when a size may be incomplete.",
     tint: "sky",
+  },
+  {
+    title: "Overview",
+    shortcut: "⌘1",
+    body: "Free and used space, your largest items, and what changed since the previous scan.",
+    tint: "mint",
   },
   {
     title: "Large Files",
     shortcut: "⌘3",
-    body: "Every file above the size you pick, biggest first. Select several to see their combined size at a glance.",
+    body: "Every file above the size you pick, biggest first, with a combined total for your selection.",
     tint: "sun",
   },
   {
     title: "History",
     shortcut: "⌘4",
-    body: "Each scan is saved as a summary on your Mac. See a size-over-time chart and which folders grew or shrank.",
+    body: "Every scan is saved as a summary on your Mac: a size-over-time chart and the folders that grew or shrank.",
     tint: "lilac",
     pro: true,
   },
   {
     title: "Smart Cleanup",
     shortcut: "⌘5",
-    body: "Finds caches, build output, simulators and other known space hogs, then moves what you select to the Trash.",
+    body: "Finds caches, build output, simulators and other known space hogs, then moves what you choose to the Trash.",
     tint: "coral",
     pro: true,
   },
   {
     title: "Trash",
     shortcut: "⌘6",
-    body: "See how much the Trash is holding and empty it in one click, across every disk.",
+    body: "See how much the Trash holds and empty it in one click, across every disk.",
     tint: "mint",
   },
 ];
 
-export const cleanupCategories: { name: string; detail: string; regenerable: boolean }[] = [
-  { name: "Xcode Data", detail: "DerivedData, archives, device support", regenerable: true },
-  { name: "iOS Simulators", detail: "Simulator devices and runtimes", regenerable: true },
-  { name: "Android", detail: "System images, emulators, Gradle caches", regenerable: true },
-  { name: "node_modules", detail: "Reinstall with npm, yarn or pnpm", regenerable: true },
-  { name: "Package Caches", detail: "npm, Homebrew, CocoaPods, pip, Cargo…", regenerable: true },
-  { name: "Build Artifacts", detail: ".next, dist, target, build, Pods", regenerable: true },
-  { name: "App Caches", detail: "Caches apps recreate on their own", regenerable: true },
-  { name: "Logs", detail: "Diagnostic and application logs", regenerable: true },
-  { name: "Docker", detail: "Docker Desktop disk image", regenerable: false },
-  { name: "iOS Backups", detail: "Local iPhone and iPad backups", regenerable: false },
-  { name: "Virtual Machines", detail: "Parallels, UTM, VMware, VirtualBox", regenerable: false },
-  { name: "Disk Images", detail: ".dmg, .iso, .ipsw installers", regenerable: false },
-  { name: "Archives", detail: ".zip, .tar.gz, .7z", regenerable: false },
-  { name: "Large Media", detail: "Video, audio and images over 500 MB", regenerable: false },
+/** `exampleGb` values are illustrative, used only for the interactive demo. */
+export const cleanupCategories: {
+  name: string;
+  detail: string;
+  regenerable: boolean;
+  exampleGb: number;
+}[] = [
+  {
+    name: "Xcode Data",
+    detail: "DerivedData, archives, device support",
+    regenerable: true,
+    exampleGb: 24.1,
+  },
+  {
+    name: "iOS Simulators",
+    detail: "Simulator devices and runtimes",
+    regenerable: true,
+    exampleGb: 18.6,
+  },
+  { name: "Docker", detail: "Docker Desktop disk image", regenerable: false, exampleGb: 16.0 },
+  {
+    name: "node_modules",
+    detail: "Reinstall with npm, yarn or pnpm",
+    regenerable: true,
+    exampleGb: 9.4,
+  },
+  {
+    name: "iOS Backups",
+    detail: "Local iPhone and iPad backups",
+    regenerable: false,
+    exampleGb: 8.2,
+  },
+  {
+    name: "Package Caches",
+    detail: "npm, Homebrew, CocoaPods, pip, Cargo…",
+    regenerable: true,
+    exampleGb: 6.8,
+  },
+  {
+    name: "Disk Images",
+    detail: ".dmg, .iso, .ipsw installers",
+    regenerable: false,
+    exampleGb: 5.3,
+  },
+  {
+    name: "App Caches",
+    detail: "Caches apps recreate on their own",
+    regenerable: true,
+    exampleGb: 4.9,
+  },
+  {
+    name: "Build Artifacts",
+    detail: ".next, dist, target, build, Pods",
+    regenerable: true,
+    exampleGb: 3.7,
+  },
+  {
+    name: "Android",
+    detail: "System images, emulators, Gradle caches",
+    regenerable: true,
+    exampleGb: 3.1,
+  },
+  {
+    name: "Large Media",
+    detail: "Video, audio and images over 500 MB",
+    regenerable: false,
+    exampleGb: 2.9,
+  },
+  {
+    name: "Virtual Machines",
+    detail: "Parallels, UTM, VMware, VirtualBox",
+    regenerable: false,
+    exampleGb: 2.4,
+  },
+  { name: "Archives", detail: ".zip, .tar.gz, .7z", regenerable: false, exampleGb: 1.2 },
+  { name: "Logs", detail: "Diagnostic and application logs", regenerable: true, exampleGb: 0.8 },
 ];
 
 export const plans: { feature: string; free: boolean }[] = [
@@ -85,7 +147,9 @@ export const plans: { feature: string; free: boolean }[] = [
   { feature: "Menu bar monitor, low-space alerts, scan at login", free: false },
 ];
 
-export const faqs: { q: string; a: string }[] = [
+export type Faq = { q: string; a: string };
+
+export const productFaqs: Faq[] = [
   {
     q: "Does MacDissect upload anything about my files?",
     a: "No. Scanning and analysis happen entirely on your Mac. The only network request is license activation, which is re-checked every few days and never includes file names or sizes.",
@@ -99,15 +163,34 @@ export const faqs: { q: string; a: string }[] = [
     a: "macOS protects some locations. MacDissect tells you when a folder couldn't be read so you know a size may be incomplete. Granting Full Disk Access in System Settings lets it see everything, including inside the Trash.",
   },
   {
-    q: "What happens after the 7-day trial?",
-    a: "Pro features lock, but the free features keep working: scanning folders, exploring, finding large files and emptying the Trash.",
+    q: "Which macOS versions are supported?",
+    a: "macOS 14 Sonoma or later.",
+  },
+];
+
+export const billingFaqs: Faq[] = [
+  {
+    q: "What happens if my subscription ends?",
+    a: "Pro features lock on your Macs, but the free features keep working: scanning folders, exploring, finding large files and emptying the Trash.",
+  },
+  {
+    q: "How much does MacDissect Pro cost?",
+    a: "$10 a year, billed yearly, plus any sales tax that applies where you live. That covers every Pro feature on up to 3 Macs.",
   },
   {
     q: "How many Macs can I use it on?",
     a: "One MacDissect Pro license activates on up to 3 Macs. Remove a Mac from your account page to free a slot.",
   },
   {
-    q: "Which macOS versions are supported?",
-    a: "macOS 14 Sonoma or later.",
+    q: "How do I get my license key?",
+    a: "After checkout, sign in on this website with the same email address you paid with. Your account page shows your MACD-… key and the download.",
+  },
+  {
+    q: "Can I cancel?",
+    a: "Yes, any time, through Dodo Payments using the link in your receipt email. When the subscription ends, Pro features lock on your Macs and the free features keep working.",
+  },
+  {
+    q: "Who handles payment?",
+    a: "Dodo Payments runs checkout as the merchant of record, so they handle your card details and sales tax. We never see your card number.",
   },
 ];

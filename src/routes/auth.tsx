@@ -1,6 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { AnimatePresence, motion } from "motion/react";
+import { KeyRound, Loader2 } from "lucide-react";
+import { PageShell } from "@/components/site/SiteFooter";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth")({
@@ -56,67 +59,107 @@ function AuthPage() {
   };
 
   return (
-    <div className="grid min-h-screen place-items-center bg-paper px-6 font-sans text-ink">
-      <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center justify-center gap-2.5">
-          <span className="grid size-9 place-items-center rounded-xl bg-ink font-display text-lg font-extrabold text-cream">
-            M
-          </span>
-          <span className="font-display text-2xl font-extrabold tracking-tight">MacDissect</span>
-        </Link>
-
-        <form
-          onSubmit={submit}
-          className="mt-8 rounded-3xl border-2 border-ink/10 bg-cream p-7 shadow-[6px_6px_0_0_#191925]"
+    <PageShell>
+      <section className="relative isolate grid min-h-[90vh] place-items-center overflow-hidden px-6 pt-32 pb-16">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[radial-gradient(40%_50%_at_30%_30%,rgba(167,139,250,0.22),transparent),radial-gradient(40%_50%_at_75%_70%,rgba(52,211,153,0.2),transparent)]"
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: "spring", visualDuration: 0.6, bounce: 0.15 }}
+          className="w-full max-w-md"
         >
-          <h1 className="font-display text-2xl font-extrabold">
-            {mode === "signin" ? "Sign in to your license" : "Create your account"}
-          </h1>
-          <p className="mt-2 text-sm text-ink/60">
-            Use the same email address you used at checkout.
+          <form
+            onSubmit={submit}
+            className="rounded-[2rem] border border-ink/10 bg-cream/90 p-8 shadow-[0_30px_60px_-30px_rgba(25,25,37,0.35)] backdrop-blur"
+          >
+            <span className="grid size-12 place-items-center rounded-2xl bg-ink text-cream">
+              <KeyRound className="size-5" />
+            </span>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={mode}
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -16 }}
+                transition={{ duration: 0.2 }}
+              >
+                <h1 className="mt-5 font-display text-3xl font-extrabold tracking-tight">
+                  {mode === "signin" ? "Sign in to your license" : "Create your account"}
+                </h1>
+                <p className="mt-2 text-sm text-ink/60">
+                  Use the same email address you used at checkout.
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="mt-6 grid grid-cols-2 rounded-xl bg-ink/5 p-1 text-sm font-semibold">
+              {(["signin", "signup"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMode(m)}
+                  className={`relative rounded-lg py-2 transition-colors ${
+                    mode === m ? "text-cream" : "text-ink/60 hover:text-ink"
+                  }`}
+                >
+                  {mode === m && (
+                    <motion.span
+                      layoutId="auth-mode"
+                      className="absolute inset-0 rounded-lg bg-ink"
+                      transition={{ type: "spring", visualDuration: 0.3, bounce: 0.2 }}
+                    />
+                  )}
+                  <span className="relative">{m === "signin" ? "Sign in" : "Create account"}</span>
+                </button>
+              ))}
+            </div>
+
+            <label className="mt-6 block text-xs font-bold tracking-wide text-ink/60 uppercase">
+              Email
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1.5 w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case transition-colors outline-none focus:border-ink/40 focus:bg-cream"
+              />
+            </label>
+            <label className="mt-3 block text-xs font-bold tracking-wide text-ink/60 uppercase">
+              Password
+              <input
+                type="password"
+                required
+                minLength={6}
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1.5 w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case transition-colors outline-none focus:border-ink/40 focus:bg-cream"
+              />
+            </label>
+
+            <motion.button
+              type="submit"
+              disabled={busy}
+              whileHover={busy ? {} : { y: -2 }}
+              whileTap={busy ? {} : { scale: 0.98 }}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-ink px-6 py-3.5 text-base font-bold text-cream shadow-[4px_4px_0_0_#A78BFA] disabled:opacity-50"
+            >
+              {busy && <Loader2 className="size-4 animate-spin" />}
+              {busy ? "One moment…" : mode === "signin" ? "Sign in" : "Create account"}
+            </motion.button>
+          </form>
+          <p className="mt-5 text-center text-sm text-ink/55">
+            Not subscribed yet?{" "}
+            <Link to="/pricing" className="font-semibold text-ink underline underline-offset-4">
+              See pricing
+            </Link>
           </p>
-
-          <label className="mt-6 block text-xs font-bold tracking-wide text-ink/60 uppercase">
-            Email
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border-2 border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case outline-none focus:border-mint"
-            />
-          </label>
-          <label className="mt-3 block text-xs font-bold tracking-wide text-ink/60 uppercase">
-            Password
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border-2 border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case outline-none focus:border-mint"
-            />
-          </label>
-
-          <button
-            type="submit"
-            disabled={busy}
-            className="mt-6 w-full rounded-2xl bg-ink px-6 py-3.5 text-base font-bold text-cream shadow-[4px_4px_0_0_#A78BFA] transition-transform hover:-translate-y-0.5 disabled:opacity-50"
-          >
-            {busy ? "One moment…" : mode === "signin" ? "Sign in" : "Create account"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-            className="mt-4 w-full text-center text-sm font-semibold text-ink/60 hover:text-ink"
-          >
-            {mode === "signin"
-              ? "New here? Create an account"
-              : "Already have an account? Sign in"}
-          </button>
-        </form>
-      </div>
-    </div>
+        </motion.div>
+      </section>
+    </PageShell>
   );
 }

@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
 import { Route as ApiPublicLicenseActivateRouteImport } from './routes/api/public/license/activate'
@@ -36,6 +38,16 @@ const ActivateRoute = ActivateRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
@@ -70,6 +82,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -80,6 +94,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -92,6 +108,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -104,6 +122,8 @@ export interface FileRouteTypes {
     | '/'
     | '/activate'
     | '/auth'
+    | '/pricing'
+    | '/privacy'
     | '/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
@@ -114,6 +134,8 @@ export interface FileRouteTypes {
     | '/'
     | '/activate'
     | '/auth'
+    | '/pricing'
+    | '/privacy'
     | '/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
@@ -125,6 +147,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/activate'
     | '/auth'
+    | '/pricing'
+    | '/privacy'
     | '/_authenticated/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
@@ -137,6 +161,8 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ActivateRoute: typeof ActivateRoute
   AuthRoute: typeof AuthRoute
+  PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
   ApiPublicLicenseDeactivateRoute: typeof ApiPublicLicenseDeactivateRoute
@@ -171,6 +197,20 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -227,6 +267,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ActivateRoute: ActivateRoute,
   AuthRoute: AuthRoute,
+  PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
   ApiPublicLicenseDeactivateRoute: ApiPublicLicenseDeactivateRoute,
