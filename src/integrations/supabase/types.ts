@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      license_activations: {
+        Row: {
+          created_at: string
+          device_id: string
+          device_name: string | null
+          id: string
+          last_seen_at: string
+          license_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          device_name?: string | null
+          id?: string
+          last_seen_at?: string
+          license_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          device_name?: string | null
+          id?: string
+          last_seen_at?: string
+          license_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "license_activations_license_id_fkey"
+            columns: ["license_id"]
+            isOneToOne: false
+            referencedRelation: "licenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      licenses: {
+        Row: {
+          activation_count: number
+          created_at: string
+          dodo_subscription_id: string | null
+          email: string
+          id: string
+          license_key: string
+          max_activations: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          activation_count?: number
+          created_at?: string
+          dodo_subscription_id?: string | null
+          email: string
+          id?: string
+          license_key: string
+          max_activations?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          activation_count?: number
+          created_at?: string
+          dodo_subscription_id?: string | null
+          email?: string
+          id?: string
+          license_key?: string
+          max_activations?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
