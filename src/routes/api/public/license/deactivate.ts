@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/api/public/license/activate")({
+export const Route = createFileRoute("/api/public/license/deactivate")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { activateLicenseOnDevice } = await import("@/lib/license.server");
-        let body: { license_key?: string; device_id?: string; device_name?: string };
+        const { deactivateLicenseOnDevice } = await import("@/lib/license.server");
+        let body: { license_key?: string; device_id?: string };
         try {
           body = (await request.json()) as typeof body;
         } catch {
@@ -24,10 +24,9 @@ export const Route = createFileRoute("/api/public/license/activate")({
             { status: 400 },
           );
         }
-        const result = await activateLicenseOnDevice({
+        const result = await deactivateLicenseOnDevice({
           rawKey: body.license_key,
           deviceId: body.device_id,
-          deviceName: body.device_name ?? null,
         });
         return Response.json(result, { status: result.ok ? 200 : 400 });
       },

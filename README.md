@@ -1,4 +1,4 @@
-# Disk Doctor
+# MacDissect
 
 let build a landing page for my software i am build this Create a macOS application that helps users identify and manage disk space usage. The application should provide insights into how disk space is being consumed, allowing users to free up space by identifying large files, folders, and the contents of the trash.
 

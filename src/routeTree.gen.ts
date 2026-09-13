@@ -16,6 +16,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
 import { Route as ApiPublicLicenseActivateRouteImport } from './routes/api/public/license/activate'
+import { Route as ApiPublicLicenseDeactivateRouteImport } from './routes/api/public/license/deactivate'
 import { Route as ApiPublicLicenseVerifyRouteImport } from './routes/api/public/license/verify'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,12 @@ const ApiPublicLicenseActivateRoute =
     path: '/api/public/license/activate',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicLicenseDeactivateRoute =
+  ApiPublicLicenseDeactivateRouteImport.update({
+    id: '/api/public/license/deactivate',
+    path: '/api/public/license/deactivate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicLicenseVerifyRoute = ApiPublicLicenseVerifyRouteImport.update({
   id: '/api/public/license/verify',
   path: '/api/public/license/verify',
@@ -66,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
+  '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
 }
 export interface FileRoutesByTo {
@@ -75,6 +83,7 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
+  '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
 }
 export interface FileRoutesById {
@@ -86,6 +95,7 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
+  '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
 }
 export interface FileRouteTypes {
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
+    | '/api/public/license/deactivate'
     | '/api/public/license/verify'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
+    | '/api/public/license/deactivate'
     | '/api/public/license/verify'
   id:
     | '__root__'
@@ -116,6 +128,7 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
+    | '/api/public/license/deactivate'
     | '/api/public/license/verify'
   fileRoutesById: FileRoutesById
 }
@@ -126,6 +139,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
+  ApiPublicLicenseDeactivateRoute: typeof ApiPublicLicenseDeactivateRoute
   ApiPublicLicenseVerifyRoute: typeof ApiPublicLicenseVerifyRoute
 }
 
@@ -180,6 +194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLicenseActivateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/license/deactivate': {
+      id: '/api/public/license/deactivate'
+      path: '/api/public/license/deactivate'
+      fullPath: '/api/public/license/deactivate'
+      preLoaderRoute: typeof ApiPublicLicenseDeactivateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/license/verify': {
       id: '/api/public/license/verify'
       path: '/api/public/license/verify'
@@ -208,6 +229,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
+  ApiPublicLicenseDeactivateRoute: ApiPublicLicenseDeactivateRoute,
   ApiPublicLicenseVerifyRoute: ApiPublicLicenseVerifyRoute,
 }
 export const routeTree = rootRouteImport
