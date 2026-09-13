@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
+import { Route as ApiPublicLicenseActivateRouteImport } from './routes/api/public/license/activate'
+import { Route as ApiPublicLicenseVerifyRouteImport } from './routes/api/public/license/verify'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +24,63 @@ const ApiPublicDodoWebhookRoute = ApiPublicDodoWebhookRouteImport.update({
   path: '/api/public/dodo-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicLicenseActivateRoute =
+  ApiPublicLicenseActivateRouteImport.update({
+    id: '/api/public/license/activate',
+    path: '/api/public/license/activate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicLicenseVerifyRoute = ApiPublicLicenseVerifyRouteImport.update({
+  id: '/api/public/license/verify',
+  path: '/api/public/license/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
+  '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
+  '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
+  '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/dodo-webhook'
+  fullPaths:
+    | '/'
+    | '/api/public/dodo-webhook'
+    | '/api/public/license/activate'
+    | '/api/public/license/verify'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/dodo-webhook'
-  id: '__root__' | '/' | '/api/public/dodo-webhook'
+  to:
+    | '/'
+    | '/api/public/dodo-webhook'
+    | '/api/public/license/activate'
+    | '/api/public/license/verify'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/public/dodo-webhook'
+    | '/api/public/license/activate'
+    | '/api/public/license/verify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
+  ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
+  ApiPublicLicenseVerifyRoute: typeof ApiPublicLicenseVerifyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +99,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicDodoWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/license/activate': {
+      id: '/api/public/license/activate'
+      path: '/api/public/license/activate'
+      fullPath: '/api/public/license/activate'
+      preLoaderRoute: typeof ApiPublicLicenseActivateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/license/verify': {
+      id: '/api/public/license/verify'
+      path: '/api/public/license/verify'
+      fullPath: '/api/public/license/verify'
+      preLoaderRoute: typeof ApiPublicLicenseVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
+  ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
+  ApiPublicLicenseVerifyRoute: ApiPublicLicenseVerifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

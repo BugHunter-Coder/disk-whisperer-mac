@@ -88,6 +88,22 @@ export const Route = createFileRoute("/api/public/dodo-webhook")({
           console.error("Subscription upsert failed:", error);
           return new Response("Database error", { status: 500 });
         }
+
+        // Issue (or revoke) the Pro license key for this subscriber.
+        const email = d.customer?.email;
+        if (email) {
+          const { issueLicenseForSubscription } = await import("@/lib/license.server");
+          try {
+            await issueLicenseForSubscription({
+              email,
+              subscriptionId: d.subscription_id ?? null,
+              active: status === "active",
+            });
+          } catch (e) {
+            console.error("License issuance failed:", e);
+          }
+        }
+
         return Response.json({ ok: true });
       },
     },
