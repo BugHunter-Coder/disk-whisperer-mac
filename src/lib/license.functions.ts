@@ -121,7 +121,8 @@ export const getDownloadLink = createServerFn({ method: "GET" })
       return { ok: false as const, message: "No active subscription found for your account." };
     }
 
-    const url = process.env["MACDISSECT_DOWNLOAD_URL"];
+    const { DOWNLOAD } = await import("./download");
+    const url = process.env["MACDISSECT_DOWNLOAD_URL"] ?? DOWNLOAD.url;
     if (!url) {
       return {
         ok: false as const,

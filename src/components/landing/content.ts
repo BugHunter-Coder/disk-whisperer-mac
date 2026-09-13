@@ -170,6 +170,10 @@ export const productFaqs: Faq[] = [
 
 export const billingFaqs: Faq[] = [
   {
+    q: "Is there a free trial?",
+    a: "Yes. Download MacDissect and every Pro feature is unlocked for 7 days, no payment or account needed. After that, the free features keep working.",
+  },
+  {
     q: "What happens if my subscription ends?",
     a: "Pro features lock on your Macs, but the free features keep working: scanning folders, exploring, finding large files and emptying the Trash.",
   },
@@ -183,7 +187,7 @@ export const billingFaqs: Faq[] = [
   },
   {
     q: "How do I get my license key?",
-    a: "After checkout, sign in on this website with the same email address you paid with. Your account page shows your MACD-… key and the download.",
+    a: "After checkout, sign in on this website with the same email address you paid with. Your account page shows your MACD-… key. Paste it into MacDissect's Settings to activate.",
   },
   {
     q: "Can I cancel?",

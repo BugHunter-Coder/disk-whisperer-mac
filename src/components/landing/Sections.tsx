@@ -337,7 +337,7 @@ export function CtaBand() {
             Ready to dissect your disk?
           </h2>
           <p className="relative mx-auto mt-5 max-w-md text-lg text-ink/75">
-            Every Pro feature for $10 a year. One license covers up to 3 Macs.
+            Try every Pro feature free for 7 days. Keep them for $10 a year on up to 3 Macs.
           </p>
           <motion.div
             className="relative mt-8 inline-block"
@@ -345,10 +345,10 @@ export function CtaBand() {
             whileTap={{ scale: 0.97 }}
           >
             <Link
-              to="/pricing"
+              to="/download"
               className="inline-flex items-center gap-2 rounded-2xl bg-ink px-8 py-4 text-lg font-bold text-cream shadow-[4px_4px_0_0_#A78BFA]"
             >
-              See pricing <ArrowRight className="size-5" />
+              Download free <ArrowRight className="size-5" />
             </Link>
           </motion.div>
         </div>

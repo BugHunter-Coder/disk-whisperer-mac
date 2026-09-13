@@ -20,6 +20,7 @@ import {
   type ProPlan,
 } from "@/lib/dodo.functions";
 import { billingFaqs, plans } from "@/components/landing/content";
+import { DownloadButton } from "@/components/site/DownloadButton";
 import { FaqList } from "@/components/site/FaqList";
 import { PageShell } from "@/components/site/SiteFooter";
 import {
@@ -200,9 +201,12 @@ function PricingPage() {
                 </li>
               ))}
           </ul>
-          <p className="mt-auto pt-8 text-sm text-ink/50">
-            If your subscription ends, these features keep working in the app.
-          </p>
+          <div className="mt-auto pt-8">
+            <DownloadButton variant="light" label="Download free" />
+            <p className="mt-3 text-sm text-ink/50">
+              Includes a 7-day trial of every Pro feature. These features stay free afterwards.
+            </p>
+          </div>
         </motion.div>
 
         {/* Pro */}

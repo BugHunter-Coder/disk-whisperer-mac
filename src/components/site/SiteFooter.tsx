@@ -20,6 +20,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/download" className="hover:text-ink">
+                Download
+              </Link>
+            </li>
+            <li>
               <Link to="/pricing" className="hover:text-ink">
                 Pricing
               </Link>

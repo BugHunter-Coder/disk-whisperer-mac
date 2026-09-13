@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -73,10 +73,10 @@ export function SiteHeader() {
           <div className="flex items-center gap-2">
             <motion.span whileHover={{ y: -2 }} whileTap={{ scale: 0.96 }}>
               <Link
-                to="/pricing"
-                className="hidden rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-cream shadow-[3px_3px_0_0_#34D399] sm:inline-block"
+                to="/download"
+                className="hidden items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-cream shadow-[3px_3px_0_0_#34D399] sm:inline-flex"
               >
-                Get MacDissect
+                <Download className="size-4" /> Download
               </Link>
             </motion.span>
             <button
@@ -112,11 +112,11 @@ export function SiteHeader() {
                 </Link>
               ))}
               <Link
-                to="/pricing"
+                to="/download"
                 onClick={() => setOpen(false)}
                 className="mt-1 rounded-xl bg-ink px-4 py-3 text-center font-semibold text-cream"
               >
-                Get MacDissect
+                Download for Mac
               </Link>
             </motion.nav>
           )}

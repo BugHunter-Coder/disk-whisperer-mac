@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DownloadRouteImport } from './routes/download'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -38,6 +39,11 @@ const ActivateRoute = ActivateRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate'
     | '/auth'
+    | '/download'
     | '/pricing'
     | '/privacy'
     | '/account'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate'
     | '/auth'
+    | '/download'
     | '/pricing'
     | '/privacy'
     | '/account'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/activate'
     | '/auth'
+    | '/download'
     | '/pricing'
     | '/privacy'
     | '/_authenticated/account'
@@ -161,6 +173,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ActivateRoute: typeof ActivateRoute
   AuthRoute: typeof AuthRoute
+  DownloadRoute: typeof DownloadRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
@@ -197,6 +210,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -267,6 +287,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ActivateRoute: ActivateRoute,
   AuthRoute: AuthRoute,
+  DownloadRoute: DownloadRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,

@@ -10,6 +10,7 @@ import {
 } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
+import { DownloadButton } from "@/components/site/DownloadButton";
 import {
   BASE_D,
   BASE_W,
@@ -461,11 +462,12 @@ export function MacTeardown() {
                   reclaim the space safely.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <DownloadButton />
                   <Link
                     to="/pricing"
-                    className="inline-flex items-center gap-2 rounded-2xl bg-ink px-6 py-3.5 font-bold text-cream shadow-[4px_4px_0_0_#FFC93C] transition-transform hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 rounded-2xl border border-ink/15 bg-cream/70 px-5 py-3.5 font-bold backdrop-blur transition-colors hover:bg-cream"
                   >
-                    Get MacDissect <ArrowRight className="size-4" />
+                    $10/year Pro <ArrowRight className="size-4" />
                   </Link>
                   <span className="flex items-center gap-2 text-sm font-semibold text-ink/50">
                     <motion.span
@@ -497,12 +499,7 @@ export function MacTeardown() {
                     </h2>
                     <p className="mt-4 max-w-md text-lg text-ink/65">{current.body}</p>
                     {stage === stages.length - 1 && (
-                      <Link
-                        to="/pricing"
-                        className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-ink px-6 py-3.5 font-bold text-cream shadow-[4px_4px_0_0_#34D399] transition-transform hover:-translate-y-0.5"
-                      >
-                        Dissect your Mac <ArrowRight className="size-4" />
-                      </Link>
+                      <DownloadButton label="Dissect your Mac" className="mt-6" />
                     )}
                   </motion.div>
                 )}

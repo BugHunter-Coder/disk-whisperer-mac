@@ -157,7 +157,11 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
           <li>
             <strong>Supabase</strong>, which hosts our database and accounts;
           </li>
-          <li>our website hosting provider, which processes requests to this site.</li>
+          <li>our website hosting provider, which processes requests to this site;</li>
+          <li>
+            <strong>GitHub</strong>, which hosts the app download and receives the usual request
+            details (such as your IP address) when you download it.
+          </li>
         </ul>
         <p>We may also disclose information when required by law.</p>
       </>
