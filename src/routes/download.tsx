@@ -27,6 +27,8 @@ export const Route = createFileRoute("/download")({
   component: DownloadPage,
 });
 
+const QUARANTINE_COMMAND = "xattr -dr com.apple.quarantine /Applications/MacDissect.app";
+
 const steps = [
   {
     icon: FolderInput,
@@ -36,8 +38,14 @@ const steps = [
   },
   {
     icon: MousePointerClick,
-    title: "Right-click › Open",
-    body: "The first time, right-click MacDissect in Applications and choose Open, then Open again.",
+    title: "Open it once",
+    body: "macOS says \u201cApple could not verify MacDissect is free of malware.\u201d Click Done.",
+    tint: "bg-coral",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Click Open Anyway",
+    body: "In System Settings › Privacy & Security, scroll to Security and click Open Anyway next to MacDissect, then confirm.",
     tint: "bg-sun",
   },
   {
@@ -49,11 +57,11 @@ const steps = [
 ];
 
 function DownloadPage() {
-  const [copied, setCopied] = useState(false);
-  const copyChecksum = async () => {
-    await navigator.clipboard.writeText(DOWNLOAD.sha256);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
+  const [copied, setCopied] = useState<string | null>(null);
+  const copy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopied(text);
+    setTimeout(() => setCopied(null), 1800);
   };
 
   return (
@@ -105,10 +113,10 @@ function DownloadPage() {
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <Reveal>
           <h2 className="text-center font-display text-3xl font-extrabold tracking-tight">
-            Install in three steps
+            Install in four steps
           </h2>
         </Reveal>
-        <Stagger className="mt-10 grid gap-4 md:grid-cols-3" gap={0.1}>
+        <Stagger className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.1}>
           {steps.map((s, i) => (
             <StaggerItem key={s.title}>
               <div className="relative h-full rounded-3xl border border-ink/10 bg-cream p-7">
@@ -130,14 +138,54 @@ function DownloadPage() {
         <Reveal>
           <div className="rounded-3xl bg-ink p-8 text-cream">
             <ShieldCheck className="size-6 text-mint" />
-            <h2 className="mt-4 font-display text-2xl font-bold">"MacDissect can't be opened"?</h2>
+            <h2 className="mt-4 font-display text-2xl font-bold">
+              &ldquo;Apple could not verify MacDissect&rdquo;?
+            </h2>
             <p className="mt-2 text-cream/70">
-              macOS shows this for apps downloaded outside the App Store that it hasn't checked yet.
-              Right-click the app and choose <strong className="text-cream">Open</strong>, or go to{" "}
-              <strong className="text-cream">System Settings › Privacy &amp; Security</strong> and
-              click <strong className="text-cream">Open Anyway</strong>. You only need to do this
-              once.
+              macOS shows this for apps from outside the App Store that Apple hasn&apos;t notarized
+              yet. MacDissect doesn&apos;t upload anything and only reads the folders you choose.
+              You only need to allow it once:
             </p>
+            <ol className="mt-4 list-decimal space-y-2 pl-5 text-cream/80">
+              <li>
+                Try to open MacDissect, then click <strong className="text-cream">Done</strong>.
+              </li>
+              <li>
+                Open{" "}
+                <strong className="text-cream">System Settings › Privacy &amp; Security</strong> and
+                scroll down to <strong className="text-cream">Security</strong>.
+              </li>
+              <li>
+                Next to &ldquo;MacDissect was blocked&rdquo;, click{" "}
+                <strong className="text-cream">Open Anyway</strong>, confirm with your password or
+                Touch ID, then click <strong className="text-cream">Open</strong>.
+              </li>
+            </ol>
+            <p className="mt-4 text-sm text-cream/55">
+              On macOS 14 Sonoma you can instead right-click the app and choose Open.
+            </p>
+            <div className="mt-6 rounded-2xl bg-cream/5 p-4">
+              <p className="text-xs font-bold tracking-widest text-cream/50 uppercase">
+                Prefer Terminal? Run this after moving the app to Applications
+              </p>
+              <div className="mt-2 flex items-center gap-3">
+                <code className="min-w-0 flex-1 overflow-x-auto font-mono text-xs whitespace-nowrap text-cream/80">
+                  {QUARANTINE_COMMAND}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => copy(QUARANTINE_COMMAND)}
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg bg-cream/10 px-3 py-1.5 text-xs font-bold hover:bg-cream/20"
+                >
+                  {copied === QUARANTINE_COMMAND ? (
+                    <Check className="size-3.5" />
+                  ) : (
+                    <Copy className="size-3.5" />
+                  )}
+                  {copied === QUARANTINE_COMMAND ? "Copied" : "Copy"}
+                </button>
+              </div>
+            </div>
             <div className="mt-6 rounded-2xl bg-cream/5 p-4">
               <p className="text-xs font-bold tracking-widest text-cream/50 uppercase">
                 SHA-256 checksum
@@ -148,11 +196,15 @@ function DownloadPage() {
                 </code>
                 <button
                   type="button"
-                  onClick={copyChecksum}
+                  onClick={() => copy(DOWNLOAD.sha256)}
                   className="flex shrink-0 items-center gap-1.5 rounded-lg bg-cream/10 px-3 py-1.5 text-xs font-bold hover:bg-cream/20"
                 >
-                  {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-                  {copied ? "Copied" : "Copy"}
+                  {copied === DOWNLOAD.sha256 ? (
+                    <Check className="size-3.5" />
+                  ) : (
+                    <Copy className="size-3.5" />
+                  )}
+                  {copied === DOWNLOAD.sha256 ? "Copied" : "Copy"}
                 </button>
               </div>
             </div>
