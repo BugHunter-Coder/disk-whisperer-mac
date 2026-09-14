@@ -102,8 +102,8 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
         </ul>
         <p>
           We store each activated Mac's ID, name and when it last checked in, and use them only to
-          enforce the number of Macs a license allows and to show them on your account page. You can
-          remove a Mac there at any time.
+          enforce the number of Macs a license allows and to show them on your account page. To
+          release a Mac, deactivate it from MacDissect's Settings on that Mac.
         </p>
       </>
     ),
@@ -321,7 +321,7 @@ function PrivacyPage() {
               <UserRound className="size-6 text-mint" />
               <h2 className="mt-4 font-display text-2xl font-bold">Manage your data</h2>
               <p className="mt-2 text-cream/65">
-                See your license key and remove activated Macs from your account page.
+                See your license key and which Mac it's activated on from your account page.
               </p>
               <Link
                 to="/account"

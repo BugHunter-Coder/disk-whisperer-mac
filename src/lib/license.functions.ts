@@ -36,75 +36,91 @@ export const activateDevice = createServerFn({ method: "POST" })
     });
   });
 
+/**
+ * Enough to recognise the Mac, never the full ID: the key plus the full ID is what releases a Mac,
+ * and that must only happen from MacDissect on that Mac. So the full ID never reaches the browser.
+ */
+function shortMacId(deviceId: string) {
+  return deviceId.length > 10 ? `${deviceId.slice(0, 4)}…${deviceId.slice(-4)}` : "••••";
+}
+
 export type MyLicense = {
   licenseKey: string;
   status: string;
   activations: number;
   maxActivations: number;
-  devices: { id: string; deviceId: string; deviceName: string | null; lastSeenAt: string }[];
+  createdAt: string;
+  subscription: { status: string; renewsAt: string | null } | null;
+  /** Read-only: a key can only be released from the Mac itself (Settings → License). deviceId is shortened. */
+  devices: {
+    id: string;
+    deviceId: string;
+    deviceName: string | null;
+    activatedAt: string;
+    lastSeenAt: string;
+  }[];
 };
 
 export const getMyLicense = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<MyLicense | null> => {
-    const { data: license } = await context.supabase
-      .from("licenses")
-      .select("id, license_key, status, activation_count, max_activations")
-      .eq("status", "active")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    const findLicense = () =>
+      context.supabase
+        .from("licenses")
+        .select(
+          "id, license_key, status, activation_count, max_activations, created_at, dodo_subscription_id",
+        )
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    let { data: license } = await findLicense();
+
+    // No key yet: the payment webhook may not have arrived, so ask Dodo directly.
+    const email = typeof context.claims.email === "string" ? context.claims.email : null;
+    if (!license && email) {
+      const { syncSubscriptionsFromDodo } = await import("./license.server");
+      try {
+        if ((await syncSubscriptionsFromDodo(email)) > 0) ({ data: license } = await findLicense());
+      } catch (e) {
+        console.error("Dodo subscription sync failed:", e);
+      }
+    }
 
     if (!license) return null;
 
     const { data: devices } = await context.supabase
       .from("license_activations")
-      .select("id, device_id, device_name, last_seen_at")
+      .select("id, device_id, device_name, created_at, last_seen_at")
       .eq("license_id", license.id)
       .order("created_at", { ascending: true });
+
+    const { data: subscription } = license.dodo_subscription_id
+      ? await context.supabase
+          .from("dodo_subscriptions")
+          .select("status, current_period_end")
+          .eq("dodo_subscription_id", license.dodo_subscription_id)
+          .maybeSingle()
+      : { data: null };
 
     return {
       licenseKey: license.license_key,
       status: license.status,
       activations: license.activation_count,
       maxActivations: license.max_activations,
+      createdAt: license.created_at,
+      subscription: subscription
+        ? { status: subscription.status, renewsAt: subscription.current_period_end }
+        : null,
       devices: (devices ?? []).map((d) => ({
         id: d.id,
-        deviceId: d.device_id,
+        deviceId: shortMacId(d.device_id),
         deviceName: d.device_name,
+        activatedAt: d.created_at,
         lastSeenAt: d.last_seen_at,
       })),
     };
-  });
-
-export const removeDevice = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({ activationId: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    // RLS scopes this read to licenses owned by the caller's email.
-    const { data: activation } = await context.supabase
-      .from("license_activations")
-      .select("id, license_id")
-      .eq("id", data.activationId)
-      .maybeSingle();
-
-    if (!activation) return { ok: false as const, message: "That Mac was not found." };
-
-    const { adminClient } = await import("./license.server");
-    const admin = adminClient();
-    await admin.from("license_activations").delete().eq("id", activation.id);
-
-    const { count } = await admin
-      .from("license_activations")
-      .select("id", { count: "exact", head: true })
-      .eq("license_id", activation.license_id);
-
-    await admin
-      .from("licenses")
-      .update({ activation_count: count ?? 0 })
-      .eq("id", activation.license_id);
-
-    return { ok: true as const, message: "Mac removed." };
   });
 
 export const getDownloadLink = createServerFn({ method: "GET" })

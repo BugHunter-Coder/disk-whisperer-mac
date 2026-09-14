@@ -56,6 +56,12 @@ export const sections: {
     body: "See how much the Trash holds and empty it in one click, across every disk.",
     tint: "mint",
   },
+  {
+    title: "Live Stats",
+    shortcut: "⌘7",
+    body: "CPU, memory, battery, network and disk activity as it happens, plus the apps working your Mac hardest.",
+    tint: "sky",
+  },
 ];
 
 /** `exampleGb` values are illustrative, used only for the interactive demo. */
@@ -137,11 +143,14 @@ export const cleanupCategories: {
 ];
 
 export const plans: { feature: string; free: boolean }[] = [
-  { feature: "Scan your home folder or any folder you choose", free: true },
-  { feature: "Treemap, sunburst and list views with drill-down", free: true },
-  { feature: "Large file finder and search", free: true },
+  { feature: "Visualize disk usage: treemap, sunburst and list views", free: true },
+  { feature: "Power search across everything you scanned", free: true },
+  { feature: "Find large files", free: true },
+  { feature: "Live stats: CPU, memory and battery", free: true },
+  { feature: "Overview of used and free space", free: true },
   { feature: "See Trash size and empty it in one click", free: true },
   { feature: "Scan your full Mac (entire startup disk)", free: false },
+  { feature: "Scan any folder or external drive", free: false },
   { feature: "Smart Cleanup and Move to Trash", free: false },
   { feature: "History and growth tracking", free: false },
   { feature: "Menu bar monitor, low-space alerts, scan at login", free: false },
@@ -175,15 +184,15 @@ export const billingFaqs: Faq[] = [
   },
   {
     q: "What happens if my subscription ends?",
-    a: "Pro features lock on your Macs, but the free features keep working: scanning folders, exploring, finding large files and emptying the Trash.",
+    a: "Pro features lock on your Macs, but the free features keep working: scanning and visualizing your home folder, search, finding large files, live stats and emptying the Trash.",
   },
   {
     q: "How much does MacDissect Pro cost?",
-    a: "$10 a year, billed yearly, plus any sales tax that applies where you live. That covers every Pro feature on up to 3 Macs.",
+    a: "$10 a year, billed yearly, plus any sales tax that applies where you live. That covers every Pro feature on one Mac.",
   },
   {
     q: "How many Macs can I use it on?",
-    a: "One MacDissect Pro license activates on up to 3 Macs. Remove a Mac from your account page to free a slot.",
+    a: "One MacDissect Pro license works on one Mac. Moving to a new Mac? On the old Mac, open MacDissect → Settings → License and click Deactivate This Mac, then activate the key on the new Mac. Your account page shows which Mac the key is on.",
   },
   {
     q: "How do I get my license key?",

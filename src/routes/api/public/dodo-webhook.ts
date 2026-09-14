@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createHmac, timingSafeEqual } from "crypto";
-import { createClient } from "@supabase/supabase-js";
 
 // Dodo Payments uses Standard Webhooks: signature = base64(HMAC-SHA256(secret,
 // `${webhook-id}.${webhook-timestamp}.${body}`)), sent as "v1,<sig>" pairs.
@@ -19,15 +18,13 @@ function verifySignature(rawBody: string, headers: Headers, secret: string): boo
     .update(`${id}.${timestamp}.${rawBody}`)
     .digest("base64");
 
-  return signatureHeader
-    .split(" ")
-    .some((part) => {
-      const [version, sig] = part.split(",");
-      if (version !== "v1" || !sig) return false;
-      const a = Buffer.from(sig);
-      const b = Buffer.from(expected);
-      return a.length === b.length && timingSafeEqual(a, b);
-    });
+  return signatureHeader.split(" ").some((part) => {
+    const [version, sig] = part.split(",");
+    if (version !== "v1" || !sig) return false;
+    const a = Buffer.from(sig);
+    const b = Buffer.from(expected);
+    return a.length === b.length && timingSafeEqual(a, b);
+  });
 }
 
 export const Route = createFileRoute("/api/public/dodo-webhook")({
@@ -65,43 +62,23 @@ export const Route = createFileRoute("/api/public/dodo-webhook")({
               ? "failed"
               : "active");
 
-        const supabase = createClient(
-          process.env["SUPABASE_URL"]!,
-          process.env["SUPABASE_SERVICE_ROLE_KEY"]!,
-          { auth: { persistSession: false } },
-        );
-
-        const { error } = await supabase.from("subscriptions").upsert(
-          {
-            email: d.customer?.email ?? "unknown",
-            customer_id: d.customer?.customer_id ?? null,
-            dodo_subscription_id: d.subscription_id ?? null,
-            product_id: d.product_id ?? null,
-            status,
-            current_period_end: d.next_billing_date ?? null,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: "dodo_subscription_id" },
-        );
-
-        if (error) {
-          console.error("Subscription upsert failed:", error);
-          return new Response("Database error", { status: 500 });
-        }
-
-        // Issue (or revoke) the Pro license key for this subscriber.
         const email = d.customer?.email;
-        if (email) {
-          const { issueLicenseForSubscription } = await import("@/lib/license.server");
-          try {
-            await issueLicenseForSubscription({
-              email,
-              subscriptionId: d.subscription_id ?? null,
-              active: status === "active",
-            });
-          } catch (e) {
-            console.error("License issuance failed:", e);
-          }
+        if (!email) return Response.json({ ok: true });
+
+        // Store the subscription and issue (or revoke) the Pro license key for this subscriber.
+        const { recordSubscription } = await import("@/lib/license.server");
+        try {
+          await recordSubscription({
+            email,
+            customerId: d.customer?.customer_id ?? null,
+            subscriptionId: d.subscription_id ?? null,
+            productId: d.product_id ?? null,
+            status,
+            currentPeriodEnd: d.next_billing_date ?? null,
+          });
+        } catch (e) {
+          console.error("Recording subscription failed:", e);
+          return new Response("Database error", { status: 500 });
         }
 
         return Response.json({ ok: true });

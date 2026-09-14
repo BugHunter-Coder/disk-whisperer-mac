@@ -27,6 +27,24 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+/** Supabase's raw messages ("Email signups are disabled") mean nothing to customers. */
+function authErrorMessage(err: unknown): string {
+  const code = (err as { code?: string } | null)?.code;
+  switch (code) {
+    case "email_provider_disabled":
+    case "signup_disabled":
+      return "Account sign-up is unavailable right now. Please try again later or contact support.";
+    case "email_not_confirmed":
+      return "Confirm your email first: open the link we sent you, then sign in.";
+    case "invalid_credentials":
+      return "That email and password don't match. Check them and try again.";
+    case "user_already_exists":
+      return "An account with this email already exists. Sign in instead.";
+    default:
+      return err instanceof Error ? err.message : "Something went wrong.";
+  }
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -39,12 +57,26 @@ function AuthPage() {
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: `${window.location.origin}/account` },
         });
         if (error) throw error;
+        // Supabase hides existing accounts: it "succeeds" with no identities and sends no email.
+        if (data.user && data.user.identities?.length === 0) {
+          toast.error("An account with this email already exists. Sign in instead.");
+          setMode("signin");
+          return;
+        }
+        // With email confirmation on, there is no session until the link in the email is clicked.
+        if (!data.session) {
+          toast.success("Check your inbox", {
+            description: `We sent a confirmation link to ${email}. Open it to finish creating your account.`,
+          });
+          setMode("signin");
+          return;
+        }
         toast.success("Account created.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -52,7 +84,7 @@ function AuthPage() {
       }
       await navigate({ to: "/account" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong.");
+      toast.error(authErrorMessage(err));
     } finally {
       setBusy(false);
     }

@@ -41,7 +41,7 @@ export function FeaturesSection() {
   return (
     <section id="features" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
       <SectionHeading
-        eyebrow="Six views"
+        eyebrow="Seven views"
         title="One very clear picture of your disk."
         body="Scan your home folder, any folder you pick, or the whole Mac. Then jump between views from the sidebar or the keyboard."
       />
@@ -337,7 +337,7 @@ export function CtaBand() {
             Ready to dissect your disk?
           </h2>
           <p className="relative mx-auto mt-5 max-w-md text-lg text-ink/75">
-            Try every Pro feature free for 7 days. Keep them for $10 a year on up to 3 Macs.
+            Try every Pro feature free for 7 days. Keep them for $10 a year on your Mac.
           </p>
           <motion.div
             className="relative mt-8 inline-block"

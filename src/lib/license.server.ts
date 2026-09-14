@@ -56,6 +56,98 @@ export async function issueLicenseForSubscription(params: {
   });
 }
 
+export type DodoSubscriptionEvent = {
+  email: string;
+  customerId: string | null;
+  subscriptionId: string | null;
+  productId: string | null;
+  status: string;
+  currentPeriodEnd: string | null;
+};
+
+/** Stores a Dodo subscription and issues (or revokes) its license. Safe to call repeatedly. */
+export async function recordSubscription(sub: DodoSubscriptionEvent): Promise<void> {
+  const supabase = adminClient();
+  const { error } = await supabase.from("dodo_subscriptions").upsert(
+    {
+      email: sub.email,
+      customer_id: sub.customerId,
+      dodo_subscription_id: sub.subscriptionId,
+      product_id: sub.productId,
+      status: sub.status,
+      current_period_end: sub.currentPeriodEnd,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "dodo_subscription_id" },
+  );
+  if (error) throw new Error(`Subscription upsert failed: ${error.message}`);
+
+  await issueLicenseForSubscription({
+    email: sub.email,
+    subscriptionId: sub.subscriptionId,
+    active: sub.status === "active",
+  });
+}
+
+function dodoBaseUrl() {
+  return process.env["DODO_ENVIRONMENT"] === "live"
+    ? "https://live.dodopayments.com"
+    : "https://test.dodopayments.com";
+}
+
+type DodoListItem = {
+  subscription_id: string;
+  status: string;
+  product_id: string;
+  next_billing_date: string | null;
+  customer: { customer_id: string; email: string };
+};
+
+/**
+ * Pulls this email's MacDissect Pro subscriptions straight from Dodo and records them.
+ * Covers webhooks that never arrived (local dev, outages), so a paid customer always gets a key.
+ */
+export async function syncSubscriptionsFromDodo(email: string): Promise<number> {
+  const apiKey = process.env["DODO_PAYMENTS_API_KEY"];
+  const productId = process.env["DODO_PRODUCT_ID"];
+  if (!apiKey || !email) return 0;
+
+  const get = async <T>(path: string): Promise<T> => {
+    const res = await fetch(`${dodoBaseUrl()}${path}`, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (!res.ok) throw new Error(`Dodo ${path} failed: ${res.status}`);
+    return (await res.json()) as T;
+  };
+
+  const customers = await get<{ items: { customer_id: string; email: string }[] }>(
+    `/customers?email=${encodeURIComponent(email)}`,
+  );
+
+  let recorded = 0;
+  for (const customer of customers.items) {
+    if (customer.email.toLowerCase() !== email.toLowerCase()) continue;
+    const subs = await get<{ items: DodoListItem[] }>(
+      `/subscriptions?customer_id=${encodeURIComponent(customer.customer_id)}&page_size=100`,
+    );
+    for (const s of subs.items) {
+      if (productId && s.product_id !== productId) continue;
+      // A checkout that was never paid stays "pending"; it has no license to give.
+      if (s.status === "pending") continue;
+      await recordSubscription({
+        email: s.customer.email,
+        customerId: s.customer.customer_id,
+        subscriptionId: s.subscription_id,
+        productId: s.product_id,
+        status: s.status,
+        currentPeriodEnd: s.next_billing_date,
+      });
+      recorded++;
+    }
+  }
+  return recorded;
+}
+
 type LicenseRow = {
   id: string;
   license_key: string;
@@ -103,7 +195,7 @@ async function syncActivationCount(supabase: SupabaseClient, licenseId: string):
 
 /**
  * Checks a key. With a device id, also requires that Mac to still be activated
- * (so removing a Mac from the account page locks it) and records it as seen.
+ * (so a Mac that deactivated itself stops validating) and records it as seen.
  */
 export async function verifyLicenseKey(
   rawKey: string,
@@ -201,7 +293,10 @@ export async function activateLicenseOnDevice(params: {
     return {
       ok: false,
       code: "limit_reached",
-      message: `This license is already used on ${license.max_activations} Macs. Remove one to free a slot.`,
+      message:
+        license.max_activations === 1
+          ? "This license is already activated on another Mac. Open MacDissect on that Mac, go to Settings → License and click Deactivate This Mac, then try again."
+          : `This license is already used on ${license.max_activations} Macs. Deactivate one of them in MacDissect, then try again.`,
     };
   }
 
@@ -210,6 +305,14 @@ export async function activateLicenseOnDevice(params: {
     device_id: deviceId,
     device_name: params.deviceName ?? null,
   });
+  // 23514: the database's activation-limit trigger won a race with another Mac.
+  if (error?.code === "23514")
+    return {
+      ok: false,
+      code: "limit_reached",
+      message:
+        "This license is already activated on another Mac. Open MacDissect on that Mac, go to Settings → License and click Deactivate This Mac, then try again.",
+    };
   if (error)
     return { ok: false, code: "server_error", message: "Could not activate this Mac. Try again." };
 

@@ -23,6 +23,7 @@ import { billingFaqs, plans } from "@/components/landing/content";
 import { DownloadButton } from "@/components/site/DownloadButton";
 import { FaqList } from "@/components/site/FaqList";
 import { PageShell } from "@/components/site/SiteFooter";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Reveal,
   Stagger,
@@ -39,12 +40,12 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "MacDissect Pro is $10 a year: full-Mac scans, Smart Cleanup, History and monitoring on up to 3 Macs.",
+          "MacDissect Pro is $10 a year: full-Mac and any-folder scans, Smart Cleanup, History and monitoring for one Mac.",
       },
       { property: "og:title", content: "Pricing — MacDissect Pro" },
       {
         property: "og:description",
-        content: "$10 a year for every Pro feature, on up to 3 Macs.",
+        content: "$10 a year for every Pro feature, on one Mac.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -80,11 +81,11 @@ function intervalLabel(plan: ProPlan) {
 }
 
 const proHighlights = [
-  "Scan your entire Mac, not just one folder",
+  "Scan your entire Mac, any folder or external drive",
   "Smart Cleanup across 14 categories",
   "History with size-over-time charts",
   "Menu bar monitor and low-space alerts",
-  "Use on up to 3 Macs",
+  "One license key for one Mac",
 ];
 
 function PricingPage() {
@@ -95,6 +96,18 @@ function PricingPage() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  // Signed-in buyers pay with their account email, so the license shows up on /account.
+  const [accountEmail, setAccountEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    void supabase.auth.getSession().then(({ data }) => {
+      const sessionEmail = data.session?.user.email;
+      if (sessionEmail) {
+        setAccountEmail(sessionEmail);
+        setEmail(sessionEmail);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -150,7 +163,7 @@ function PricingPage() {
           transition={{ delay: 0.45 }}
           className="mx-auto mt-5 max-w-xl text-lg text-ink/65"
         >
-          The essentials are always free. Pro is $10 a year for every feature, on up to 3 Macs.
+          The essentials are always free. Pro is $10 a year for every feature, on one Mac.
         </motion.p>
       </section>
 
@@ -274,10 +287,21 @@ function PricingPage() {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  readOnly={accountEmail !== null}
+                  title={
+                    accountEmail
+                      ? "Your license is linked to the account you're signed in with."
+                      : undefined
+                  }
                   placeholder="ada@example.com"
-                  className="mt-1.5 w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm font-medium text-cream normal-case outline-none placeholder:text-cream/30 focus:border-sun focus:bg-cream/10"
+                  className="mt-1.5 w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm font-medium text-cream normal-case outline-none placeholder:text-cream/30 read-only:text-cream/70 focus:border-sun focus:bg-cream/10"
                 />
               </label>
+              {accountEmail && (
+                <p className="-mt-1 text-xs text-cream/50 normal-case sm:col-span-2">
+                  Signed in as {accountEmail}. Your license key will appear on your account page.
+                </p>
+              )}
               <motion.button
                 type="submit"
                 disabled={busy}

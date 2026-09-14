@@ -1,7 +1,8 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
-import { useState } from "react";
-import { Download, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Download, LogIn, LogOut, Menu, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -20,8 +21,20 @@ const links = [
   { to: "/", hash: "features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
   { to: "/privacy", label: "Privacy" },
-  { to: "/account", label: "My license" },
 ] as const;
+
+/** The signed-in visitor's email (null when signed out), updating on sign-in and sign-out. */
+function useAccountEmail() {
+  const [email, setEmail] = useState<string | null>(null);
+  useEffect(() => {
+    void supabase.auth.getSession().then(({ data }) => setEmail(data.session?.user.email ?? null));
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      setEmail(session?.user.email ?? null);
+    });
+    return () => data.subscription.unsubscribe();
+  }, []);
+  return email;
+}
 
 export function SiteHeader() {
   const { scrollY, scrollYProgress } = useScroll();
@@ -29,6 +42,15 @@ export function SiteHeader() {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const accountEmail = useAccountEmail();
+  const signedIn = accountEmail !== null;
+  const navigate = useNavigate();
+
+  const signOut = async () => {
+    setOpen(false);
+    await supabase.auth.signOut();
+    await navigate({ to: "/" });
+  };
 
   // Hide while scrolling down, show again on the way up.
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -71,6 +93,37 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            {signedIn ? (
+              <>
+                <Link
+                  to="/account"
+                  title={accountEmail}
+                  className="hidden items-center gap-2 rounded-full border border-ink/15 py-1.5 pr-4 pl-1.5 text-sm font-semibold text-ink transition-colors hover:bg-ink/5 sm:inline-flex"
+                  activeProps={{ className: "bg-ink/5" }}
+                >
+                  <span className="grid size-7 place-items-center rounded-full bg-ink text-xs font-bold text-cream uppercase">
+                    {accountEmail.charAt(0)}
+                  </span>
+                  Account
+                </Link>
+                <button
+                  type="button"
+                  onClick={signOut}
+                  aria-label="Log out"
+                  title="Log out"
+                  className="hidden size-10 place-items-center rounded-full text-ink/60 transition-colors hover:bg-ink/5 hover:text-ink sm:grid"
+                >
+                  <LogOut className="size-4" />
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/auth"
+                className="hidden items-center gap-2 rounded-full border border-ink/15 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink/5 sm:inline-flex"
+              >
+                <LogIn className="size-4" /> Log in
+              </Link>
+            )}
             <motion.span whileHover={{ y: -2 }} whileTap={{ scale: 0.96 }}>
               <Link
                 to="/download"
@@ -111,6 +164,35 @@ export function SiteHeader() {
                   {l.label}
                 </Link>
               ))}
+              {signedIn ? (
+                <>
+                  <Link
+                    to="/account"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 font-semibold hover:bg-ink/5"
+                  >
+                    <span className="grid size-7 place-items-center rounded-full bg-ink text-xs font-bold text-cream uppercase">
+                      {accountEmail.charAt(0)}
+                    </span>
+                    Account
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={signOut}
+                    className="rounded-xl px-4 py-3 text-left font-semibold hover:bg-ink/5"
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl border border-ink/15 px-4 py-3 text-center font-semibold hover:bg-ink/5"
+                >
+                  Log in
+                </Link>
+              )}
               <Link
                 to="/download"
                 onClick={() => setOpen(false)}

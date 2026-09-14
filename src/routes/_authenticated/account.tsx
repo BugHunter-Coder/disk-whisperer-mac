@@ -1,19 +1,24 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Copy, Download, Laptop, Loader2, LogOut } from "lucide-react";
+import { motion } from "motion/react";
+import { ArrowRight, Download, Laptop, Loader2 } from "lucide-react";
+import {
+  MaskedLicenseKey,
+  ProfileCard,
+  SubscriptionDetails,
+} from "@/components/account/AccountCards";
 import { PageShell } from "@/components/site/SiteFooter";
 import { WordReveal, fadeUp, staggerParent } from "@/components/site/motion";
 import { supabase } from "@/integrations/supabase/client";
-import { getMyLicense, removeDevice, getDownloadLink } from "@/lib/license.functions";
+import { getMyLicense, getDownloadLink } from "@/lib/license.functions";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
     meta: [
-      { title: "Your MacDissect Pro license" },
+      { title: "Your account — MacDissect Pro" },
       {
         name: "description",
         content:
@@ -31,11 +36,19 @@ export const Route = createFileRoute("/_authenticated/account")({
   component: AccountPage,
 });
 
+const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "medium",
+  timeStyle: "short",
+});
+
+function formatDateTime(value: string) {
+  return dateTimeFormat.format(new Date(value));
+}
+
 function AccountPage() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { user } = Route.useRouteContext();
   const fetchLicense = useServerFn(getMyLicense);
-  const remove = useServerFn(removeDevice);
   const download = useServerFn(getDownloadLink);
   const [downloading, setDownloading] = useState(false);
 
@@ -43,12 +56,6 @@ function AccountPage() {
     queryKey: ["my-license"],
     queryFn: () => fetchLicense(),
   });
-
-  const copyKey = async () => {
-    if (!data) return;
-    await navigator.clipboard.writeText(data.licenseKey);
-    toast.success("License key copied.");
-  };
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -58,16 +65,6 @@ function AccountPage() {
       else toast.info(result.message);
     } finally {
       setDownloading(false);
-    }
-  };
-
-  const handleRemove = async (activationId: string) => {
-    const result = await remove({ data: { activationId } });
-    if (result.ok) {
-      toast.success(result.message);
-      await queryClient.invalidateQueries({ queryKey: ["my-license"] });
-    } else {
-      toast.error(result.message);
     }
   };
 
@@ -84,17 +81,23 @@ function AccountPage() {
           className="absolute inset-0 -z-10 bg-[radial-gradient(45%_55%_at_20%_10%,rgba(255,201,60,0.22),transparent)]"
         />
         <div className="mx-auto max-w-3xl">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h1 className="font-display text-[clamp(2.4rem,6vw,4rem)] leading-[0.95] font-extrabold tracking-tight">
-              <WordReveal text="Your Pro license" />
-            </h1>
-            <button
-              onClick={signOut}
-              className="flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm font-semibold transition-colors hover:bg-cream"
-            >
-              <LogOut className="size-4" /> Sign out
-            </button>
-          </div>
+          <h1 className="font-display text-[clamp(2.4rem,6vw,4rem)] leading-[0.95] font-extrabold tracking-tight">
+            <WordReveal text="Your account" />
+          </h1>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", visualDuration: 0.5, bounce: 0.1 }}
+            className="mt-8"
+          >
+            <ProfileCard
+              email={user.email ?? ""}
+              emailVerified={Boolean(user.email_confirmed_at)}
+              memberSince={user.created_at}
+              onSignOut={signOut}
+            />
+          </motion.div>
 
           {isLoading && (
             <div className="mt-8 space-y-3">
@@ -145,21 +148,13 @@ function AccountPage() {
                   <span className="text-xs font-bold tracking-widest text-cream/50 uppercase">
                     License key
                   </span>
-                  <div className="mt-3 flex flex-wrap items-center gap-3">
-                    <code className="rounded-xl bg-cream/10 px-4 py-3 font-mono text-lg font-bold tracking-wider">
-                      {data.licenseKey}
-                    </code>
-                    <motion.button
-                      onClick={copyKey}
-                      whileTap={{ scale: 0.94 }}
-                      className="flex items-center gap-2 rounded-xl bg-mint px-4 py-3 text-sm font-bold text-ink"
-                    >
-                      <Copy className="size-4" /> Copy
-                    </motion.button>
-                  </div>
+                  <MaskedLicenseKey licenseKey={data.licenseKey} />
+                  <p className="mt-2 text-xs text-cream/45">
+                    Hidden for your privacy. Copy always copies the full key.
+                  </p>
                   <div className="mt-6">
                     <div className="flex justify-between text-sm text-cream/60">
-                      <span>Macs activated</span>
+                      <span>{data.maxActivations === 1 ? "Mac activated" : "Macs activated"}</span>
                       <span className="font-semibold text-cream">
                         {data.activations} of {data.maxActivations}
                       </span>
@@ -198,44 +193,66 @@ function AccountPage() {
               </motion.div>
 
               <motion.section variants={fadeUp} className="mt-10">
-                <h2 className="font-display text-2xl font-bold">Activated Macs</h2>
+                <h2 className="font-display text-2xl font-bold">Subscription</h2>
+                <div className="mt-4">
+                  <SubscriptionDetails license={data} />
+                </div>
+              </motion.section>
+
+              <motion.section variants={fadeUp} className="mt-10">
+                <h2 className="font-display text-2xl font-bold">
+                  {data.maxActivations === 1 ? "Activated Mac" : "Activated Macs"}
+                </h2>
                 {data.devices.length === 0 ? (
                   <p className="mt-2 text-ink/60">
-                    No Macs yet. Paste your key into MacDissect's Settings, or use the{" "}
+                    Not activated on a Mac yet. Paste your key into MacDissect's Settings, or use
+                    the{" "}
                     <Link to="/activate" className="font-semibold underline underline-offset-4">
                       activation page
                     </Link>
                     .
                   </p>
                 ) : (
-                  <ul className="mt-4 space-y-2.5">
-                    <AnimatePresence initial={false}>
+                  <>
+                    <ul className="mt-4 space-y-2.5">
                       {data.devices.map((d) => (
                         <motion.li
                           key={d.id}
-                          layout
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, x: 40, transition: { duration: 0.2 } }}
-                          className="flex items-center gap-4 rounded-2xl border border-ink/10 bg-cream px-5 py-4"
+                          className="rounded-2xl border border-ink/10 bg-cream px-5 py-4"
                         >
-                          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky/30">
-                            <Laptop className="size-5" />
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <p className="font-semibold">{d.deviceName ?? "Unnamed Mac"}</p>
-                            <p className="truncate font-mono text-xs text-ink/45">{d.deviceId}</p>
+                          <div className="flex items-center gap-4">
+                            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky/30">
+                              <Laptop className="size-5" />
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold">{d.deviceName ?? "Unnamed Mac"}</p>
+                              <p className="font-mono text-xs text-ink/45">Mac ID {d.deviceId}</p>
+                            </div>
+                            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-mint/30 px-2.5 py-1 text-xs font-bold text-emerald-800">
+                              <span className="size-1.5 rounded-full bg-emerald-600" /> Key in use
+                            </span>
                           </div>
-                          <button
-                            onClick={() => handleRemove(d.id)}
-                            className="rounded-xl border border-coral/50 px-3 py-2 text-sm font-semibold transition-colors hover:bg-coral/20"
-                          >
-                            Remove
-                          </button>
+                          <dl className="mt-3 grid gap-x-6 gap-y-1 border-t border-ink/10 pt-3 text-sm sm:grid-cols-2">
+                            <div className="flex justify-between gap-2 sm:block">
+                              <dt className="text-ink/50">Activated</dt>
+                              <dd className="font-medium">{formatDateTime(d.activatedAt)}</dd>
+                            </div>
+                            <div className="flex justify-between gap-2 sm:block">
+                              <dt className="text-ink/50">Last checked in</dt>
+                              <dd className="font-medium">{formatDateTime(d.lastSeenAt)}</dd>
+                            </div>
+                          </dl>
                         </motion.li>
                       ))}
-                    </AnimatePresence>
-                  </ul>
+                    </ul>
+                    <p className="mt-3 text-sm text-ink/55">
+                      Your key stays on this Mac. To move it to another Mac, open MacDissect on this
+                      Mac, go to Settings → License and click{" "}
+                      <span className="font-semibold">Deactivate This Mac</span>.
+                    </p>
+                  </>
                 )}
               </motion.section>
             </motion.div>

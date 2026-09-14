@@ -4,7 +4,7 @@ CREATE TABLE public.licenses (
   email text NOT NULL,
   dodo_subscription_id text,
   status text NOT NULL DEFAULT 'active',
-  max_activations integer NOT NULL DEFAULT 3,
+  max_activations integer NOT NULL DEFAULT 1,
   activation_count integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()

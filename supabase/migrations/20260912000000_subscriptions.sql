@@ -1,4 +1,4 @@
-create table public.subscriptions (
+create table public.dodo_subscriptions (
   id uuid primary key default gen_random_uuid(),
   email text not null,
   customer_id text,
@@ -10,13 +10,13 @@ create table public.subscriptions (
   updated_at timestamptz not null default now()
 );
 
-grant select, insert, update, delete on public.subscriptions to authenticated;
-grant all on public.subscriptions to service_role;
+grant select, insert, update, delete on public.dodo_subscriptions to authenticated;
+grant all on public.dodo_subscriptions to service_role;
 
-alter table public.subscriptions enable row level security;
+alter table public.dodo_subscriptions enable row level security;
 
 create policy "Users can read their own subscription"
-on public.subscriptions
+on public.dodo_subscriptions
 for select
 to authenticated
 using (email = (select email from auth.users where id = auth.uid()));
