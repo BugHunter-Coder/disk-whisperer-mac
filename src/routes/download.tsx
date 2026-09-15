@@ -13,12 +13,12 @@ export const Route = createFileRoute("/download")({
       { title: "Download MacDissect for Mac" },
       {
         name: "description",
-        content: `Download MacDissect ${DOWNLOAD.version} for ${DOWNLOAD.requirements}. Every Pro feature is free for 7 days.`,
+        content: `Download MacDissect ${DOWNLOAD.version} for ${DOWNLOAD.requirements}. Free forever, Pro is $10 a year.`,
       },
       { property: "og:title", content: "Download MacDissect for Mac" },
       {
         property: "og:description",
-        content: "See what's filling your Mac. Every Pro feature free for 7 days.",
+        content: "See what's filling your Mac. Free to download, Pro is $10 a year.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -26,8 +26,6 @@ export const Route = createFileRoute("/download")({
   }),
   component: DownloadPage,
 });
-
-const QUARANTINE_COMMAND = "xattr -dr com.apple.quarantine /Applications/MacDissect.app";
 
 const steps = [
   {
@@ -38,20 +36,14 @@ const steps = [
   },
   {
     icon: MousePointerClick,
-    title: "Open it once",
-    body: "macOS says \u201cApple could not verify MacDissect is free of malware.\u201d Click Done.",
+    title: "Open MacDissect",
+    body: "Open it from Applications. macOS checks Apple\u2019s notarization and may ask you to confirm an app downloaded from the internet \u2014 click Open.",
     tint: "bg-coral",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Click Open Anyway",
-    body: "In System Settings › Privacy & Security, scroll to Security and click Open Anyway next to MacDissect, then confirm.",
-    tint: "bg-sun",
   },
   {
     icon: Sparkles,
     title: "Scan your Mac",
-    body: "Pick your home folder or any folder. Every Pro feature is unlocked for your first 7 days.",
+    body: "Scan your home folder for free. With Pro, scan your whole Mac or any folder and use Smart Cleanup.",
     tint: "bg-mint",
   },
 ];
@@ -91,8 +83,8 @@ function DownloadPage() {
           transition={{ delay: 0.4 }}
           className="mx-auto mt-5 max-w-xl text-lg text-ink/65"
         >
-          Free to download. Every Pro feature is unlocked for 7 days, then the essentials stay free
-          and Pro is $10 a year.
+          Free to download, and the essentials stay free forever. Unlock every Pro feature for $10 a
+          year.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
@@ -113,10 +105,10 @@ function DownloadPage() {
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <Reveal>
           <h2 className="text-center font-display text-3xl font-extrabold tracking-tight">
-            Install in four steps
+            Install in three steps
           </h2>
         </Reveal>
-        <Stagger className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.1}>
+        <Stagger className="mt-10 grid gap-4 sm:grid-cols-3" gap={0.1}>
           {steps.map((s, i) => (
             <StaggerItem key={s.title}>
               <div className="relative h-full rounded-3xl border border-ink/10 bg-cream p-7">
@@ -139,53 +131,13 @@ function DownloadPage() {
           <div className="rounded-3xl bg-ink p-8 text-cream">
             <ShieldCheck className="size-6 text-mint" />
             <h2 className="mt-4 font-display text-2xl font-bold">
-              &ldquo;Apple could not verify MacDissect&rdquo;?
+              Signed &amp; notarized by Apple
             </h2>
             <p className="mt-2 text-cream/70">
-              macOS shows this for apps from outside the App Store that Apple hasn&apos;t notarized
-              yet. MacDissect doesn&apos;t upload anything and only reads the folders you choose.
-              You only need to allow it once:
+              MacDissect is signed with an Apple Developer ID and notarized by Apple, so it opens
+              like any app from a trusted developer &mdash; no security workarounds. It doesn&apos;t
+              upload anything and only reads the folders you choose.
             </p>
-            <ol className="mt-4 list-decimal space-y-2 pl-5 text-cream/80">
-              <li>
-                Try to open MacDissect, then click <strong className="text-cream">Done</strong>.
-              </li>
-              <li>
-                Open{" "}
-                <strong className="text-cream">System Settings › Privacy &amp; Security</strong> and
-                scroll down to <strong className="text-cream">Security</strong>.
-              </li>
-              <li>
-                Next to &ldquo;MacDissect was blocked&rdquo;, click{" "}
-                <strong className="text-cream">Open Anyway</strong>, confirm with your password or
-                Touch ID, then click <strong className="text-cream">Open</strong>.
-              </li>
-            </ol>
-            <p className="mt-4 text-sm text-cream/55">
-              On macOS 14 Sonoma you can instead right-click the app and choose Open.
-            </p>
-            <div className="mt-6 rounded-2xl bg-cream/5 p-4">
-              <p className="text-xs font-bold tracking-widest text-cream/50 uppercase">
-                Prefer Terminal? Run this after moving the app to Applications
-              </p>
-              <div className="mt-2 flex items-center gap-3">
-                <code className="min-w-0 flex-1 overflow-x-auto font-mono text-xs whitespace-nowrap text-cream/80">
-                  {QUARANTINE_COMMAND}
-                </code>
-                <button
-                  type="button"
-                  onClick={() => copy(QUARANTINE_COMMAND)}
-                  className="flex shrink-0 items-center gap-1.5 rounded-lg bg-cream/10 px-3 py-1.5 text-xs font-bold hover:bg-cream/20"
-                >
-                  {copied === QUARANTINE_COMMAND ? (
-                    <Check className="size-3.5" />
-                  ) : (
-                    <Copy className="size-3.5" />
-                  )}
-                  {copied === QUARANTINE_COMMAND ? "Copied" : "Copy"}
-                </button>
-              </div>
-            </div>
             <div className="mt-6 rounded-2xl bg-cream/5 p-4">
               <p className="text-xs font-bold tracking-widest text-cream/50 uppercase">
                 SHA-256 checksum

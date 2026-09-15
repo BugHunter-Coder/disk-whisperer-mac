@@ -33,3 +33,8 @@ dist-ssr
 
 # Local agent session notes
 .mesh/
+
+# Real keys live in Cloudflare/Render secrets or .env.local, never in git
+.env
+.env.*
+!.env.example

@@ -65,8 +65,8 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
             folder, so History can show what changed. You can delete them from the History view.
           </li>
           <li>
-            <strong>License and trial state</strong>: your license key, activation details and the
-            trial start date, in your login Keychain.
+            <strong>License state</strong>: your license key and activation details, in your login
+            Keychain.
           </li>
           <li>
             <strong>Preferences</strong>: settings such as menu bar and low-space alert options.

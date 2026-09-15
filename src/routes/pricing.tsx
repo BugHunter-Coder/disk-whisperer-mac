@@ -217,7 +217,7 @@ function PricingPage() {
           <div className="mt-auto pt-8">
             <DownloadButton variant="light" label="Download free" />
             <p className="mt-3 text-sm text-ink/50">
-              Includes a 7-day trial of every Pro feature. These features stay free afterwards.
+              These features are free forever, no plan needed.
             </p>
           </div>
         </motion.div>

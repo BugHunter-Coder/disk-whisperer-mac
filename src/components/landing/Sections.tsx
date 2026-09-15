@@ -337,7 +337,7 @@ export function CtaBand() {
             Ready to dissect your disk?
           </h2>
           <p className="relative mx-auto mt-5 max-w-md text-lg text-ink/75">
-            Try every Pro feature free for 7 days. Keep them for $10 a year on your Mac.
+            The essentials are free forever. Unlock every Pro feature for $10 a year on your Mac.
           </p>
           <motion.div
             className="relative mt-8 inline-block"

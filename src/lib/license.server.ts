@@ -155,6 +155,7 @@ type LicenseRow = {
   status: string;
   max_activations: number;
   activation_count: number;
+  dodo_subscription_id: string | null;
 };
 
 /** Machine-readable failure reasons, so the Mac app can react without parsing messages. */
@@ -174,11 +175,48 @@ export type LicenseCheck =
 async function findLicense(supabase: SupabaseClient, key: string): Promise<LicenseRow | null> {
   const { data } = await supabase
     .from("licenses")
-    .select("id, license_key, email, status, max_activations, activation_count")
+    .select(
+      "id, license_key, email, status, max_activations, activation_count, dodo_subscription_id",
+    )
     .eq("license_key", key)
     .maybeSingle<LicenseRow>();
   return data;
 }
+
+/** A renewal can land a little after the period ends; don't lock paying customers out over that. */
+const RENEWAL_GRACE_MS = 3 * 24 * 60 * 60 * 1000;
+
+/**
+ * True while the license's Dodo subscription is paid up. Checked on every activation and
+ * verification, so a cancelled or lapsed plan stops working even if its webhook never arrived.
+ * A cancelled plan keeps working until the end of the period that was already paid for.
+ */
+async function subscriptionIsPaidUp(
+  supabase: SupabaseClient,
+  license: LicenseRow,
+): Promise<boolean> {
+  if (!license.dodo_subscription_id) return true; // issued manually, not tied to a subscription
+  const { data: sub } = await supabase
+    .from("dodo_subscriptions")
+    .select("status, current_period_end")
+    .eq("dodo_subscription_id", license.dodo_subscription_id)
+    .maybeSingle<{ status: string; current_period_end: string | null }>();
+  if (!sub) return false;
+
+  const periodEnd = sub.current_period_end ? Date.parse(sub.current_period_end) : NaN;
+  const paidThrough = Number.isFinite(periodEnd) && Date.now() <= periodEnd + RENEWAL_GRACE_MS;
+  if (sub.status === "active") return Number.isNaN(periodEnd) || paidThrough;
+  if (sub.status === "cancelled") return paidThrough;
+  return false; // pending, on_hold, failed, expired
+}
+
+/** Revokes a license whose subscription lapsed, so every Mac using it locks on its next check. */
+async function revokeUnpaidLicense(supabase: SupabaseClient, license: LicenseRow) {
+  await supabase.from("licenses").update({ status: "revoked" }).eq("id", license.id);
+}
+
+const UNPAID_REASON =
+  "Your MacDissect Pro subscription isn't active. Renew it on macdissect.com to keep using Pro.";
 
 /** Recounts activations so the stored count never drifts from the real rows. */
 async function syncActivationCount(supabase: SupabaseClient, licenseId: string): Promise<number> {
@@ -210,6 +248,10 @@ export async function verifyLicenseKey(
   if (!data) return { valid: false, code: "not_found", reason: "That license key was not found." };
   if (data.status !== "active")
     return { valid: false, code: "revoked", reason: "This license is no longer active." };
+  if (!(await subscriptionIsPaidUp(supabase, data))) {
+    await revokeUnpaidLicense(supabase, data);
+    return { valid: false, code: "revoked", reason: UNPAID_REASON };
+  }
 
   const deviceId = rawDeviceId?.trim();
   if (deviceId) {
@@ -268,6 +310,10 @@ export async function activateLicenseOnDevice(params: {
   if (!license) return { ok: false, code: "not_found", message: "That license key was not found." };
   if (license.status !== "active")
     return { ok: false, code: "revoked", message: "This license is no longer active." };
+  if (!(await subscriptionIsPaidUp(supabase, license))) {
+    await revokeUnpaidLicense(supabase, license);
+    return { ok: false, code: "revoked", message: UNPAID_REASON };
+  }
 
   const { data: existing } = await supabase
     .from("license_activations")

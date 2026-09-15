@@ -180,11 +180,11 @@ export const productFaqs: Faq[] = [
 export const billingFaqs: Faq[] = [
   {
     q: "Is there a free trial?",
-    a: "Yes. Download MacDissect and every Pro feature is unlocked for 7 days, no payment or account needed. After that, the free features keep working.",
+    a: "No trial is needed to try MacDissect: the free version is free forever and scans and visualizes your home folder, with search, large files, live stats and Trash. Pro features unlock with an active $10/year plan.",
   },
   {
     q: "What happens if my subscription ends?",
-    a: "Pro features lock on your Macs, but the free features keep working: scanning and visualizing your home folder, search, finding large files, live stats and emptying the Trash.",
+    a: "Pro features lock on your Mac within about a day, but the free features keep working: scanning and visualizing your home folder, search, finding large files, live stats and emptying the Trash.",
   },
   {
     q: "How much does MacDissect Pro cost?",
