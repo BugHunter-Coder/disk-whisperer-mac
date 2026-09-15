@@ -88,7 +88,7 @@ export type Database = {
         }
         Relationships: []
       }
-      dodo_subscriptions: {
+      subscriptions: {
         Row: {
           created_at: string
           current_period_end: string | null
