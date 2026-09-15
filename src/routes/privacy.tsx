@@ -4,25 +4,16 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CreditCard, HardDrive, KeyRound, ShieldCheck, UserRound } from "lucide-react";
 import { PageShell } from "@/components/site/SiteFooter";
 import { Reveal, Stagger, StaggerItem, WordReveal } from "@/components/site/motion";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy — MacDissect" },
-      {
-        name: "description",
-        content:
-          "How MacDissect handles your data: scans stay on your Mac, and the website only keeps what's needed for your subscription and license.",
-      },
-      { property: "og:title", content: "Privacy Policy — MacDissect" },
-      {
-        property: "og:description",
-        content: "Scans stay on your Mac. Here's exactly what the app and website do with data.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/privacy",
+      title: "Privacy Policy – MacDissect",
+      description:
+        "How MacDissect handles your data: scans stay on your Mac, and the website only keeps what's needed for your subscription and license.",
+    }),
   component: PrivacyPage,
 });
 

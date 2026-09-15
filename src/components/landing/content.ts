@@ -161,7 +161,7 @@ export type Faq = { q: string; a: string };
 export const productFaqs: Faq[] = [
   {
     q: "Does MacDissect upload anything about my files?",
-    a: "No. Scanning and analysis happen entirely on your Mac. The only network request is license activation, which is re-checked every few days and never includes file names or sizes.",
+    a: "No. Scanning and analysis happen entirely on your Mac. The only network request is license activation, which is re-checked about once a day and never includes file names or sizes.",
   },
   {
     q: "Can it delete something important?",

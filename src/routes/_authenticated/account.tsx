@@ -14,25 +14,16 @@ import { PageShell } from "@/components/site/SiteFooter";
 import { WordReveal, fadeUp, staggerParent } from "@/components/site/motion";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyLicense, getDownloadLink } from "@/lib/license.functions";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/_authenticated/account")({
-  head: () => ({
-    meta: [
-      { title: "Your account — MacDissect Pro" },
-      {
-        name: "description",
-        content:
-          "View your MacDissect Pro license key, manage activated Macs, and download the app.",
-      },
-      { property: "og:title", content: "Your MacDissect Pro license" },
-      {
-        property: "og:description",
-        content: "License key, activated Macs, and the MacDissect Pro download.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/account",
+      title: "Your account – MacDissect Pro",
+      description: "Your MacDissect Pro license key, subscription and activated Mac.",
+      noindex: true,
+    }),
   component: AccountPage,
 });
 

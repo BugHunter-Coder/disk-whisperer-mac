@@ -12,21 +12,20 @@ import {
 } from "@/components/landing/Sections";
 import { PageShell } from "@/components/site/SiteFooter";
 import { easeOut, fadeUp, staggerParent, WordReveal } from "@/components/site/motion";
+import { productFaqs } from "@/components/landing/content";
+import { faqJsonLd, organizationJsonLd, pageHead, softwareJsonLd, websiteJsonLd } from "@/lib/seo";
 
 const description =
   "MacDissect shows what's filling your Mac with a treemap and sunburst, finds large files, cleans caches and build files safely, and tracks disk growth over time. Scans stay on your Mac.";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "MacDissect — See Every Gigabyte on Your Mac" },
-      { name: "description", content: description },
-      { property: "og:title", content: "MacDissect — See Every Gigabyte on Your Mac" },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/",
+      title: "MacDissect – Disk Space Analyzer & Cleaner for Mac",
+      description,
+      jsonLd: [websiteJsonLd, organizationJsonLd, softwareJsonLd, faqJsonLd(productFaqs)],
+    }),
   component: Index,
 });
 

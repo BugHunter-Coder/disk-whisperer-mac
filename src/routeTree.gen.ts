@@ -16,6 +16,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
 import { Route as ApiPublicLicenseActivateRouteImport } from './routes/api/public/license/activate'
@@ -56,6 +57,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/pricing'
     | '/privacy'
+    | '/sitemap.xml'
     | '/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/pricing'
     | '/privacy'
+    | '/sitemap.xml'
     | '/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/pricing'
     | '/privacy'
+    | '/sitemap.xml'
     | '/_authenticated/account'
     | '/api/public/dodo-webhook'
     | '/api/public/license/activate'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   DownloadRoute: typeof DownloadRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
   ApiPublicLicenseDeactivateRoute: typeof ApiPublicLicenseDeactivateRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -290,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   DownloadRoute: DownloadRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
   ApiPublicLicenseDeactivateRoute: ApiPublicLicenseDeactivateRoute,

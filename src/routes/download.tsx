@@ -6,24 +6,16 @@ import { DownloadButton } from "@/components/site/DownloadButton";
 import { PageShell } from "@/components/site/SiteFooter";
 import { Reveal, Stagger, StaggerItem, WordReveal } from "@/components/site/motion";
 import { DOWNLOAD } from "@/lib/download";
+import { pageHead, softwareJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/download")({
-  head: () => ({
-    meta: [
-      { title: "Download MacDissect for Mac" },
-      {
-        name: "description",
-        content: `Download MacDissect ${DOWNLOAD.version} for ${DOWNLOAD.requirements}. Free forever, Pro is $10 a year.`,
-      },
-      { property: "og:title", content: "Download MacDissect for Mac" },
-      {
-        property: "og:description",
-        content: "See what's filling your Mac. Free to download, Pro is $10 a year.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/download",
+      title: "Download MacDissect for Mac – Free Disk Space Analyzer",
+      description: `Download MacDissect ${DOWNLOAD.version}, the disk space analyzer for ${DOWNLOAD.requirements}. Signed and notarized by Apple. Free forever, Pro is $10 a year.`,
+      jsonLd: [softwareJsonLd],
+    }),
   component: DownloadPage,
 });
 

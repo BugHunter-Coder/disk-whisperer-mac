@@ -32,25 +32,17 @@ import {
   fadeUp,
   staggerParent,
 } from "@/components/site/motion";
+import { faqJsonLd, pageHead, softwareJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Pricing — MacDissect Pro" },
-      {
-        name: "description",
-        content:
-          "MacDissect Pro is $10 a year: full-Mac and any-folder scans, Smart Cleanup, History and monitoring for one Mac.",
-      },
-      { property: "og:title", content: "Pricing — MacDissect Pro" },
-      {
-        property: "og:description",
-        content: "$10 a year for every Pro feature, on one Mac.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/pricing",
+      title: "MacDissect Pricing – Free Mac Disk Analyzer, Pro $10/Year",
+      description:
+        "MacDissect is free to scan and visualize your home folder. Pro is $10 a year for full-Mac and any-folder scans, Smart Cleanup, History and monitoring.",
+      jsonLd: [softwareJsonLd, faqJsonLd(billingFaqs)],
+    }),
   loader: () => getProPlan(),
   component: PricingPage,
 });

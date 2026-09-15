@@ -5,25 +5,16 @@ import { AnimatePresence, motion } from "motion/react";
 import { KeyRound, Loader2 } from "lucide-react";
 import { PageShell } from "@/components/site/SiteFooter";
 import { supabase } from "@/integrations/supabase/client";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({
-    meta: [
-      { title: "Sign in — MacDissect Pro" },
-      {
-        name: "description",
-        content:
-          "Sign in with the email you used at checkout to get your MacDissect Pro license key and download link.",
-      },
-      { property: "og:title", content: "Sign in — MacDissect Pro" },
-      {
-        property: "og:description",
-        content: "Access your MacDissect Pro license key and download.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/auth",
+      title: "Sign in – MacDissect Pro",
+      description: "Sign in to get your MacDissect Pro license key and download link.",
+      noindex: true,
+    }),
   component: AuthPage,
 });
 

@@ -7,25 +7,16 @@ import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { PageShell } from "@/components/site/SiteFooter";
 import { WordReveal } from "@/components/site/motion";
 import { activateDevice, checkLicenseKey } from "@/lib/license.functions";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/activate")({
-  head: () => ({
-    meta: [
-      { title: "Activate MacDissect Pro" },
-      {
-        name: "description",
-        content:
-          "Enter your MacDissect Pro license key to check it or activate it on one of your Macs.",
-      },
-      { property: "og:title", content: "Activate MacDissect Pro" },
-      {
-        property: "og:description",
-        content: "Check or activate your MacDissect Pro license key.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/activate",
+      title: "Activate MacDissect Pro",
+      description: "Check or activate your MacDissect Pro license key.",
+      noindex: true,
+    }),
   component: ActivatePage,
 });
 
