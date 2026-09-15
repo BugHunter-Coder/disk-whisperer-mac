@@ -4,5 +4,5 @@ export const DOWNLOAD = {
   version: "1.1",
   size: "2.9 MB",
   requirements: "macOS 14 Sonoma or later · Apple silicon & Intel",
-  sha256: "5446f48f32953532ce250981e8e43f205cc49f22fee710497dc3c1b733004202",
+  sha256: "0d95c75cdf4a4dce7f340ec147586d03dfb8ae602a4394e658777a929a2670b9",
 } as const;
