@@ -17,7 +17,7 @@ export const Route = createFileRoute("/privacy")({
   component: PrivacyPage,
 });
 
-const LAST_UPDATED = "September 13, 2026";
+const LAST_UPDATED = "September 16, 2026";
 
 const summary = [
   {
@@ -129,8 +129,11 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
           your browser's local storage so you stay signed in.
         </p>
         <p>
-          The website doesn't use advertising or analytics cookies, and doesn't sell or share your
-          information for marketing.
+          The website uses <strong>DataFast</strong> to see how many people visit and which pages
+          they read. DataFast sets no cookies, doesn't track you across other sites, and only
+          reports aggregate numbers (page views, referrers, country) that can't be tied back to
+          you. We don't use advertising, and we don't sell or share your information for
+          marketing.
         </p>
       </>
     ),
@@ -149,6 +152,10 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
             <strong>Supabase</strong>, which hosts our database and accounts;
           </li>
           <li>our website hosting provider, which processes requests to this site;</li>
+          <li>
+            <strong>DataFast</strong>, which measures site traffic without cookies or personal
+            data;
+          </li>
           <li>
             <strong>GitHub</strong>, which hosts the app download and receives the usual request
             details (such as your IP address) when you download it.

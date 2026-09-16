@@ -74,6 +74,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+/**
+ * Search-engine ownership verification, set once per engine from its own webmaster
+ * tools (Search Console / Bing Webmaster). Env-driven so no token lives in source.
+ */
+const GOOGLE_SITE_VERIFICATION = import.meta.env["VITE_GOOGLE_SITE_VERIFICATION"];
+const BING_SITE_VERIFICATION = import.meta.env["VITE_BING_SITE_VERIFICATION"];
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -92,6 +99,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      ...(GOOGLE_SITE_VERIFICATION
+        ? [{ name: "google-site-verification", content: GOOGLE_SITE_VERIFICATION }]
+        : []),
+      ...(BING_SITE_VERIFICATION
+        ? [{ name: "msvalidate.01", content: BING_SITE_VERIFICATION }]
+        : []),
     ],
     links: [
       {
@@ -118,6 +131,12 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          defer
+          data-website-id="dfid_PnnVg08lKZMLDaXsSbNLc"
+          data-domain="www.macdissect.com"
+          src="https://datafa.st/js/script.js"
+        />
       </head>
       <body>
         {children}

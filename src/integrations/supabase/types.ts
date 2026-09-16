@@ -129,7 +129,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_site_visitor_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      record_site_visit: {
+        Args: { p_visitor_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

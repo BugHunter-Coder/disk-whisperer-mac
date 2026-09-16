@@ -34,6 +34,9 @@ dist-ssr
 # Local agent session notes
 .mesh/
 
+# Supabase CLI local link state
+supabase/.temp/
+
 # Real keys live in Cloudflare/Render secrets or .env.local, never in git
 .env
 .env.*

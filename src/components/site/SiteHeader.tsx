@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } fr
 import { useEffect, useState } from "react";
 import { Download, LogIn, LogOut, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { LiveVisitorBadge } from "@/components/site/LiveVisitorBadge";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -93,6 +94,7 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <LiveVisitorBadge />
             {signedIn ? (
               <>
                 <Link
