@@ -285,7 +285,7 @@ function PricingPage() {
                       ? "Your license is linked to the account you're signed in with."
                       : undefined
                   }
-                  placeholder="ada@example.com"
+                  placeholder="you@example.com"
                   className="mt-1.5 w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm font-medium text-cream normal-case outline-none placeholder:text-cream/30 read-only:text-cream/70 focus:border-sun focus:bg-cream/10"
                 />
               </label>
