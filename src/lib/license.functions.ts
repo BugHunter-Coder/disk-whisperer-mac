@@ -134,7 +134,7 @@ export const getDownloadLink = createServerFn({ method: "GET" })
       .maybeSingle();
 
     if (!license) {
-      return { ok: false as const, message: "No active subscription found for your account." };
+      return { ok: false as const, message: "No MacDissect Pro license found for your account." };
     }
 
     const { DOWNLOAD } = await import("./download");

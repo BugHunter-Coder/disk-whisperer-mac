@@ -25,18 +25,43 @@ export const createDodoCheckout = createServerFn({ method: "POST" })
       process.env["SITE_URL"] ??
       "https://project--8213ab52-6526-4d49-8898-7f68c648d679.lovable.app";
 
-    const res = await fetch(`${dodoBaseUrl()}/checkouts`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        product_cart: [{ product_id: productId, quantity: 1 }],
-        customer: { email: data.email, name: data.name },
-        return_url: `${origin}/pricing?subscribed=1`,
-      }),
-    });
+    const license = await import("./license.server");
+    // A lifetime license never needs buying twice, and each person gets one free launch license.
+    if (await license.hasActiveLicense(data.email)) {
+      return {
+        ok: false as const,
+        error: "This email already has a MacDissect Pro license. Sign in to see your key.",
+      };
+    }
+
+    const promoCode = process.env["DODO_LAUNCH_DISCOUNT_CODE"];
+    const promoOpen =
+      !!promoCode && (await license.countFreeLicenseClaims()) < license.FREE_LICENSE_LIMIT;
+
+    const startCheckout = (discountCode?: string) =>
+      fetch(`${dodoBaseUrl()}/checkouts`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product_cart: [{ product_id: productId, quantity: 1 }],
+          customer: { email: data.email, name: data.name },
+          return_url: `${origin}/pricing?purchased=1`,
+          ...(discountCode ? { discount_codes: [discountCode] } : {}),
+        }),
+      });
+
+    let res = promoOpen ? await startCheckout(promoCode) : await startCheckout();
+    let freeLicense = promoOpen;
+    // The discount's own usage limit is the source of truth: if Dodo says the free spots are
+    // gone (or the code is misconfigured), fall back to the regular one-time price.
+    if (promoOpen && !res.ok) {
+      console.error("Dodo promo checkout failed:", res.status, await res.text());
+      res = await startCheckout();
+      freeLicense = false;
+    }
 
     if (!res.ok) {
       console.error("Dodo checkout failed:", res.status, await res.text());
@@ -47,14 +72,32 @@ export const createDodoCheckout = createServerFn({ method: "POST" })
     if (!payload.checkout_url) {
       return { ok: false as const, error: "Checkout link missing from response." };
     }
-    return { ok: true as const, checkoutUrl: payload.checkout_url };
+    return { ok: true as const, checkoutUrl: payload.checkout_url, freeLicense };
   });
+
+export type LaunchOffer = { limit: number; claimed: number; remaining: number; active: boolean };
+
+/** Public launch-offer status for the promotion banner and pricing page. */
+export const getLaunchOffer = createServerFn({ method: "GET" }).handler(
+  async (): Promise<LaunchOffer> => {
+    const { countFreeLicenseClaims, FREE_LICENSE_LIMIT } = await import("./license.server");
+    const configured = !!process.env["DODO_LAUNCH_DISCOUNT_CODE"];
+    let claimed = 0;
+    try {
+      claimed = await countFreeLicenseClaims();
+    } catch (e) {
+      console.error("Could not count free launch licenses:", e);
+    }
+    const remaining = Math.max(0, FREE_LICENSE_LIMIT - claimed);
+    return { limit: FREE_LICENSE_LIMIT, claimed, remaining, active: configured && remaining > 0 };
+  },
+);
 
 export type ProPlan = {
   /** Price in the currency's smallest unit (e.g. cents). */
   amount: number;
   currency: string;
-  /** e.g. "year" or "month"; null for a one-time price. */
+  /** e.g. "year" or "month"; null for a one-time (lifetime) price. */
   interval: string | null;
   intervalCount: number;
   taxInclusive: boolean;
@@ -63,13 +106,13 @@ export type ProPlan = {
 };
 
 /**
- * The advertised Pro plan: $10 per year. The Dodo product (DODO_PRODUCT_ID) should be a
- * recurring price of 1000 USD cents billed every 1 year so checkout matches this.
+ * The advertised Pro plan: $10 once, for life. The Dodo product (DODO_PRODUCT_ID) should be a
+ * one-time price of 1000 USD cents so checkout matches this.
  */
 export const PRO_PLAN_DEFAULT: ProPlan = {
   amount: 1000,
   currency: "USD",
-  interval: "year",
+  interval: null,
   intervalCount: 1,
   taxInclusive: false,
   trialDays: 0,
@@ -117,7 +160,7 @@ export const getProPlan = createServerFn({ method: "GET" }).handler(
         plan.interval !== PRO_PLAN_DEFAULT.interval ||
         plan.intervalCount !== PRO_PLAN_DEFAULT.intervalCount
       ) {
-        console.warn("Dodo product price differs from the advertised $10/year plan:", plan);
+        console.warn("Dodo product price differs from the advertised $10 lifetime plan:", plan);
       }
       return plan;
     } catch (e) {

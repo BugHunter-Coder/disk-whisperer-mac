@@ -176,7 +176,7 @@ function AuthPage() {
             </motion.button>
           </form>
           <p className="mt-5 text-center text-sm text-ink/55">
-            Not subscribed yet?{" "}
+            No Pro license yet?{" "}
             <Link to="/pricing" className="font-semibold text-ink underline underline-offset-4">
               See pricing
             </Link>

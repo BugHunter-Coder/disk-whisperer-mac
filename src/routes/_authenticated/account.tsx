@@ -5,11 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "motion/react";
 import { ArrowRight, Download, Laptop, Loader2 } from "lucide-react";
-import {
-  MaskedLicenseKey,
-  ProfileCard,
-  SubscriptionDetails,
-} from "@/components/account/AccountCards";
+import { MaskedLicenseKey, ProfileCard, LicenseDetails } from "@/components/account/AccountCards";
 import { PageShell } from "@/components/site/SiteFooter";
 import { WordReveal, fadeUp, staggerParent } from "@/components/site/motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/account")({
     pageHead({
       path: "/account",
       title: "Your account – MacDissect Pro",
-      description: "Your MacDissect Pro license key, subscription and activated Mac.",
+      description: "Your MacDissect Pro lifetime license key and activated Mac.",
       noindex: true,
     }),
   component: AccountPage,
@@ -111,8 +107,8 @@ function AccountPage() {
             >
               <h2 className="font-display text-2xl font-bold">No active license yet</h2>
               <p className="mt-2 text-ink/70">
-                We couldn't find an active subscription for this email address. If you just paid,
-                give it a minute and refresh. Otherwise, subscribe with the same email.
+                We couldn't find a MacDissect Pro license for this email address. If you just
+                checked out, give it a minute and refresh. Otherwise, get Pro with the same email.
               </p>
               <Link
                 to="/pricing"
@@ -184,9 +180,9 @@ function AccountPage() {
               </motion.div>
 
               <motion.section variants={fadeUp} className="mt-10">
-                <h2 className="font-display text-2xl font-bold">Subscription</h2>
+                <h2 className="font-display text-2xl font-bold">License</h2>
                 <div className="mt-4">
-                  <SubscriptionDetails license={data} />
+                  <LicenseDetails license={data} />
                 </div>
               </motion.section>
 

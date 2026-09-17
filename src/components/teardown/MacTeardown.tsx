@@ -467,7 +467,7 @@ export function MacTeardown() {
                     to="/pricing"
                     className="inline-flex items-center gap-2 rounded-2xl border border-ink/15 bg-cream/70 px-5 py-3.5 font-bold backdrop-blur transition-colors hover:bg-cream"
                   >
-                    $10/year Pro <ArrowRight className="size-4" />
+                    $10 lifetime Pro <ArrowRight className="size-4" />
                   </Link>
                   <span className="flex items-center gap-2 text-sm font-semibold text-ink/50">
                     <motion.span

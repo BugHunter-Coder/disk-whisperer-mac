@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Download, LogIn, LogOut, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { LiveVisitorBadge } from "@/components/site/LiveVisitorBadge";
+import { PromoBanner } from "@/components/site/PromoBanner";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -21,6 +22,7 @@ export function Logo({ className = "" }: { className?: string }) {
 const links = [
   { to: "/", hash: "features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
+  { to: "/guides", label: "Guides" },
   { to: "/privacy", label: "Privacy" },
 ] as const;
 
@@ -68,9 +70,10 @@ export function SiteHeader() {
       />
       <motion.header
         className="fixed inset-x-0 top-3 z-40 px-4"
-        animate={{ y: hidden ? -96 : 0 }}
+        animate={{ y: hidden ? -160 : 0 }}
         transition={{ type: "spring", visualDuration: 0.35, bounce: 0 }}
       >
+        <PromoBanner />
         <div
           className={`mx-auto flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 transition-[background-color,box-shadow,border-color] duration-300 ${
             scrolled || open

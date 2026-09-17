@@ -21,6 +21,8 @@ export function DownloadButton({
     <motion.a
       href={DOWNLOAD.url}
       download
+      // DataFast records each click as a "download_dmg" goal.
+      data-fast-goal="download_dmg"
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.97 }}
       className={`inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 font-bold transition-colors ${styles} ${className}`}

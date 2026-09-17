@@ -220,6 +220,89 @@ export function CleanupSection() {
   );
 }
 
+const screenshots = [
+  {
+    src: "/product/explore-treemap.png",
+    title: "Treemap",
+    alt: "MacDissect treemap showing folders sized by disk usage",
+  },
+  {
+    src: "/product/explore-sunburst.png",
+    title: "Sunburst",
+    alt: "MacDissect sunburst chart of a Mac's home folder",
+  },
+  {
+    src: "/product/cleanup.png",
+    title: "Smart Cleanup",
+    alt: "MacDissect Smart Cleanup listing Xcode data, simulators and caches",
+  },
+  {
+    src: "/product/large-files.png",
+    title: "Large Files",
+    alt: "MacDissect Large Files list sorted by size",
+  },
+  {
+    src: "/product/history.png",
+    title: "History",
+    alt: "MacDissect History chart of disk usage over time",
+  },
+  {
+    src: "/product/explore-list.png",
+    title: "Folder list",
+    alt: "MacDissect folder list sorted by size",
+  },
+];
+
+/** Real app screenshots, so visitors see the product before downloading. */
+export function ScreenshotsSection() {
+  const [active, setActive] = useState(0);
+  const shot = screenshots[active] ?? screenshots[0]!;
+  return (
+    <section id="screenshots" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
+      <SectionHeading
+        eyebrow="The real app"
+        title="This is what MacDissect looks like."
+        body="Screenshots from MacDissect running on macOS. Pick a view to switch."
+        center
+      />
+      <Reveal className="mt-10">
+        <div
+          className="flex flex-wrap justify-center gap-2"
+          role="tablist"
+          aria-label="Screenshots"
+        >
+          {screenshots.map((s, i) => (
+            <button
+              key={s.src}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              onClick={() => setActive(i)}
+              className={`rounded-full px-4 py-2 text-sm font-bold transition-colors ${
+                i === active ? "bg-ink text-cream" : "border border-ink/15 hover:bg-cream"
+              }`}
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>
+        <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 bg-cream shadow-[0_40px_80px_-30px_rgba(25,25,37,0.45)]">
+          <img
+            key={shot.src}
+            src={shot.src}
+            alt={shot.alt}
+            width={1600}
+            height={1025}
+            loading="lazy"
+            decoding="async"
+            className="block h-auto w-full"
+          />
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
 export function MonitorSection() {
   const items = [
     {
@@ -337,7 +420,7 @@ export function CtaBand() {
             Ready to dissect your disk?
           </h2>
           <p className="relative mx-auto mt-5 max-w-md text-lg text-ink/75">
-            The essentials are free forever. Unlock every Pro feature for $10 a year on your Mac.
+            The essentials are free forever. Unlock every Pro feature once, for life, for $10.
           </p>
           <motion.div
             className="relative mt-8 inline-block"

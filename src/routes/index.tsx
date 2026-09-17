@@ -9,6 +9,7 @@ import {
   FeaturesSection,
   MonitorSection,
   PrivacyTeaser,
+  ScreenshotsSection,
 } from "@/components/landing/Sections";
 import { PageShell } from "@/components/site/SiteFooter";
 import { easeOut, fadeUp, staggerParent, WordReveal } from "@/components/site/motion";
@@ -39,6 +40,7 @@ function Index() {
   return (
     <PageShell>
       <MacTeardown />
+      <ScreenshotsSection />
       <FeaturesSection />
       <CleanupSection />
       <MonitorSection />

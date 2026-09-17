@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { comparisons } from "@/components/landing/compare";
 import { Logo, SiteHeader } from "./SiteHeader";
 
 export function SiteFooter() {
   return (
     <footer className="mt-10 border-t border-ink/10">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="sm:col-span-2">
           <Logo />
           <p className="mt-4 max-w-sm text-sm text-ink/60">
@@ -34,6 +35,23 @@ export function SiteFooter() {
                 FAQ
               </Link>
             </li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="text-xs font-bold tracking-widest text-ink/40 uppercase">Resources</h3>
+          <ul className="mt-4 space-y-2.5 text-sm font-medium text-ink/70">
+            <li>
+              <Link to="/guides" className="hover:text-ink">
+                Disk space guides
+              </Link>
+            </li>
+            {comparisons.map((c) => (
+              <li key={c.slug}>
+                <Link to="/compare/$slug" params={{ slug: c.slug }} className="hover:text-ink">
+                  vs {c.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         <div>

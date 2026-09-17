@@ -22,8 +22,9 @@ export function adminClient(): SupabaseClient {
 }
 
 /**
- * Creates (or reactivates) a license for a paid subscription. Idempotent:
- * a subscription that already has a key keeps the same key.
+ * Creates a license for a subscription bought before Pro became a lifetime purchase.
+ * Idempotent: a subscription that already has a key keeps the same key. Those licenses are
+ * lifetime too, so a cancelled or lapsed subscription no longer revokes them.
  */
 export async function issueLicenseForSubscription(params: {
   email: string;
@@ -31,7 +32,6 @@ export async function issueLicenseForSubscription(params: {
   active: boolean;
 }): Promise<void> {
   const supabase = adminClient();
-  const status = params.active ? "active" : "revoked";
 
   if (params.subscriptionId) {
     const { data: existing } = await supabase
@@ -40,10 +40,7 @@ export async function issueLicenseForSubscription(params: {
       .eq("dodo_subscription_id", params.subscriptionId)
       .maybeSingle();
 
-    if (existing) {
-      await supabase.from("licenses").update({ status, email: params.email }).eq("id", existing.id);
-      return;
-    }
+    if (existing) return;
   }
 
   if (!params.active) return;
@@ -89,6 +86,93 @@ export async function recordSubscription(sub: DodoSubscriptionEvent): Promise<vo
   });
 }
 
+export type DodoPaymentEvent = {
+  paymentId: string;
+  email: string;
+  customerId: string | null;
+  productId: string | null;
+  status: string;
+  totalAmount: number;
+  currency: string | null;
+  refunded: boolean;
+};
+
+/**
+ * Stores a one-time Dodo payment for MacDissect Pro and issues its lifetime license, or revokes
+ * the license when the payment was refunded. Safe to call repeatedly for the same payment.
+ */
+export async function recordPayment(payment: DodoPaymentEvent): Promise<void> {
+  const supabase = adminClient();
+  const { error } = await supabase.from("dodo_payments").upsert(
+    {
+      dodo_payment_id: payment.paymentId,
+      email: payment.email,
+      customer_id: payment.customerId,
+      product_id: payment.productId,
+      status: payment.status,
+      total_amount: payment.totalAmount,
+      currency: payment.currency,
+      refunded: payment.refunded,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "dodo_payment_id" },
+  );
+  if (error) throw new Error(`Payment upsert failed: ${error.message}`);
+
+  const { data: existing } = await supabase
+    .from("licenses")
+    .select("id")
+    .eq("dodo_payment_id", payment.paymentId)
+    .maybeSingle();
+
+  if (payment.refunded) {
+    if (existing)
+      await supabase.from("licenses").update({ status: "revoked" }).eq("id", existing.id);
+    return;
+  }
+  if (existing || payment.status !== "succeeded") return;
+
+  const { error: insertError } = await supabase.from("licenses").insert({
+    license_key: generateLicenseKey(),
+    email: payment.email,
+    dodo_payment_id: payment.paymentId,
+    status: "active",
+  });
+  // 23505: a concurrent webhook delivery already issued this payment's license.
+  if (insertError && insertError.code !== "23505")
+    throw new Error(`License insert failed: ${insertError.message}`);
+}
+
+/** Marks a refunded payment and revokes its license, so every Mac using it locks. */
+export async function recordRefund(paymentId: string): Promise<void> {
+  const supabase = adminClient();
+  await supabase
+    .from("dodo_payments")
+    .update({ refunded: true, updated_at: new Date().toISOString() })
+    .eq("dodo_payment_id", paymentId);
+  await supabase.from("licenses").update({ status: "revoked" }).eq("dodo_payment_id", paymentId);
+}
+
+/** Launch offer: the first this-many MacDissect Pro licenses are free for life. */
+export const FREE_LICENSE_LIMIT = 50;
+
+/** How many free launch licenses have been claimed. */
+export async function countFreeLicenseClaims(): Promise<number> {
+  const { data, error } = await adminClient().rpc("get_free_license_claims");
+  if (error) throw new Error(`Free license count failed: ${error.message}`);
+  return Number(data ?? 0);
+}
+
+/** True when this email already holds an active MacDissect Pro license. */
+export async function hasActiveLicense(email: string): Promise<boolean> {
+  const { count } = await adminClient()
+    .from("licenses")
+    .select("id", { count: "exact", head: true })
+    .ilike("email", email)
+    .eq("status", "active");
+  return (count ?? 0) > 0;
+}
+
 function dodoBaseUrl() {
   return process.env["DODO_ENVIRONMENT"] === "live"
     ? "https://live.dodopayments.com"
@@ -103,9 +187,20 @@ type DodoListItem = {
   customer: { customer_id: string; email: string };
 };
 
+type DodoPaymentListItem = {
+  payment_id: string;
+  status: string;
+  total_amount: number;
+  currency: string | null;
+  subscription_id: string | null;
+  refund_status?: string | null;
+  customer: { customer_id: string; email: string };
+};
+
 /**
- * Pulls this email's MacDissect Pro subscriptions straight from Dodo and records them.
- * Covers webhooks that never arrived (local dev, outages), so a paid customer always gets a key.
+ * Pulls this email's MacDissect Pro purchases (lifetime payments, and subscriptions from before
+ * Pro became lifetime) straight from Dodo and records them. Covers webhooks that never arrived
+ * (local dev, outages), so a customer always gets a key.
  */
 export async function syncSubscriptionsFromDodo(email: string): Promise<number> {
   const apiKey = process.env["DODO_PAYMENTS_API_KEY"];
@@ -127,6 +222,25 @@ export async function syncSubscriptionsFromDodo(email: string): Promise<number> 
   let recorded = 0;
   for (const customer of customers.items) {
     if (customer.email.toLowerCase() !== email.toLowerCase()) continue;
+    if (productId) {
+      const payments = await get<{ items: DodoPaymentListItem[] }>(
+        `/payments?customer_id=${encodeURIComponent(customer.customer_id)}&product_id=${encodeURIComponent(productId)}&status=succeeded&page_size=100`,
+      );
+      for (const p of payments.items) {
+        if (p.subscription_id) continue; // renewals of a legacy subscription, handled below
+        await recordPayment({
+          paymentId: p.payment_id,
+          email: p.customer.email,
+          customerId: p.customer.customer_id,
+          productId,
+          status: p.status,
+          totalAmount: p.total_amount,
+          currency: p.currency,
+          refunded: p.refund_status === "full" || p.refund_status === "succeeded",
+        });
+        recorded++;
+      }
+    }
     const subs = await get<{ items: DodoListItem[] }>(
       `/subscriptions?customer_id=${encodeURIComponent(customer.customer_id)}&page_size=100`,
     );
@@ -183,41 +297,6 @@ async function findLicense(supabase: SupabaseClient, key: string): Promise<Licen
   return data;
 }
 
-/** A renewal can land a little after the period ends; don't lock paying customers out over that. */
-const RENEWAL_GRACE_MS = 3 * 24 * 60 * 60 * 1000;
-
-/**
- * True while the license's Dodo subscription is paid up. Checked on every activation and
- * verification, so a cancelled or lapsed plan stops working even if its webhook never arrived.
- * A cancelled plan keeps working until the end of the period that was already paid for.
- */
-async function subscriptionIsPaidUp(
-  supabase: SupabaseClient,
-  license: LicenseRow,
-): Promise<boolean> {
-  if (!license.dodo_subscription_id) return true; // issued manually, not tied to a subscription
-  const { data: sub } = await supabase
-    .from("dodo_subscriptions")
-    .select("status, current_period_end")
-    .eq("dodo_subscription_id", license.dodo_subscription_id)
-    .maybeSingle<{ status: string; current_period_end: string | null }>();
-  if (!sub) return false;
-
-  const periodEnd = sub.current_period_end ? Date.parse(sub.current_period_end) : NaN;
-  const paidThrough = Number.isFinite(periodEnd) && Date.now() <= periodEnd + RENEWAL_GRACE_MS;
-  if (sub.status === "active") return Number.isNaN(periodEnd) || paidThrough;
-  if (sub.status === "cancelled") return paidThrough;
-  return false; // pending, on_hold, failed, expired
-}
-
-/** Revokes a license whose subscription lapsed, so every Mac using it locks on its next check. */
-async function revokeUnpaidLicense(supabase: SupabaseClient, license: LicenseRow) {
-  await supabase.from("licenses").update({ status: "revoked" }).eq("id", license.id);
-}
-
-const UNPAID_REASON =
-  "Your MacDissect Pro subscription isn't active. Renew it on macdissect.com to keep using Pro.";
-
 /** Recounts activations so the stored count never drifts from the real rows. */
 async function syncActivationCount(supabase: SupabaseClient, licenseId: string): Promise<number> {
   const { count } = await supabase
@@ -248,10 +327,6 @@ export async function verifyLicenseKey(
   if (!data) return { valid: false, code: "not_found", reason: "That license key was not found." };
   if (data.status !== "active")
     return { valid: false, code: "revoked", reason: "This license is no longer active." };
-  if (!(await subscriptionIsPaidUp(supabase, data))) {
-    await revokeUnpaidLicense(supabase, data);
-    return { valid: false, code: "revoked", reason: UNPAID_REASON };
-  }
 
   const deviceId = rawDeviceId?.trim();
   if (deviceId) {
@@ -310,10 +385,6 @@ export async function activateLicenseOnDevice(params: {
   if (!license) return { ok: false, code: "not_found", message: "That license key was not found." };
   if (license.status !== "active")
     return { ok: false, code: "revoked", message: "This license is no longer active." };
-  if (!(await subscriptionIsPaidUp(supabase, license))) {
-    await revokeUnpaidLicense(supabase, license);
-    return { ok: false, code: "revoked", message: UNPAID_REASON };
-  }
 
   const { data: existing } = await supabase
     .from("license_activations")

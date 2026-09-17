@@ -12,12 +12,12 @@ export const Route = createFileRoute("/privacy")({
       path: "/privacy",
       title: "Privacy Policy – MacDissect",
       description:
-        "How MacDissect handles your data: scans stay on your Mac, and the website only keeps what's needed for your subscription and license.",
+        "How MacDissect handles your data: scans stay on your Mac, and the website only keeps what's needed for your purchase and license.",
     }),
   component: PrivacyPage,
 });
 
-const LAST_UPDATED = "September 16, 2026";
+const LAST_UPDATED = "September 17, 2026";
 
 const summary = [
   {
@@ -106,13 +106,14 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
       <>
         <p>
           Checkout is run by <strong>Dodo Payments</strong>, which acts as the merchant of record.
-          When you subscribe, you give us your name and email address, which we pass to Dodo
+          When you buy or claim Pro, you give us your name and email address, which we pass to Dodo
           Payments to start checkout. Dodo Payments collects your payment details and billing
           address under its own privacy policy; we never receive your card number.
         </p>
         <p>
-          Dodo Payments sends us your subscription status, subscription ID, customer ID, email
-          address and next billing date. We use these to issue, renew or revoke your license key.
+          Dodo Payments sends us your payment ID, payment status, amount, customer ID and email
+          address (and, for older yearly plans, the subscription status). We use these to issue your
+          license key, or revoke it if a payment is refunded.
         </p>
       </>
     ),
@@ -131,9 +132,8 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
         <p>
           The website uses <strong>DataFast</strong> to see how many people visit and which pages
           they read. DataFast sets no cookies, doesn't track you across other sites, and only
-          reports aggregate numbers (page views, referrers, country) that can't be tied back to
-          you. We don't use advertising, and we don't sell or share your information for
-          marketing.
+          reports aggregate numbers (page views, referrers, country) that can't be tied back to you.
+          We don't use advertising, and we don't sell or share your information for marketing.
         </p>
       </>
     ),
@@ -146,15 +146,14 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
         <p>We share personal data only with the service providers needed to run MacDissect:</p>
         <ul>
           <li>
-            <strong>Dodo Payments</strong>, for checkout, billing, tax and subscription management;
+            <strong>Dodo Payments</strong>, for checkout, billing, tax and refunds;
           </li>
           <li>
             <strong>Supabase</strong>, which hosts our database and accounts;
           </li>
           <li>our website hosting provider, which processes requests to this site;</li>
           <li>
-            <strong>DataFast</strong>, which measures site traffic without cookies or personal
-            data;
+            <strong>DataFast</strong>, which measures site traffic without cookies or personal data;
           </li>
           <li>
             <strong>GitHub</strong>, which hosts the app download and receives the usual request
@@ -171,10 +170,10 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
     body: (
       <>
         <p>
-          We keep your subscription, license and activation records while your account exists, and
-          as long as needed afterwards for accounting and legal obligations. Everything the app
-          stores locally stays under your control: delete scan history in the app, or remove the app
-          and its Keychain items.
+          We keep your purchase, license and activation records while your account exists, and as
+          long as needed afterwards for accounting and legal obligations. Everything the app stores
+          locally stays under your control: delete scan history in the app, or remove the app and
+          its Keychain items.
         </p>
         <p>
           You can ask us to access, correct or delete your personal data. Reply to your purchase
@@ -190,7 +189,7 @@ const sections: { id: string; title: string; body: ReactNode }[] = [
     body: (
       <p>
         If we change how MacDissect handles data, we'll update this page and the date at the top.
-        Significant changes will also be announced by email to subscribers.
+        Significant changes will also be announced by email to customers.
       </p>
     ),
   },

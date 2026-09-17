@@ -180,15 +180,19 @@ export const productFaqs: Faq[] = [
 export const billingFaqs: Faq[] = [
   {
     q: "Is there a free trial?",
-    a: "No trial is needed to try MacDissect: the free version is free forever and scans and visualizes your home folder, with search, large files, live stats and Trash. Pro features unlock with an active $10/year plan.",
+    a: "No trial is needed to try MacDissect: the free version is free forever and scans and visualizes your home folder, with search, large files, live stats and Trash. Pro features unlock with a one-time $10 lifetime license.",
   },
   {
-    q: "What happens if my subscription ends?",
-    a: "Pro features lock on your Mac within about a day, but the free features keep working: scanning and visualizing your home folder, search, finding large files, live stats and emptying the Trash.",
+    q: "Is Pro really a one-time payment?",
+    a: "Yes. You pay once and your license key works for life. There is no subscription and nothing to renew or cancel.",
+  },
+  {
+    q: "How does the launch offer work?",
+    a: "The first 50 people to claim MacDissect Pro get a lifetime license for free: go through checkout on the pricing page and the price is $0. Once all 50 are claimed, Pro is a one-time $10. One free license per email address.",
   },
   {
     q: "How much does MacDissect Pro cost?",
-    a: "$10 a year, billed yearly, plus any sales tax that applies where you live. That covers every Pro feature on one Mac.",
+    a: "$10 once, plus any sales tax that applies where you live, for a lifetime license covering every Pro feature on one Mac. The first 50 licenses are free.",
   },
   {
     q: "How many Macs can I use it on?",
@@ -199,8 +203,12 @@ export const billingFaqs: Faq[] = [
     a: "After checkout, sign in on this website with the same email address you paid with. Your account page shows your MACD-… key. Paste it into MacDissect's Settings to activate.",
   },
   {
-    q: "Can I cancel?",
-    a: "Yes, any time, through Dodo Payments using the link in your receipt email. When the subscription ends, Pro features lock on your Macs and the free features keep working.",
+    q: "I had a yearly subscription. What happens now?",
+    a: "Your existing license key now works for life. You won't lose Pro, and you can cancel the old subscription through the link in your Dodo Payments receipt email so it isn't charged again.",
+  },
+  {
+    q: "Can I get a refund?",
+    a: "Reply to your Dodo Payments receipt email to ask. A refunded license stops working on your Mac, and the free features keep working.",
   },
   {
     q: "Who handles payment?",

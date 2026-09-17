@@ -16,6 +16,7 @@ import {
 import {
   PRO_PLAN_DEFAULT,
   createDodoCheckout,
+  getLaunchOffer,
   getProPlan,
   type ProPlan,
 } from "@/lib/dodo.functions";
@@ -38,12 +39,15 @@ export const Route = createFileRoute("/pricing")({
   head: () =>
     pageHead({
       path: "/pricing",
-      title: "MacDissect Pricing – Free Mac Disk Analyzer, Pro $10/Year",
+      title: "MacDissect Pricing – Free Mac Disk Analyzer, Pro $10 Lifetime",
       description:
-        "MacDissect is free to scan and visualize your home folder. Pro is $10 a year for full-Mac and any-folder scans, Smart Cleanup, History and monitoring.",
+        "MacDissect is free to scan and visualize your home folder. Pro is a one-time $10 lifetime license for full-Mac and any-folder scans, Smart Cleanup, History and monitoring. The first 50 licenses are free.",
       jsonLd: [softwareJsonLd, faqJsonLd(billingFaqs)],
     }),
-  loader: () => getProPlan(),
+  loader: async () => {
+    const [plan, offer] = await Promise.all([getProPlan(), getLaunchOffer()]);
+    return { plan, offer };
+  },
   component: PricingPage,
 });
 
@@ -57,16 +61,8 @@ function formatPrice(plan: ProPlan) {
   }).format(plan.amount / 100);
 }
 
-function formatMonthly(plan: ProPlan) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: plan.currency,
-    maximumFractionDigits: 2,
-  }).format(plan.amount / 100 / 12);
-}
-
 function intervalLabel(plan: ProPlan) {
-  if (!plan.interval) return "one-time";
+  if (!plan.interval) return "once, for life";
   return plan.intervalCount > 1
     ? `every ${plan.intervalCount} ${plan.interval}s`
     : `per ${plan.interval}`;
@@ -81,13 +77,15 @@ const proHighlights = [
 ];
 
 function PricingPage() {
-  // Live price from Dodo when configured, otherwise the advertised $10/year plan.
-  const plan = Route.useLoaderData() ?? PRO_PLAN_DEFAULT;
+  // Live price from Dodo when configured, otherwise the advertised $10 lifetime plan.
+  const loaderData = Route.useLoaderData();
+  const plan = loaderData.plan ?? PRO_PLAN_DEFAULT;
+  const offer = loaderData.offer;
   const startCheckout = useServerFn(createDodoCheckout);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
+  const [purchased, setPurchased] = useState(false);
   // Signed-in buyers pay with their account email, so the license shows up on /account.
   const [accountEmail, setAccountEmail] = useState<string | null>(null);
 
@@ -103,22 +101,24 @@ function PricingPage() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("subscribed") === "1") {
-      setSubscribed(true);
+    if (params.get("purchased") === "1" || params.get("subscribed") === "1") {
+      setPurchased(true);
       window.history.replaceState(null, "", window.location.pathname);
     }
   }, []);
 
-  const handleSubscribe = async (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !name) {
-      toast.error("Enter your name and email to subscribe.");
+      toast.error(`Enter your name and email to ${offer.active ? "claim" : "buy"} Pro.`);
       return;
     }
     setBusy(true);
     try {
       const result = await startCheckout({ data: { email, name } });
       if (result.ok) {
+        if (offer.active && !result.freeLicense)
+          toast.message("The free launch licenses just ran out. Pro is $10, once.");
         window.location.href = result.checkoutUrl;
       } else {
         toast.error(result.error);
@@ -155,12 +155,13 @@ function PricingPage() {
           transition={{ delay: 0.45 }}
           className="mx-auto mt-5 max-w-xl text-lg text-ink/65"
         >
-          The essentials are always free. Pro is $10 a year for every feature, on one Mac.
+          The essentials are always free. Pro is a one-time {formatPrice(plan)} for every feature,
+          on one Mac, for life. No subscription, nothing to renew.
         </motion.p>
       </section>
 
       <AnimatePresence>
-        {subscribed && (
+        {purchased && (
           <motion.div
             initial={{ opacity: 0, y: -12, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -170,7 +171,8 @@ function PricingPage() {
           >
             <PartyPopper className="size-5 shrink-0" />
             <span className="flex-1">
-              You're subscribed! Sign in with the same email to get your license key and download.
+              You've got MacDissect Pro for life! Sign in with the same email to get your license
+              key.
             </span>
             <Link to="/auth" className="rounded-xl bg-ink px-4 py-2 text-sm text-cream">
               Sign in
@@ -217,7 +219,8 @@ function PricingPage() {
         {/* Pro */}
         <motion.div
           variants={fadeUp}
-          className="relative overflow-hidden rounded-[2rem] bg-ink p-8 text-cream shadow-[6px_6px_0_0_#FFC93C] sm:shadow-[10px_10px_0_0_#FFC93C] md:col-span-3"
+          id="buy"
+          className="relative scroll-mt-28 overflow-hidden rounded-[2rem] bg-ink p-8 text-cream shadow-[6px_6px_0_0_#FFC93C] sm:shadow-[10px_10px_0_0_#FFC93C] md:col-span-3"
         >
           <motion.div
             aria-hidden
@@ -230,25 +233,41 @@ function PricingPage() {
               <span className="grid size-11 place-items-center rounded-2xl bg-sun text-ink">
                 <Sparkles className="size-5" />
               </span>
-              {plan.trialDays > 0 && (
+              {offer.active ? (
+                <span className="rounded-full bg-sun px-3 py-1 text-xs font-bold text-ink">
+                  Launch offer · {offer.remaining} of {offer.limit} free left
+                </span>
+              ) : (
                 <span className="rounded-full border border-cream/20 px-3 py-1 text-xs font-bold">
-                  {plan.trialDays}-day free trial
+                  Lifetime license
                 </span>
               )}
             </div>
             <h2 className="mt-5 font-display text-2xl font-bold">MacDissect Pro</h2>
-            <div className="mt-4 flex items-baseline gap-2">
-              <span className="font-display text-6xl font-extrabold tracking-tight">
-                {formatPrice(plan)}
-              </span>
-              <span className="text-cream/60">{intervalLabel(plan)}</span>
+            <div className="mt-4 flex items-baseline gap-3">
+              {offer.active ? (
+                <>
+                  <span className="font-display text-6xl font-extrabold tracking-tight">$0</span>
+                  <span className="font-display text-2xl font-bold text-cream/40 line-through">
+                    {formatPrice(plan)}
+                  </span>
+                  <span className="text-cream/60">for life</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-display text-6xl font-extrabold tracking-tight">
+                    {formatPrice(plan)}
+                  </span>
+                  <span className="text-cream/60">{intervalLabel(plan)}</span>
+                </>
+              )}
             </div>
             <p className="mt-1 text-sm text-cream/50">
-              {plan.interval === "year" && plan.intervalCount === 1 && !plan.taxInclusive
-                ? `Billed yearly · that's ${formatMonthly(plan)}/month · plus applicable tax`
-                : plan.taxInclusive
-                  ? "Tax included · cancel anytime"
-                  : "Plus applicable tax · cancel anytime"}
+              {offer.active
+                ? `Free for the first ${offer.limit} people, then ${formatPrice(plan)} once · nothing to renew`
+                : plan.interval
+                  ? "Plus applicable tax"
+                  : `Pay once, keep Pro forever · ${plan.taxInclusive ? "tax included" : "plus applicable tax"}`}
             </p>
 
             <Stagger as="ul" className="mt-6 grid gap-2.5 text-sm sm:grid-cols-2" gap={0.05}>
@@ -260,7 +279,7 @@ function PricingPage() {
               ))}
             </Stagger>
 
-            <form onSubmit={handleSubscribe} className="mt-8 grid gap-3 sm:grid-cols-2">
+            <form onSubmit={handleCheckout} className="mt-8 grid gap-3 sm:grid-cols-2">
               <label className="text-xs font-bold tracking-wide text-cream/60 uppercase">
                 Name
                 <input
@@ -307,7 +326,8 @@ function PricingPage() {
                   </>
                 ) : (
                   <>
-                    Subscribe <ArrowRight className="size-5" />
+                    {offer.active ? "Claim free lifetime license" : "Buy lifetime license"}{" "}
+                    <ArrowRight className="size-5" />
                   </>
                 )}
               </motion.button>
@@ -373,7 +393,7 @@ function PricingPage() {
           <FaqList items={billingFaqs} />
         </Reveal>
         <p className="mt-6 text-center text-sm text-ink/55">
-          Already subscribed?{" "}
+          Already have Pro?{" "}
           <Link to="/account" className="font-semibold text-ink underline underline-offset-4">
             Get your license key
           </Link>

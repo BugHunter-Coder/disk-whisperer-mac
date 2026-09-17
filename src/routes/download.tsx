@@ -13,7 +13,7 @@ export const Route = createFileRoute("/download")({
     pageHead({
       path: "/download",
       title: "Download MacDissect for Mac – Free Disk Space Analyzer",
-      description: `Download MacDissect ${DOWNLOAD.version}, the disk space analyzer for ${DOWNLOAD.requirements}. Signed and notarized by Apple. Free forever, Pro is $10 a year.`,
+      description: `Download MacDissect ${DOWNLOAD.version}, the disk space analyzer for ${DOWNLOAD.requirements}. Signed and notarized by Apple. Free forever, Pro is a one-time $10 lifetime license.`,
       jsonLd: [softwareJsonLd],
     }),
   component: DownloadPage,
@@ -75,8 +75,8 @@ function DownloadPage() {
           transition={{ delay: 0.4 }}
           className="mx-auto mt-5 max-w-xl text-lg text-ink/65"
         >
-          Free to download, and the essentials stay free forever. Unlock every Pro feature for $10 a
-          year.
+          Free to download, and the essentials stay free forever. Unlock every Pro feature for a
+          one-time $10.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
@@ -157,9 +157,9 @@ function DownloadPage() {
         <p className="mt-8 text-center text-sm text-ink/55">
           Ready to keep Pro?{" "}
           <Link to="/pricing" className="font-semibold text-ink underline underline-offset-4">
-            $10 a year
+            $10 once, for life
           </Link>{" "}
-          · Already subscribed?{" "}
+          · Already have Pro?{" "}
           <Link to="/activate" className="font-semibold text-ink underline underline-offset-4">
             Activate your Mac
           </Link>

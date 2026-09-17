@@ -1,5 +1,7 @@
 import type { ComponentProps } from "react";
 import type { Faq } from "@/components/landing/content";
+import { comparisons } from "@/components/landing/compare";
+import { guides } from "@/components/landing/guides";
 import { DOWNLOAD } from "@/lib/download";
 
 export const SITE_URL = "https://macdissect.com";
@@ -59,14 +61,20 @@ export const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: SITE_NAME,
+  alternateName: "Mac Dissect",
   url: SITE_URL,
   logo: `${SITE_URL}/og-image.png`,
+  sameAs: [
+    "https://github.com/BugHunter-Coder/disk-whisperer-mac",
+    "https://peerpush.com/p/macdissect",
+  ],
 };
 
 export const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: SITE_NAME,
+  alternateName: "Mac Dissect",
   url: SITE_URL,
 };
 
@@ -75,6 +83,8 @@ export const softwareJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: SITE_NAME,
+  alternateName: "Mac Dissect",
+  publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
   description:
     "Disk space analyzer for Mac: treemap and sunburst views, large file finder, safe cleanup of caches and build files, and disk growth history. Scans stay on your Mac.",
   applicationCategory: "UtilitiesApplication",
@@ -92,17 +102,10 @@ export const softwareJsonLd = {
     { "@type": "Offer", name: "MacDissect Free", price: "0", priceCurrency: "USD" },
     {
       "@type": "Offer",
-      name: "MacDissect Pro",
+      name: "MacDissect Pro (lifetime license)",
       price: "10.00",
       priceCurrency: "USD",
       url: `${SITE_URL}/pricing`,
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: "10.00",
-        priceCurrency: "USD",
-        billingDuration: 1,
-        unitCode: "ANN",
-      },
     },
   ],
 };
@@ -119,10 +122,43 @@ export function faqJsonLd(items: Faq[]) {
   };
 }
 
+/** A how-to or comparison page, so search engines know who wrote it and when. */
+export function articleJsonLd({
+  path,
+  title,
+  description,
+  updated,
+}: {
+  path: string;
+  title: string;
+  description: string;
+  updated: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    url: `${SITE_URL}${path}`,
+    image: OG_IMAGE.url,
+    datePublished: updated,
+    dateModified: updated,
+    author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+  };
+}
+
 /** Public pages listed in the sitemap. Sign-in, account and activation pages are excluded. */
-export const SITEMAP_PAGES = [
+export const SITEMAP_PAGES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/download", priority: "0.9", changefreq: "weekly" },
   { path: "/pricing", priority: "0.8", changefreq: "monthly" },
+  { path: "/guides", priority: "0.7", changefreq: "weekly" },
+  ...guides.map((g) => ({ path: `/guides/${g.slug}`, priority: "0.7", changefreq: "monthly" })),
+  ...comparisons.map((c) => ({
+    path: `/compare/${c.slug}`,
+    priority: "0.6",
+    changefreq: "monthly",
+  })),
   { path: "/privacy", priority: "0.4", changefreq: "yearly" },
-] as const;
+];

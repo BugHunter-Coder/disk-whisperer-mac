@@ -60,11 +60,11 @@ export function ProfileCard({
   );
 }
 
-export function SubscriptionDetails({ license }: { license: MyLicense }) {
-  const status = license.subscription?.status ?? license.status;
+export function LicenseDetails({ license }: { license: MyLicense }) {
+  const status = license.status;
   const active = status === "active";
   const rows = [
-    { label: "Plan", value: "MacDissect Pro · yearly" },
+    { label: "Plan", value: "MacDissect Pro · lifetime" },
     {
       label: "Status",
       value: (
@@ -78,7 +78,7 @@ export function SubscriptionDetails({ license }: { license: MyLicense }) {
         </span>
       ),
     },
-    { label: "Renews on", value: formatDate(license.subscription?.renewsAt) },
+    { label: "Expires", value: "Never" },
     { label: "Key issued", value: formatDate(license.createdAt) },
   ];
 
@@ -87,7 +87,7 @@ export function SubscriptionDetails({ license }: { license: MyLicense }) {
       {rows.map((r) => (
         <div key={r.label} className="bg-cream px-6 py-4">
           <dt className="flex items-center gap-1.5 text-xs font-bold tracking-wide text-ink/45 uppercase">
-            {r.label === "Renews on" && <CalendarClock className="size-3.5" />}
+            {r.label === "Expires" && <CalendarClock className="size-3.5" />}
             {r.label}
           </dt>
           <dd className="mt-1 font-semibold">{r.value}</dd>

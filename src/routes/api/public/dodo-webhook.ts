@@ -42,15 +42,54 @@ export const Route = createFileRoute("/api/public/dodo-webhook")({
         const event = JSON.parse(rawBody) as {
           type?: string;
           data?: {
-            subscription_id?: string;
+            payment_id?: string;
+            subscription_id?: string | null;
             status?: string;
             product_id?: string;
+            product_cart?: { product_id?: string }[] | null;
+            total_amount?: number;
+            currency?: string;
             next_billing_date?: string;
             customer?: { customer_id?: string; email?: string };
           };
         };
 
         const type = event.type ?? "";
+
+        // One-time lifetime purchase (including $0 launch-promo claims) → issue its license.
+        if (type === "payment.succeeded" || type === "refund.succeeded") {
+          const d = event.data ?? {};
+          if (!d.payment_id) return Response.json({ ok: true });
+          const license = await import("@/lib/license.server");
+          try {
+            if (type === "refund.succeeded") {
+              await license.recordRefund(d.payment_id);
+              return Response.json({ ok: true });
+            }
+            // Renewals of subscriptions from before Pro became lifetime carry a subscription id.
+            if (d.subscription_id) return Response.json({ ok: true });
+            const productId = process.env["DODO_PRODUCT_ID"];
+            const productIds = (d.product_cart ?? []).map((i) => i.product_id);
+            if (productId && !productIds.includes(productId)) return Response.json({ ok: true });
+            const email = d.customer?.email;
+            if (!email) return Response.json({ ok: true });
+            await license.recordPayment({
+              paymentId: d.payment_id,
+              email,
+              customerId: d.customer?.customer_id ?? null,
+              productId: productId ?? productIds[0] ?? null,
+              status: "succeeded",
+              totalAmount: d.total_amount ?? 0,
+              currency: d.currency ?? null,
+              refunded: false,
+            });
+          } catch (e) {
+            console.error("Recording payment failed:", e);
+            return new Response("Database error", { status: 500 });
+          }
+          return Response.json({ ok: true });
+        }
+
         if (!type.startsWith("subscription.")) return Response.json({ ok: true });
 
         const d = event.data ?? {};
@@ -65,7 +104,7 @@ export const Route = createFileRoute("/api/public/dodo-webhook")({
         const email = d.customer?.email;
         if (!email) return Response.json({ ok: true });
 
-        // Store the subscription and issue (or revoke) the Pro license key for this subscriber.
+        // Legacy yearly subscriptions: store them and issue their (now lifetime) license key.
         const { recordSubscription } = await import("@/lib/license.server");
         try {
           await recordSubscription({
