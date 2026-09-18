@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { Download } from "lucide-react";
 import { DOWNLOAD } from "@/lib/download";
+import { trackEvent } from "@/lib/firebase";
 
 /** Direct link to the latest DMG. */
 export function DownloadButton({
@@ -23,6 +24,9 @@ export function DownloadButton({
       download
       // DataFast records each click as a "download_dmg" goal.
       data-fast-goal="download_dmg"
+      onClick={() => {
+        void trackEvent("download_dmg", { version: DOWNLOAD.version });
+      }}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.97 }}
       className={`inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 font-bold transition-colors ${styles} ${className}`}

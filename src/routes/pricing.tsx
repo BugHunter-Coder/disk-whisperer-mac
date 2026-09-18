@@ -25,6 +25,7 @@ import { DownloadButton } from "@/components/site/DownloadButton";
 import { FaqList } from "@/components/site/FaqList";
 import { PageShell } from "@/components/site/SiteFooter";
 import { supabase } from "@/integrations/supabase/client";
+import { trackEvent } from "@/lib/firebase";
 import {
   Reveal,
   Stagger,
@@ -117,6 +118,9 @@ function PricingPage() {
     try {
       const result = await startCheckout({ data: { email, name } });
       if (result.ok) {
+        void trackEvent("begin_checkout", {
+          is_free_offer: Boolean(offer.active && result.freeLicense),
+        });
         if (offer.active && !result.freeLicense)
           toast.message("The free launch licenses just ran out. Pro is $10, once.");
         window.location.href = result.checkoutUrl;

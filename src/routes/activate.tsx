@@ -8,6 +8,7 @@ import { PageShell } from "@/components/site/SiteFooter";
 import { WordReveal } from "@/components/site/motion";
 import { activateDevice, checkLicenseKey } from "@/lib/license.functions";
 import { pageHead } from "@/lib/seo";
+import { trackEvent } from "@/lib/firebase";
 
 export const Route = createFileRoute("/activate")({
   head: () =>
@@ -60,6 +61,9 @@ function ActivatePage() {
       const res = await activate({
         data: { licenseKey, deviceId, deviceName: deviceName || undefined },
       });
+      if (res.ok) {
+        void trackEvent("license_activated");
+      }
       setResult({ ok: res.ok, message: res.message });
     } catch {
       toast.error("Could not activate. Try again.");
