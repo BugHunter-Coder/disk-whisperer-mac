@@ -1,0 +1,6 @@
+// Nitro merges this into the generated .output/server/wrangler.json at build time.
+{
+  "vars": {
+    "DODO_LAUNCH_DISCOUNT_CODE": "LAUNCH50"
+  }
+}
