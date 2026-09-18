@@ -21,7 +21,7 @@ export type Guide = {
   cta: string;
 };
 
-export const GUIDES_UPDATED = "2026-09-17";
+export const GUIDES_UPDATED = "2026-09-18";
 
 export const guides: Guide[] = [
   {
@@ -82,6 +82,194 @@ export const guides: Guide[] = [
       },
     ],
     cta: "MacDissect shows your whole disk as a treemap, lists every large file, and its Smart Cleanup finds 14 kinds of reclaimable data, moving what you pick to the Trash so nothing is lost by mistake.",
+  },
+  {
+    slug: "best-disk-space-analyzer-mac",
+    metaTitle: "Best Disk Space Analyzers for Mac in 2026 (Free & Paid) – MacDissect",
+    title: "The best disk space analyzers for Mac in 2026",
+    description:
+      "A plain comparison of Mac disk space analyzers: MacDissect, DaisyDisk, GrandPerspective, OmniDiskSweeper and CleanMyMac. What each does well, and which to pick.",
+    intro:
+      "A disk space analyzer scans your drive and shows which folders are taking up space, so you can clean up in minutes instead of guessing. Here's how the most popular Mac options differ, including where our own app, MacDissect, fits and where another tool may suit you better.",
+    sections: [
+      {
+        heading: "What to look for",
+        bullets: [
+          "A visual map (treemap or sunburst) so the biggest folders stand out at a glance.",
+          "Fast scans that include hidden folders like ~/Library.",
+          "Safe deletion: items go to the Trash, not straight to permanent removal.",
+          "Help telling apart regenerable caches from files that are yours.",
+          "Fair pricing: a free tier or a one-time price instead of a subscription.",
+          "Privacy: scan results that never leave your Mac.",
+        ],
+      },
+      {
+        heading: "MacDissect: best for developers and a free home-folder scan",
+        paragraphs: [
+          "MacDissect is a native SwiftUI app that maps your disk as a treemap, sunburst or sorted list. Scanning and exploring your home folder is free with no time limit. Pro, a one-time $10 license, adds full-disk and external-drive scans, Smart Cleanup, History and low-space alerts.",
+          "Smart Cleanup recognizes 14 kinds of reclaimable data, including Xcode DerivedData, iOS simulators, Docker, node_modules, build output and package caches. It marks what rebuilds itself and moves only what you select to the Trash. History shows which folders grew since your last scan, and Live Stats shows CPU, memory, network and disk activity. It needs macOS 14 Sonoma or later.",
+        ],
+      },
+      {
+        heading: "DaisyDisk: a polished, paid classic",
+        paragraphs: [
+          "DaisyDisk is a well-established analyzer known for its ring-shaped disk map. It's a one-time purchase. It's a good fit if you only need to find and delete big folders now and then and don't need developer-specific cleanup.",
+        ],
+      },
+      {
+        heading: "GrandPerspective: free and open source",
+        paragraphs: [
+          "GrandPerspective draws your disk as a treemap and nothing more. It's free and open source (a paid App Store version supports the project). Choose it if you want a no-cost treemap of the whole disk and are comfortable deciding what to delete yourself.",
+        ],
+      },
+      {
+        heading: "OmniDiskSweeper: a free, sorted list",
+        paragraphs: [
+          "OmniDiskSweeper from The Omni Group lists folders sorted by size in a column browser. It's free and quick, but there's no visual map and no guidance on what's safe to remove.",
+        ],
+      },
+      {
+        heading: "CleanMyMac: an all-in-one suite",
+        paragraphs: [
+          "CleanMyMac by MacPaw bundles cleanup, an app uninstaller, malware scanning and performance tools, sold as a subscription. It's worth it if you want all of those tools; if disk space is the only problem, a focused analyzer costs less.",
+        ],
+      },
+      {
+        heading: "Which one should you choose?",
+        bullets: [
+          "Want free and just need to see what's big in your home folder: MacDissect (free tier) or GrandPerspective.",
+          "Write code and fight Xcode, Docker or node_modules bloat: MacDissect Pro.",
+          "Prefer a simple list over a map: OmniDiskSweeper.",
+          "Want a full maintenance suite: CleanMyMac.",
+        ],
+      },
+    ],
+    cta: "Try MacDissect free: download it, scan your home folder, and see what's filling your Mac in under a minute. Upgrade to Pro once, for $10, only if you need it.",
+  },
+  {
+    slug: "see-folder-sizes-mac",
+    metaTitle: "How to See Folder Sizes on Mac (Finder, Terminal & Apps) – MacDissect",
+    title: "How to see folder sizes on a Mac",
+    description:
+      "Finder doesn't show folder sizes by default. Here are four ways to see how big every folder is on your Mac: Finder settings, Get Info, Terminal and a disk analyzer.",
+    intro:
+      'In Finder\'s list view, folders show "--" in the Size column. That\'s because calculating folder sizes takes time, so macOS skips it unless you ask. Here\'s how to turn it on, and faster ways to see sizes across your whole Mac.',
+    sections: [
+      {
+        heading: "1. Turn on \"Calculate all sizes\" in Finder",
+        paragraphs: [
+          "Open a Finder window, switch to list view (⌘2), then press ⌘J to open View Options. Tick \"Calculate all sizes\". Click \"Use as Defaults\" to apply it to every folder. Sizes can take a moment to appear in large folders.",
+        ],
+      },
+      {
+        heading: "2. Use Get Info for a single folder",
+        paragraphs: [
+          "Select a folder and press ⌘I. The Info window shows its total size and item count. Select several folders and press ⌃⌘I to see their combined size in one window.",
+        ],
+      },
+      {
+        heading: "3. Use Terminal for a sorted list",
+        paragraphs: [
+          "The du command lists folder sizes. This shows every item in your home folder, smallest to largest:",
+        ],
+        code: "cd ~\ndu -sh * .[^.]* 2>/dev/null | sort -h",
+      },
+      {
+        heading: "4. Use a disk space analyzer for the whole picture",
+        paragraphs: [
+          "Finder and du show one level at a time. A disk analyzer scans everything once and lets you drill down through nested folders instantly, including hidden ones like ~/Library that Finder hides.",
+        ],
+      },
+    ],
+    cta: "MacDissect sizes every folder in your home folder for free and draws them as a treemap or sunburst, so you can click straight to what's big instead of opening folders one by one.",
+  },
+  {
+    slug: "find-large-files-mac",
+    metaTitle: "How to Find Large Files on Mac (4 Quick Ways) – MacDissect",
+    title: "How to find large files on a Mac",
+    description:
+      "Find the biggest files on your Mac with Storage settings, Finder search, Terminal or a disk analyzer, and learn which large files are safe to delete.",
+    intro:
+      "A handful of big files, such as videos, disk images, archives and virtual machines, often account for a large share of a full disk. Here are four ways to find them, from built-in tools to Terminal.",
+    sections: [
+      {
+        heading: "1. Storage settings: Review Files",
+        paragraphs: [
+          "Open System Settings → General → Storage and click the ⓘ button next to Documents. The Large Files tab lists your biggest files, and you can delete them from there.",
+        ],
+      },
+      {
+        heading: "2. Finder search by file size",
+        paragraphs: [
+          "Press ⌘F in Finder and choose \"This Mac\". Click the Kind menu, choose Other…, tick File Size, then set it to \"is greater than\" 1 GB. Switch to list view and sort by Size.",
+        ],
+      },
+      {
+        heading: "3. Terminal",
+        paragraphs: ["List files over 1 GB in your home folder, sorted by size:"],
+        code: "find ~ -type f -size +1G -exec du -h {} + 2>/dev/null | sort -h",
+      },
+      {
+        heading: "4. A disk analyzer's large files list",
+        paragraphs: [
+          "Analyzers rank every file by size across the scanned folder and let you reveal it in Finder or move it to the Trash in one step.",
+        ],
+      },
+      {
+        heading: "Which large files are usually safe to delete",
+        bullets: [
+          ".dmg and .pkg installers for apps you've already installed",
+          "Zip archives you've already extracted",
+          "Screen recordings and exported videos you've uploaded elsewhere",
+          "Virtual machines and Docker images you no longer use",
+          "Old iPhone and iPad backups (keep at least one recent backup)",
+        ],
+      },
+    ],
+    cta: "MacDissect's free Large Files view ranks every file in your home folder by size, with search and Quick Look, and removes files by moving them to the Trash.",
+  },
+  {
+    slug: "mac-disk-almost-full",
+    metaTitle: '"Your Disk Is Almost Full" on Mac: How to Fix It Fast – MacDissect',
+    title: '"Your disk is almost full" on Mac: how to fix it fast',
+    description:
+      "Seeing the \"Your disk is almost full\" warning? Free up space quickly and safely, find out what filled your disk, and stop the warning from coming back.",
+    intro:
+      "macOS needs free space for updates, virtual memory and temporary files. When it runs low, apps slow down, updates fail and you see the warning. Here's the fastest safe order to get space back, then how to keep it from happening again.",
+    sections: [
+      {
+        heading: "Quick wins (5 minutes)",
+        bullets: [
+          "Empty the Trash, including on external drives.",
+          "Delete .dmg installers and old downloads in ~/Downloads.",
+          "Delete old iPhone and iPad backups in Finder → your device → Manage Backups.",
+          "In System Settings → General → Storage, turn on \"Empty Trash Automatically\".",
+        ],
+      },
+      {
+        heading: "Find what actually filled the disk",
+        paragraphs: [
+          "If the quick wins don't free enough, something large is hiding. Use a disk analyzer or Terminal to find the biggest folders instead of guessing. The usual culprits are video files, \"System Data\" (caches, local Time Machine snapshots, VMs) and developer data such as Xcode, Docker and node_modules.",
+        ],
+        code: "du -sh ~/* ~/Library/* 2>/dev/null | sort -h | tail -20",
+      },
+      {
+        heading: "Clear space that rebuilds itself",
+        paragraphs: [
+          "Caches in ~/Library/Caches, Xcode DerivedData and package manager caches are recreated when needed, so deleting them is safe. Quit the related apps first.",
+        ],
+      },
+      {
+        heading: "Keep it from coming back",
+        bullets: [
+          "Aim to keep at least 10–15% of your disk free.",
+          "Turn on \"Optimize Storage\" for Apple TV and Mail in Storage settings.",
+          "Scan every month or two and compare what grew since last time.",
+          "Get a warning before space runs out, not after.",
+        ],
+      },
+    ],
+    cta: "MacDissect finds what's filling your disk in seconds. Pro adds History to show which folders grew since your last scan, plus low-space alerts and free space in the menu bar, for a one-time $10.",
   },
   {
     slug: "clear-xcode-derived-data",
