@@ -16,12 +16,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as CompareSlugRouteImport } from './routes/compare/$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides/$slug'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
+import { Route as AppsInsectscanPrivacyRouteImport } from './routes/apps/insectscan/privacy'
+import { Route as AppsInsectscanSupportRouteImport } from './routes/apps/insectscan/support'
+import { Route as AppsInsectscanTermsRouteImport } from './routes/apps/insectscan/terms'
 import { Route as ApiPublicLicenseActivateRouteImport } from './routes/api/public/license/activate'
 import { Route as ApiPublicLicenseDeactivateRouteImport } from './routes/api/public/license/deactivate'
 import { Route as ApiPublicLicenseVerifyRouteImport } from './routes/api/public/license/verify'
@@ -60,6 +64,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -90,6 +99,21 @@ const ApiPublicDodoWebhookRoute = ApiPublicDodoWebhookRouteImport.update({
   path: '/api/public/dodo-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsInsectscanPrivacyRoute = AppsInsectscanPrivacyRouteImport.update({
+  id: '/apps/insectscan/privacy',
+  path: '/apps/insectscan/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsInsectscanSupportRoute = AppsInsectscanSupportRouteImport.update({
+  id: '/apps/insectscan/support',
+  path: '/apps/insectscan/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsInsectscanTermsRoute = AppsInsectscanTermsRouteImport.update({
+  id: '/apps/insectscan/terms',
+  path: '/apps/insectscan/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLicenseActivateRoute =
   ApiPublicLicenseActivateRouteImport.update({
     id: '/api/public/license/activate',
@@ -115,12 +139,16 @@ export interface FileRoutesByFullPath {
   '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/products': typeof ProductsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/account': typeof AuthenticatedAccountRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
+  '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
+  '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -132,12 +160,16 @@ export interface FileRoutesByTo {
   '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/products': typeof ProductsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/account': typeof AuthenticatedAccountRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
+  '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
+  '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -151,12 +183,16 @@ export interface FileRoutesById {
   '/download': typeof DownloadRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/products': typeof ProductsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
+  '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
+  '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -170,12 +206,16 @@ export interface FileRouteTypes {
     | '/download'
     | '/pricing'
     | '/privacy'
+    | '/products'
     | '/sitemap.xml'
     | '/account'
     | '/compare/$slug'
     | '/guides/$slug'
     | '/guides/'
     | '/api/public/dodo-webhook'
+    | '/apps/insectscan/privacy'
+    | '/apps/insectscan/support'
+    | '/apps/insectscan/terms'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -187,12 +227,16 @@ export interface FileRouteTypes {
     | '/download'
     | '/pricing'
     | '/privacy'
+    | '/products'
     | '/sitemap.xml'
     | '/account'
     | '/compare/$slug'
     | '/guides/$slug'
     | '/guides'
     | '/api/public/dodo-webhook'
+    | '/apps/insectscan/privacy'
+    | '/apps/insectscan/support'
+    | '/apps/insectscan/terms'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -205,12 +249,16 @@ export interface FileRouteTypes {
     | '/download'
     | '/pricing'
     | '/privacy'
+    | '/products'
     | '/sitemap.xml'
     | '/_authenticated/account'
     | '/compare/$slug'
     | '/guides/$slug'
     | '/guides/'
     | '/api/public/dodo-webhook'
+    | '/apps/insectscan/privacy'
+    | '/apps/insectscan/support'
+    | '/apps/insectscan/terms'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -224,11 +272,15 @@ export interface RootRouteChildren {
   DownloadRoute: typeof DownloadRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProductsRoute: typeof ProductsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CompareSlugRoute: typeof CompareSlugRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
+  AppsInsectscanPrivacyRoute: typeof AppsInsectscanPrivacyRoute
+  AppsInsectscanSupportRoute: typeof AppsInsectscanSupportRoute
+  AppsInsectscanTermsRoute: typeof AppsInsectscanTermsRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
   ApiPublicLicenseDeactivateRoute: typeof ApiPublicLicenseDeactivateRoute
   ApiPublicLicenseVerifyRoute: typeof ApiPublicLicenseVerifyRoute
@@ -285,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -325,6 +384,27 @@ declare module '@tanstack/react-router' {
       path: '/api/public/dodo-webhook'
       fullPath: '/api/public/dodo-webhook'
       preLoaderRoute: typeof ApiPublicDodoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/insectscan/privacy': {
+      id: '/apps/insectscan/privacy'
+      path: '/apps/insectscan/privacy'
+      fullPath: '/apps/insectscan/privacy'
+      preLoaderRoute: typeof AppsInsectscanPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/insectscan/support': {
+      id: '/apps/insectscan/support'
+      path: '/apps/insectscan/support'
+      fullPath: '/apps/insectscan/support'
+      preLoaderRoute: typeof AppsInsectscanSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/insectscan/terms': {
+      id: '/apps/insectscan/terms'
+      path: '/apps/insectscan/terms'
+      fullPath: '/apps/insectscan/terms'
+      preLoaderRoute: typeof AppsInsectscanTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/license/activate': {
@@ -370,11 +450,15 @@ const rootRouteChildren: RootRouteChildren = {
   DownloadRoute: DownloadRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  ProductsRoute: ProductsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   CompareSlugRoute: CompareSlugRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
+  AppsInsectscanPrivacyRoute: AppsInsectscanPrivacyRoute,
+  AppsInsectscanSupportRoute: AppsInsectscanSupportRoute,
+  AppsInsectscanTermsRoute: AppsInsectscanTermsRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
   ApiPublicLicenseDeactivateRoute: ApiPublicLicenseDeactivateRoute,
   ApiPublicLicenseVerifyRoute: ApiPublicLicenseVerifyRoute,

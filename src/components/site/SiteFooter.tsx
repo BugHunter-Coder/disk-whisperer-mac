@@ -41,6 +41,11 @@ export function SiteFooter() {
           <h3 className="text-xs font-bold tracking-widest text-ink/40 uppercase">Resources</h3>
           <ul className="mt-4 space-y-2.5 text-sm font-medium text-ink/70">
             <li>
+              <Link to="/products" className="hover:text-ink">
+                All products
+              </Link>
+            </li>
+            <li>
               <Link to="/guides" className="hover:text-ink">
                 Disk space guides
               </Link>
