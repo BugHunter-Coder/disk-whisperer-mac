@@ -23,6 +23,7 @@ import { Route as CompareSlugRouteImport } from './routes/compare/$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides/$slug'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
+import { Route as AppsInsectscanIndexRouteImport } from './routes/apps/insectscan/index'
 import { Route as AppsInsectscanPrivacyRouteImport } from './routes/apps/insectscan/privacy'
 import { Route as AppsInsectscanSupportRouteImport } from './routes/apps/insectscan/support'
 import { Route as AppsInsectscanTermsRouteImport } from './routes/apps/insectscan/terms'
@@ -99,6 +100,11 @@ const ApiPublicDodoWebhookRoute = ApiPublicDodoWebhookRouteImport.update({
   path: '/api/public/dodo-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsInsectscanIndexRoute = AppsInsectscanIndexRouteImport.update({
+  id: '/apps/insectscan/',
+  path: '/apps/insectscan/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppsInsectscanPrivacyRoute = AppsInsectscanPrivacyRouteImport.update({
   id: '/apps/insectscan/privacy',
   path: '/apps/insectscan/privacy',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
+  '/apps/insectscan/': typeof AppsInsectscanIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
+  '/apps/insectscan': typeof AppsInsectscanIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
+  '/apps/insectscan/': typeof AppsInsectscanIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -216,6 +225,7 @@ export interface FileRouteTypes {
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
+    | '/apps/insectscan/'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
+    | '/apps/insectscan'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
+    | '/apps/insectscan/'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -281,6 +293,7 @@ export interface RootRouteChildren {
   AppsInsectscanPrivacyRoute: typeof AppsInsectscanPrivacyRoute
   AppsInsectscanSupportRoute: typeof AppsInsectscanSupportRoute
   AppsInsectscanTermsRoute: typeof AppsInsectscanTermsRoute
+  AppsInsectscanIndexRoute: typeof AppsInsectscanIndexRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
   ApiPublicLicenseDeactivateRoute: typeof ApiPublicLicenseDeactivateRoute
   ApiPublicLicenseVerifyRoute: typeof ApiPublicLicenseVerifyRoute
@@ -386,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicDodoWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps/insectscan/': {
+      id: '/apps/insectscan/'
+      path: '/apps/insectscan'
+      fullPath: '/apps/insectscan/'
+      preLoaderRoute: typeof AppsInsectscanIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apps/insectscan/privacy': {
       id: '/apps/insectscan/privacy'
       path: '/apps/insectscan/privacy'
@@ -459,6 +479,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppsInsectscanPrivacyRoute: AppsInsectscanPrivacyRoute,
   AppsInsectscanSupportRoute: AppsInsectscanSupportRoute,
   AppsInsectscanTermsRoute: AppsInsectscanTermsRoute,
+  AppsInsectscanIndexRoute: AppsInsectscanIndexRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
   ApiPublicLicenseDeactivateRoute: ApiPublicLicenseDeactivateRoute,
   ApiPublicLicenseVerifyRoute: ApiPublicLicenseVerifyRoute,

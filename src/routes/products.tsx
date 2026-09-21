@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
-import { products } from "@/components/landing/products";
+import { products, type Product } from "@/components/landing/products";
 import { PageShell } from "@/components/site/SiteFooter";
 import { Reveal, Stagger, StaggerItem, WordReveal } from "@/components/site/motion";
 import { pageHead } from "@/lib/seo";
@@ -21,6 +21,50 @@ const accentClasses = {
   mint: "bg-mint text-ink",
   coral: "bg-coral text-ink",
 } as const;
+
+/** Shows the app actually working: one landscape shot for desktop apps, a scrollable filmstrip of real phone screenshots for iOS apps. */
+function ProductMedia({ product }: { product: Product }) {
+  const { layout, images } = product.screenshots;
+
+  if (layout === "desktop") {
+    return (
+      <div className="relative aspect-[16/10] overflow-hidden bg-ink/5">
+        <img
+          src={images[0]}
+          alt={`${product.name} screenshot`}
+          className="size-full object-cover object-top"
+          loading="lazy"
+        />
+        {product.status === "coming-soon" && (
+          <span className="absolute top-4 right-4 rounded-full bg-ink px-3 py-1 text-xs font-bold text-cream">
+            Coming soon
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative bg-ink/5 py-5">
+      <div className="flex snap-x gap-3 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
+        {images.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt={`${product.name} screenshot ${i + 1}`}
+            className="h-64 shrink-0 snap-start rounded-2xl border border-ink/10 object-cover shadow-lg"
+            loading="lazy"
+          />
+        ))}
+      </div>
+      {product.status === "coming-soon" && (
+        <span className="absolute top-4 right-4 rounded-full bg-ink px-3 py-1 text-xs font-bold text-cream">
+          Coming soon
+        </span>
+      )}
+    </div>
+  );
+}
 
 function ProductsPage() {
   return (
@@ -56,69 +100,64 @@ function ProductsPage() {
       <Stagger className="mx-auto grid max-w-6xl gap-6 px-6 pb-24 sm:grid-cols-2" gap={0.1}>
         {products.map((p) => (
           <StaggerItem key={p.slug}>
-            <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-ink/10 bg-cream/80 backdrop-blur">
-              <div className="relative aspect-[16/10] overflow-hidden bg-ink/5">
-                <img
-                  src={p.screenshot}
-                  alt={`${p.name} screenshot`}
-                  className="size-full object-cover object-top"
-                  loading="lazy"
-                />
-                {p.status === "coming-soon" && (
-                  <span className="absolute top-4 right-4 rounded-full bg-ink px-3 py-1 text-xs font-bold text-cream">
-                    Coming soon
-                  </span>
-                )}
-              </div>
+            <div className="group flex h-full flex-col overflow-hidden rounded-3xl border border-ink/10 bg-cream/80 backdrop-blur transition-shadow hover:shadow-[0_20px_50px_-24px_rgba(25,25,37,0.35)]">
+              <Link to={p.detailHref} className="flex flex-1 flex-col">
+                <ProductMedia product={p} />
 
-              <div className="flex flex-1 flex-col p-7">
-                <div className="flex items-center gap-3">
-                  <img src={p.icon} alt="" className="size-11 rounded-2xl" />
-                  <div>
-                    <h2 className="font-display text-xl font-bold">{p.name}</h2>
-                    <p className="text-sm text-ink/55">{p.tagline}</p>
+                <div className="flex flex-1 flex-col p-7 pb-4">
+                  <div className="flex items-center gap-3">
+                    <img src={p.icon} alt="" className="size-11 rounded-2xl" />
+                    <div>
+                      <h2 className="font-display text-xl font-bold group-hover:text-ink/80">
+                        {p.name}
+                      </h2>
+                      <p className="text-sm text-ink/55">{p.tagline}</p>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 flex-1 text-[0.95rem] leading-relaxed text-ink/70">
+                    {p.description}
+                  </p>
+
+                  <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-ink/50">
+                    <span className={`rounded-full px-2.5 py-1 ${accentClasses[p.accent]}`}>
+                      {p.platform}
+                    </span>
+                    <span>{p.price}</span>
                   </div>
                 </div>
+              </Link>
 
-                <p className="mt-4 flex-1 text-[0.95rem] leading-relaxed text-ink/70">
-                  {p.description}
-                </p>
-
-                <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-ink/50">
-                  <span className={`rounded-full px-2.5 py-1 ${accentClasses[p.accent]}`}>
-                    {p.platform}
-                  </span>
-                  <span>{p.price}</span>
-                </div>
-
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  {p.cta ? (
-                    <Link
-                      to={p.cta.href}
-                      className="inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-2.5 text-sm font-bold text-cream transition-transform hover:-translate-y-0.5"
-                    >
-                      {p.cta.label} <ArrowRight className="size-4" />
-                    </Link>
-                  ) : (
-                    <span className="inline-flex items-center gap-2 rounded-xl border border-ink/15 px-5 py-2.5 text-sm font-bold text-ink/60">
-                      Coming soon to the App Store
-                    </span>
-                  )}
-                  {p.supportHref && (
-                    <Link
-                      to={p.supportHref}
-                      className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
-                    >
-                      Support
-                    </Link>
-                  )}
+              <div className="flex flex-wrap items-center gap-3 px-7 pb-7">
+                {p.cta ? (
                   <Link
-                    to={p.privacyHref}
+                    to={p.cta.href}
+                    className="inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-2.5 text-sm font-bold text-cream transition-transform hover:-translate-y-0.5"
+                  >
+                    {p.cta.label} <ArrowRight className="size-4" />
+                  </Link>
+                ) : (
+                  <Link
+                    to={p.detailHref}
+                    className="inline-flex items-center gap-2 rounded-xl border border-ink/15 px-5 py-2.5 text-sm font-bold text-ink/60 hover:border-ink/30 hover:text-ink"
+                  >
+                    See details <ArrowRight className="size-4" />
+                  </Link>
+                )}
+                {p.supportHref && (
+                  <Link
+                    to={p.supportHref}
                     className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
                   >
-                    Privacy
+                    Support
                   </Link>
-                </div>
+                )}
+                <Link
+                  to={p.privacyHref}
+                  className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
+                >
+                  Privacy
+                </Link>
               </div>
             </div>
           </StaggerItem>

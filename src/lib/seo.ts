@@ -162,6 +162,7 @@ export const SITEMAP_PAGES: { path: string; priority: string; changefreq: string
   })),
   { path: "/privacy", priority: "0.4", changefreq: "yearly" },
   { path: "/products", priority: "0.6", changefreq: "monthly" },
+  { path: "/apps/insectscan", priority: "0.5", changefreq: "monthly" },
   { path: "/apps/insectscan/privacy", priority: "0.3", changefreq: "yearly" },
   { path: "/apps/insectscan/support", priority: "0.3", changefreq: "monthly" },
   { path: "/apps/insectscan/terms", priority: "0.3", changefreq: "yearly" },
