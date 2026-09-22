@@ -121,8 +121,12 @@ function PricingPage() {
         void trackEvent("begin_checkout", {
           is_free_offer: Boolean(offer.active && result.freeLicense),
         });
-        if (offer.active && !result.freeLicense)
-          toast.message("The free launch licenses just ran out. Pro is $10, once.");
+        // A free launch claim is issued immediately, with no Dodo checkout to redirect to.
+        if (result.freeLicense) {
+          setPurchased(true);
+          return;
+        }
+        if (offer.active) toast.message("The free launch licenses just ran out. Pro is $10, once.");
         window.location.href = result.checkoutUrl;
       } else {
         toast.error(result.error);

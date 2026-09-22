@@ -38,30 +38,31 @@ export const createDodoCheckout = createServerFn({ method: "POST" })
     const promoOpen =
       !!promoCode && (await license.countFreeLicenseClaims()) < license.FREE_LICENSE_LIMIT;
 
-    const startCheckout = (discountCode?: string) =>
-      fetch(`${dodoBaseUrl()}/checkouts`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          product_cart: [{ product_id: productId, quantity: 1 }],
-          customer: { email: data.email, name: data.name },
-          return_url: `${origin}/pricing?purchased=1`,
-          ...(discountCode ? { discount_codes: [discountCode] } : {}),
-        }),
-      });
-
-    let res = promoOpen ? await startCheckout(promoCode) : await startCheckout();
-    let freeLicense = promoOpen;
-    // The discount's own usage limit is the source of truth: if Dodo says the free spots are
-    // gone (or the code is misconfigured), fall back to the regular one-time price.
-    if (promoOpen && !res.ok) {
-      console.error("Dodo promo checkout failed:", res.status, await res.text());
-      res = await startCheckout();
-      freeLicense = false;
+    // A 100%-off launch claim is issued directly instead of round-tripping through Dodo's hosted
+    // checkout: Dodo can't skip its card-entry form on a $0 one-time purchase (only subscriptions
+    // support "Card-Optional at $0 Price"), so sending free claimers there just makes them click
+    // through a payment screen for an order that's already free.
+    if (promoOpen) {
+      const claimed = await license.claimFreeLicense({ email: data.email, productId });
+      if (claimed) {
+        return { ok: true as const, checkoutUrl: null, freeLicense: true };
+      }
+      // Lost the race: the limit filled between the count check and the claim. Fall through to
+      // the regular paid checkout below.
     }
+
+    const res = await fetch(`${dodoBaseUrl()}/checkouts`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        product_cart: [{ product_id: productId, quantity: 1 }],
+        customer: { email: data.email, name: data.name },
+        return_url: `${origin}/pricing?purchased=1`,
+      }),
+    });
 
     if (!res.ok) {
       console.error("Dodo checkout failed:", res.status, await res.text());
@@ -72,7 +73,7 @@ export const createDodoCheckout = createServerFn({ method: "POST" })
     if (!payload.checkout_url) {
       return { ok: false as const, error: "Checkout link missing from response." };
     }
-    return { ok: true as const, checkoutUrl: payload.checkout_url, freeLicense };
+    return { ok: true as const, checkoutUrl: payload.checkout_url, freeLicense: false };
   });
 
 export type LaunchOffer = { limit: number; claimed: number; remaining: number; active: boolean };

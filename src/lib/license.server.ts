@@ -156,6 +156,38 @@ export async function recordRefund(paymentId: string): Promise<void> {
 /** Launch offer: the first this-many MacDissect Pro licenses are free for life. */
 export const FREE_LICENSE_LIMIT = 50;
 
+/**
+ * Atomically claims one of the launch's free lifetime licenses and issues it immediately, if any
+ * remain. Dodo's hosted checkout can't skip its card form on a $0 one-time purchase (only
+ * subscriptions support that), so a free claim never goes through Dodo — it's recorded and
+ * issued directly. Returns false if the free-license limit was already reached, in which case
+ * the caller should fall back to the regular paid Dodo checkout.
+ */
+export async function claimFreeLicense(params: {
+  email: string;
+  productId: string | null;
+}): Promise<boolean> {
+  const supabase = adminClient();
+  const paymentId = `free_${crypto.randomUUID()}`;
+  const { data: reserved, error } = await supabase.rpc("reserve_free_license_claim", {
+    p_payment_id: paymentId,
+    p_email: params.email,
+    p_product_id: params.productId,
+    p_limit: FREE_LICENSE_LIMIT,
+  });
+  if (error) throw new Error(`Free license reservation failed: ${error.message}`);
+  if (!reserved) return false;
+
+  const { error: insertError } = await supabase.from("licenses").insert({
+    license_key: generateLicenseKey(),
+    email: params.email,
+    dodo_payment_id: paymentId,
+    status: "active",
+  });
+  if (insertError) throw new Error(`License insert failed: ${insertError.message}`);
+  return true;
+}
+
 /** How many free launch licenses have been claimed. */
 export async function countFreeLicenseClaims(): Promise<number> {
   const { data, error } = await adminClient().rpc("get_free_license_claims");
