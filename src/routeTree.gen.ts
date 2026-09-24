@@ -27,6 +27,10 @@ import { Route as AppsInsectscanIndexRouteImport } from './routes/apps/insectsca
 import { Route as AppsInsectscanPrivacyRouteImport } from './routes/apps/insectscan/privacy'
 import { Route as AppsInsectscanSupportRouteImport } from './routes/apps/insectscan/support'
 import { Route as AppsInsectscanTermsRouteImport } from './routes/apps/insectscan/terms'
+import { Route as AppsSpriglyIndexRouteImport } from './routes/apps/sprigly/index'
+import { Route as AppsSpriglyPrivacyRouteImport } from './routes/apps/sprigly/privacy'
+import { Route as AppsSpriglySupportRouteImport } from './routes/apps/sprigly/support'
+import { Route as AppsSpriglyTermsRouteImport } from './routes/apps/sprigly/terms'
 import { Route as ApiPublicLicenseActivateRouteImport } from './routes/api/public/license/activate'
 import { Route as ApiPublicLicenseDeactivateRouteImport } from './routes/api/public/license/deactivate'
 import { Route as ApiPublicLicenseVerifyRouteImport } from './routes/api/public/license/verify'
@@ -120,6 +124,26 @@ const AppsInsectscanTermsRoute = AppsInsectscanTermsRouteImport.update({
   path: '/apps/insectscan/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsSpriglyIndexRoute = AppsSpriglyIndexRouteImport.update({
+  id: '/apps/sprigly/',
+  path: '/apps/sprigly/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsSpriglyPrivacyRoute = AppsSpriglyPrivacyRouteImport.update({
+  id: '/apps/sprigly/privacy',
+  path: '/apps/sprigly/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsSpriglySupportRoute = AppsSpriglySupportRouteImport.update({
+  id: '/apps/sprigly/support',
+  path: '/apps/sprigly/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsSpriglyTermsRoute = AppsSpriglyTermsRouteImport.update({
+  id: '/apps/sprigly/terms',
+  path: '/apps/sprigly/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLicenseActivateRoute =
   ApiPublicLicenseActivateRouteImport.update({
     id: '/api/public/license/activate',
@@ -155,7 +179,11 @@ export interface FileRoutesByFullPath {
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
+  '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
+  '/apps/sprigly/support': typeof AppsSpriglySupportRoute
+  '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
   '/apps/insectscan/': typeof AppsInsectscanIndexRoute
+  '/apps/sprigly/': typeof AppsSpriglyIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -177,7 +205,11 @@ export interface FileRoutesByTo {
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
+  '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
+  '/apps/sprigly/support': typeof AppsSpriglySupportRoute
+  '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
   '/apps/insectscan': typeof AppsInsectscanIndexRoute
+  '/apps/sprigly': typeof AppsSpriglyIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -201,7 +233,11 @@ export interface FileRoutesById {
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
+  '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
+  '/apps/sprigly/support': typeof AppsSpriglySupportRoute
+  '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
   '/apps/insectscan/': typeof AppsInsectscanIndexRoute
+  '/apps/sprigly/': typeof AppsSpriglyIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
   '/api/public/license/deactivate': typeof ApiPublicLicenseDeactivateRoute
   '/api/public/license/verify': typeof ApiPublicLicenseVerifyRoute
@@ -225,7 +261,11 @@ export interface FileRouteTypes {
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
+    | '/apps/sprigly/privacy'
+    | '/apps/sprigly/support'
+    | '/apps/sprigly/terms'
     | '/apps/insectscan/'
+    | '/apps/sprigly/'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -247,7 +287,11 @@ export interface FileRouteTypes {
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
+    | '/apps/sprigly/privacy'
+    | '/apps/sprigly/support'
+    | '/apps/sprigly/terms'
     | '/apps/insectscan'
+    | '/apps/sprigly'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -270,7 +314,11 @@ export interface FileRouteTypes {
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
+    | '/apps/sprigly/privacy'
+    | '/apps/sprigly/support'
+    | '/apps/sprigly/terms'
     | '/apps/insectscan/'
+    | '/apps/sprigly/'
     | '/api/public/license/activate'
     | '/api/public/license/deactivate'
     | '/api/public/license/verify'
@@ -293,7 +341,11 @@ export interface RootRouteChildren {
   AppsInsectscanPrivacyRoute: typeof AppsInsectscanPrivacyRoute
   AppsInsectscanSupportRoute: typeof AppsInsectscanSupportRoute
   AppsInsectscanTermsRoute: typeof AppsInsectscanTermsRoute
+  AppsSpriglyPrivacyRoute: typeof AppsSpriglyPrivacyRoute
+  AppsSpriglySupportRoute: typeof AppsSpriglySupportRoute
+  AppsSpriglyTermsRoute: typeof AppsSpriglyTermsRoute
   AppsInsectscanIndexRoute: typeof AppsInsectscanIndexRoute
+  AppsSpriglyIndexRoute: typeof AppsSpriglyIndexRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
   ApiPublicLicenseDeactivateRoute: typeof ApiPublicLicenseDeactivateRoute
   ApiPublicLicenseVerifyRoute: typeof ApiPublicLicenseVerifyRoute
@@ -427,6 +479,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsInsectscanTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps/sprigly/': {
+      id: '/apps/sprigly/'
+      path: '/apps/sprigly'
+      fullPath: '/apps/sprigly/'
+      preLoaderRoute: typeof AppsSpriglyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/sprigly/privacy': {
+      id: '/apps/sprigly/privacy'
+      path: '/apps/sprigly/privacy'
+      fullPath: '/apps/sprigly/privacy'
+      preLoaderRoute: typeof AppsSpriglyPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/sprigly/support': {
+      id: '/apps/sprigly/support'
+      path: '/apps/sprigly/support'
+      fullPath: '/apps/sprigly/support'
+      preLoaderRoute: typeof AppsSpriglySupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/sprigly/terms': {
+      id: '/apps/sprigly/terms'
+      path: '/apps/sprigly/terms'
+      fullPath: '/apps/sprigly/terms'
+      preLoaderRoute: typeof AppsSpriglyTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/license/activate': {
       id: '/api/public/license/activate'
       path: '/api/public/license/activate'
@@ -479,7 +559,11 @@ const rootRouteChildren: RootRouteChildren = {
   AppsInsectscanPrivacyRoute: AppsInsectscanPrivacyRoute,
   AppsInsectscanSupportRoute: AppsInsectscanSupportRoute,
   AppsInsectscanTermsRoute: AppsInsectscanTermsRoute,
+  AppsSpriglyPrivacyRoute: AppsSpriglyPrivacyRoute,
+  AppsSpriglySupportRoute: AppsSpriglySupportRoute,
+  AppsSpriglyTermsRoute: AppsSpriglyTermsRoute,
   AppsInsectscanIndexRoute: AppsInsectscanIndexRoute,
+  AppsSpriglyIndexRoute: AppsSpriglyIndexRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,
   ApiPublicLicenseDeactivateRoute: ApiPublicLicenseDeactivateRoute,
   ApiPublicLicenseVerifyRoute: ApiPublicLicenseVerifyRoute,

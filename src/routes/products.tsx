@@ -12,7 +12,7 @@ export const Route = createFileRoute("/products")({
       path: "/products",
       title: "Products – MacDissect",
       description:
-        "Every app we make: MacDissect for Mac disk cleanup, and InsectScan for identifying insects, plants and animals from a photo.",
+        "Every app we make: MacDissect for Mac disk cleanup, InsectScan for identifying insects, plants and animals from a photo, and Sprigly, the AI calorie counter for iPhone.",
     }),
   component: ProductsPage,
 });

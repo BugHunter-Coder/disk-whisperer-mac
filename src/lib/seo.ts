@@ -18,12 +18,24 @@ type HeadOptions = {
   noindex?: boolean;
   /** Schema.org objects rendered as JSON-LD for rich results. */
   jsonLd?: Record<string, unknown>[];
+  /** Social preview for pages about another product (defaults to MacDissect's). */
+  image?: { url: string; width: number; height: number; alt: string };
+  /** og:site_name override for another product's pages. */
+  siteName?: string;
 };
 
 type MetaTag = ComponentProps<"meta">;
 
 /** Everything a page needs for search engines and link previews, from one place. */
-export function pageHead({ path, title, description, noindex, jsonLd = [] }: HeadOptions): {
+export function pageHead({
+  path,
+  title,
+  description,
+  noindex,
+  jsonLd = [],
+  image = { ...OG_IMAGE, alt: "MacDissect disk space analyzer for Mac" },
+  siteName = SITE_NAME,
+}: HeadOptions): {
   meta: MetaTag[];
   links: ComponentProps<"link">[];
 } {
@@ -36,26 +48,37 @@ export function pageHead({ path, title, description, noindex, jsonLd = [] }: Hea
         name: "robots",
         content: noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large",
       },
-      { property: "og:site_name", content: SITE_NAME },
+      { property: "og:site_name", content: siteName },
       { property: "og:type", content: "website" },
       { property: "og:url", content: url },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
-      { property: "og:image", content: OG_IMAGE.url },
-      { property: "og:image:width", content: String(OG_IMAGE.width) },
-      { property: "og:image:height", content: String(OG_IMAGE.height) },
-      { property: "og:image:alt", content: "MacDissect disk space analyzer for Mac" },
+      { property: "og:image", content: image.url },
+      { property: "og:image:width", content: String(image.width) },
+      { property: "og:image:height", content: String(image.height) },
+      { property: "og:image:alt", content: image.alt },
       { property: "og:locale", content: "en_US" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
-      { name: "twitter:image", content: OG_IMAGE.url },
+      { name: "twitter:image", content: image.url },
       // TanStack Router renders `script:ld+json` entries as JSON-LD scripts; its meta type doesn't model them.
       ...jsonLd.map((data) => ({ "script:ld+json": data }) as unknown as MetaTag),
     ],
     links: [{ rel: "canonical", href: url }],
   };
 }
+
+/** Link preview and site name for every Sprigly page. */
+export const SPRIGLY_SOCIAL = {
+  siteName: "Sprigly",
+  image: {
+    url: `${SITE_URL}/product/sprigly-og.png`,
+    width: 1200,
+    height: 630,
+    alt: "Sprigly AI calorie counter and macro tracker for iPhone",
+  },
+};
 
 export const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -166,4 +189,8 @@ export const SITEMAP_PAGES: { path: string; priority: string; changefreq: string
   { path: "/apps/insectscan/privacy", priority: "0.3", changefreq: "yearly" },
   { path: "/apps/insectscan/support", priority: "0.3", changefreq: "monthly" },
   { path: "/apps/insectscan/terms", priority: "0.3", changefreq: "yearly" },
+  { path: "/apps/sprigly", priority: "0.7", changefreq: "weekly" },
+  { path: "/apps/sprigly/privacy", priority: "0.3", changefreq: "yearly" },
+  { path: "/apps/sprigly/support", priority: "0.3", changefreq: "monthly" },
+  { path: "/apps/sprigly/terms", priority: "0.3", changefreq: "yearly" },
 ];

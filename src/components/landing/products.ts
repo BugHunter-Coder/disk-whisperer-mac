@@ -64,4 +64,30 @@ export const products: Product[] = [
     privacyHref: "/apps/insectscan/privacy",
     supportHref: "/apps/insectscan/support",
   },
+  {
+    slug: "sprigly",
+    name: "Sprigly",
+    tagline: "Snap your plate. Know what's inside.",
+    description:
+      "An AI calorie counter and macro tracker for iPhone: snap a meal for calories, protein, carbs and fat in seconds, scan barcodes, sync with Apple Health and celebrate streaks with friends.",
+    icon: "/product/sprigly-icon.png",
+    screenshots: {
+      layout: "phone",
+      images: [
+        "/product/sprigly-today.jpg",
+        "/product/sprigly-dishes.jpg",
+        "/product/sprigly-progress.jpg",
+        "/product/sprigly-community.jpg",
+        "/product/sprigly-nutrients.jpg",
+      ],
+    },
+    platform: "iOS",
+    price: "Free · Pro $39.99/year",
+    status: "coming-soon",
+    accent: "mint",
+    cta: null,
+    detailHref: "/apps/sprigly",
+    privacyHref: "/apps/sprigly/privacy",
+    supportHref: "/apps/sprigly/support",
+  },
 ];
