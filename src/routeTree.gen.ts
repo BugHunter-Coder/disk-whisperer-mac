@@ -23,6 +23,9 @@ import { Route as CompareSlugRouteImport } from './routes/compare/$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides/$slug'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
+import { Route as AppsAstraaiPrivacyRouteImport } from './routes/apps/astraai/privacy'
+import { Route as AppsAstraaiSupportRouteImport } from './routes/apps/astraai/support'
+import { Route as AppsAstraaiTermsRouteImport } from './routes/apps/astraai/terms'
 import { Route as AppsInsectscanIndexRouteImport } from './routes/apps/insectscan/index'
 import { Route as AppsInsectscanPrivacyRouteImport } from './routes/apps/insectscan/privacy'
 import { Route as AppsInsectscanSupportRouteImport } from './routes/apps/insectscan/support'
@@ -104,6 +107,21 @@ const ApiPublicDodoWebhookRoute = ApiPublicDodoWebhookRouteImport.update({
   path: '/api/public/dodo-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsAstraaiPrivacyRoute = AppsAstraaiPrivacyRouteImport.update({
+  id: '/apps/astraai/privacy',
+  path: '/apps/astraai/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsAstraaiSupportRoute = AppsAstraaiSupportRouteImport.update({
+  id: '/apps/astraai/support',
+  path: '/apps/astraai/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsAstraaiTermsRoute = AppsAstraaiTermsRouteImport.update({
+  id: '/apps/astraai/terms',
+  path: '/apps/astraai/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppsInsectscanIndexRoute = AppsInsectscanIndexRouteImport.update({
   id: '/apps/insectscan/',
   path: '/apps/insectscan/',
@@ -176,6 +194,9 @@ export interface FileRoutesByFullPath {
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
+  '/apps/astraai/support': typeof AppsAstraaiSupportRoute
+  '/apps/astraai/terms': typeof AppsAstraaiTermsRoute
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
@@ -202,6 +223,9 @@ export interface FileRoutesByTo {
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
+  '/apps/astraai/support': typeof AppsAstraaiSupportRoute
+  '/apps/astraai/terms': typeof AppsAstraaiTermsRoute
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
@@ -230,6 +254,9 @@ export interface FileRoutesById {
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
+  '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
+  '/apps/astraai/support': typeof AppsAstraaiSupportRoute
+  '/apps/astraai/terms': typeof AppsAstraaiTermsRoute
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
@@ -258,6 +285,9 @@ export interface FileRouteTypes {
     | '/guides/$slug'
     | '/guides/'
     | '/api/public/dodo-webhook'
+    | '/apps/astraai/privacy'
+    | '/apps/astraai/support'
+    | '/apps/astraai/terms'
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
@@ -284,6 +314,9 @@ export interface FileRouteTypes {
     | '/guides/$slug'
     | '/guides'
     | '/api/public/dodo-webhook'
+    | '/apps/astraai/privacy'
+    | '/apps/astraai/support'
+    | '/apps/astraai/terms'
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
@@ -311,6 +344,9 @@ export interface FileRouteTypes {
     | '/guides/$slug'
     | '/guides/'
     | '/api/public/dodo-webhook'
+    | '/apps/astraai/privacy'
+    | '/apps/astraai/support'
+    | '/apps/astraai/terms'
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
@@ -338,6 +374,9 @@ export interface RootRouteChildren {
   GuidesSlugRoute: typeof GuidesSlugRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
+  AppsAstraaiPrivacyRoute: typeof AppsAstraaiPrivacyRoute
+  AppsAstraaiSupportRoute: typeof AppsAstraaiSupportRoute
+  AppsAstraaiTermsRoute: typeof AppsAstraaiTermsRoute
   AppsInsectscanPrivacyRoute: typeof AppsInsectscanPrivacyRoute
   AppsInsectscanSupportRoute: typeof AppsInsectscanSupportRoute
   AppsInsectscanTermsRoute: typeof AppsInsectscanTermsRoute
@@ -451,6 +490,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicDodoWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps/astraai/privacy': {
+      id: '/apps/astraai/privacy'
+      path: '/apps/astraai/privacy'
+      fullPath: '/apps/astraai/privacy'
+      preLoaderRoute: typeof AppsAstraaiPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/astraai/support': {
+      id: '/apps/astraai/support'
+      path: '/apps/astraai/support'
+      fullPath: '/apps/astraai/support'
+      preLoaderRoute: typeof AppsAstraaiSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/astraai/terms': {
+      id: '/apps/astraai/terms'
+      path: '/apps/astraai/terms'
+      fullPath: '/apps/astraai/terms'
+      preLoaderRoute: typeof AppsAstraaiTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apps/insectscan/': {
       id: '/apps/insectscan/'
       path: '/apps/insectscan'
@@ -556,6 +616,9 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesSlugRoute: GuidesSlugRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
+  AppsAstraaiPrivacyRoute: AppsAstraaiPrivacyRoute,
+  AppsAstraaiSupportRoute: AppsAstraaiSupportRoute,
+  AppsAstraaiTermsRoute: AppsAstraaiTermsRoute,
   AppsInsectscanPrivacyRoute: AppsInsectscanPrivacyRoute,
   AppsInsectscanSupportRoute: AppsInsectscanSupportRoute,
   AppsInsectscanTermsRoute: AppsInsectscanTermsRoute,
