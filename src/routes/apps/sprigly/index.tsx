@@ -1,6 +1,18 @@
+import { useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { ArrowLeft, Camera, Globe2, HeartPulse, Leaf, ScanBarcode, Trophy, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  Camera,
+  Globe2,
+  HeartPulse,
+  Leaf,
+  ScanBarcode,
+  Trophy,
+  Users,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import type { Faq } from "@/components/landing/content";
 import { PageShell } from "@/components/site/SiteFooter";
 import { FaqList } from "@/components/site/FaqList";
@@ -94,11 +106,26 @@ export const Route = createFileRoute("/apps/sprigly/")({
 });
 
 const screenshots = [
-  { src: "/product/sprigly-today.jpg", alt: "Sprigly calorie counter dashboard with calories eaten, burned and left" },
-  { src: "/product/sprigly-dishes.jpg", alt: "Sprigly food search showing Indian dishes like biryani with macros" },
-  { src: "/product/sprigly-progress.jpg", alt: "Sprigly progress screen with weight-loss journey and 14-day streak" },
-  { src: "/product/sprigly-community.jpg", alt: "Sprigly community feed with a milestone post and people to follow" },
-  { src: "/product/sprigly-nutrients.jpg", alt: "Sprigly nutrient tracker for fiber, vitamins and minerals" },
+  {
+    src: "/product/sprigly-today.jpg",
+    alt: "Sprigly calorie counter dashboard with calories eaten, burned and left",
+  },
+  {
+    src: "/product/sprigly-dishes.jpg",
+    alt: "Sprigly food search showing Indian dishes like biryani with macros",
+  },
+  {
+    src: "/product/sprigly-progress.jpg",
+    alt: "Sprigly progress screen with weight-loss journey and 14-day streak",
+  },
+  {
+    src: "/product/sprigly-community.jpg",
+    alt: "Sprigly community feed with a milestone post and people to follow",
+  },
+  {
+    src: "/product/sprigly-nutrients.jpg",
+    alt: "Sprigly nutrient tracker for fiber, vitamins and minerals",
+  },
   { src: "/product/sprigly-signin.jpg", alt: "Sprigly sign-in with Apple and Google" },
 ];
 
@@ -142,9 +169,56 @@ const features = [
 
 const steps = [
   { n: "1", title: "Snap", body: "Point your camera at a meal, a package or a barcode." },
-  { n: "2", title: "Know", body: "Sprigly shows calories, macros and any allergens you told it about." },
+  {
+    n: "2",
+    title: "Know",
+    body: "Sprigly shows calories, macros and any allergens you told it about.",
+  },
   { n: "3", title: "Grow", body: "Log it in one tap, and watch your streak and progress build." },
 ];
+
+function LaunchVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  const toggleSound = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (muted) {
+      v.currentTime = 0;
+      void v.play();
+    }
+    v.muted = !muted;
+    setMuted(!muted);
+  };
+
+  return (
+    <div className="relative mx-auto w-full max-w-[20rem]">
+      <video
+        ref={ref}
+        src="/product/sprigly-launch.mp4"
+        poster="/product/sprigly-launch.jpg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        width={1080}
+        height={1920}
+        aria-label="Sprigly launch video: snap your plate, know what's inside"
+        className="aspect-[9/16] w-full rounded-[2rem] border border-ink/10 object-cover shadow-2xl"
+      />
+      <button
+        type="button"
+        onClick={toggleSound}
+        aria-label={muted ? "Play with sound" : "Mute"}
+        className="absolute right-4 bottom-4 inline-flex items-center gap-1.5 rounded-full bg-ink/75 px-3 py-2 text-xs font-bold text-cream backdrop-blur hover:bg-ink"
+      >
+        {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+        {muted ? "Sound on" : "Mute"}
+      </button>
+    </div>
+  );
+}
 
 function SpriglyPage() {
   return (
@@ -154,62 +228,69 @@ function SpriglyPage() {
           aria-hidden
           className="absolute inset-0 -z-10 bg-[radial-gradient(45%_60%_at_85%_0%,rgba(43,176,122,0.25),transparent),radial-gradient(40%_50%_at_10%_20%,rgba(250,17,79,0.08),transparent)]"
         />
-        <div className="mx-auto max-w-6xl">
-          <Link
-            to="/products"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/55 hover:text-ink"
-          >
-            <ArrowLeft className="size-4" /> All products
-          </Link>
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_auto]">
+          <div>
+            <Link
+              to="/products"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/55 hover:text-ink"
+            >
+              <ArrowLeft className="size-4" /> All products
+            </Link>
 
-          <div className="mt-6 flex items-center gap-4">
-            <img src="/product/sprigly-icon.png" alt="Sprigly app icon" className="size-16 rounded-2xl shadow-lg" />
-            <span className="rounded-full bg-mint px-3 py-1 text-xs font-bold text-ink">
-              Coming soon on iPhone
-            </span>
+            <div className="mt-6 flex items-center gap-4">
+              <img
+                src="/product/sprigly-icon.png"
+                alt="Sprigly app icon"
+                className="size-16 rounded-2xl shadow-lg"
+              />
+              <span className="rounded-full bg-mint px-3 py-1 text-xs font-bold text-ink">
+                Coming soon on iPhone
+              </span>
+            </div>
+
+            <p className="mt-6 text-sm font-bold tracking-[0.2em] text-ink/45 uppercase">
+              Sprigly · AI calorie counter & macro tracker
+            </p>
+            <h1 className="mt-3 max-w-3xl font-display text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.95] font-extrabold tracking-tight">
+              <WordReveal text="Snap your plate." />{" "}
+              <WordReveal text="Know what's inside." className="text-mint" delay={0.2} />
+            </h1>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mt-5 max-w-2xl text-lg text-ink/65"
+            >
+              Sprigly is the AI calorie counter for iPhone that turns a photo of your meal into
+              calories, protein, carbs and fat in seconds. It syncs with Apple Health, knows dishes
+              from every cuisine, and makes eating well feel like a win.
+            </motion.p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <span className="inline-flex items-center gap-2 rounded-xl border border-ink/15 px-5 py-2.5 text-sm font-bold text-ink/60">
+                Coming soon to the App Store
+              </span>
+              <Link
+                to="/apps/sprigly/support"
+                className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
+              >
+                Support
+              </Link>
+              <Link
+                to="/apps/sprigly/privacy"
+                className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
+              >
+                Privacy
+              </Link>
+              <Link
+                to="/apps/sprigly/terms"
+                className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
+              >
+                Terms
+              </Link>
+            </div>
           </div>
-
-          <p className="mt-6 text-sm font-bold tracking-[0.2em] text-ink/45 uppercase">
-            Sprigly · AI calorie counter & macro tracker
-          </p>
-          <h1 className="mt-3 max-w-3xl font-display text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.95] font-extrabold tracking-tight">
-            <WordReveal text="Snap your plate." />{" "}
-            <WordReveal text="Know what's inside." className="text-mint" delay={0.2} />
-          </h1>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-5 max-w-2xl text-lg text-ink/65"
-          >
-            Sprigly is the AI calorie counter for iPhone that turns a photo of your meal into
-            calories, protein, carbs and fat in seconds. It syncs with Apple Health, knows dishes
-            from every cuisine, and makes eating well feel like a win.
-          </motion.p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <span className="inline-flex items-center gap-2 rounded-xl border border-ink/15 px-5 py-2.5 text-sm font-bold text-ink/60">
-              Coming soon to the App Store
-            </span>
-            <Link
-              to="/apps/sprigly/support"
-              className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
-            >
-              Support
-            </Link>
-            <Link
-              to="/apps/sprigly/privacy"
-              className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
-            >
-              Privacy
-            </Link>
-            <Link
-              to="/apps/sprigly/terms"
-              className="text-sm font-semibold text-ink/55 underline-offset-4 hover:text-ink hover:underline"
-            >
-              Terms
-            </Link>
-          </div>
+          <LaunchVideo />
         </div>
       </section>
 
@@ -237,7 +318,10 @@ function SpriglyPage() {
           A calorie tracker, macro counter and food diary in one simple app.
         </p>
       </section>
-      <Stagger className="mx-auto grid max-w-6xl gap-4 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4" gap={0.06}>
+      <Stagger
+        className="mx-auto grid max-w-6xl gap-4 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4"
+        gap={0.06}
+      >
         {features.map((f) => (
           <StaggerItem key={f.title}>
             <div className="h-full rounded-3xl border border-ink/10 bg-cream/80 p-6">
@@ -267,7 +351,9 @@ function SpriglyPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-12">
-        <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Free, or go Pro</h2>
+        <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+          Free, or go Pro
+        </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className="rounded-3xl border border-ink/10 p-6">
             <h3 className="font-display text-xl font-bold">Sprigly Free</h3>
