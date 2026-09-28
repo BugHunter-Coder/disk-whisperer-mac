@@ -80,6 +80,17 @@ export const SPRIGLY_SOCIAL = {
   },
 };
 
+/** Link preview and site name for every Hand Duel page. */
+export const HANDDUEL_SOCIAL = {
+  siteName: "Rock Paper Scissors: Hand Duel",
+  image: {
+    url: `${SITE_URL}/product/handduel-og.png`,
+    width: 1200,
+    height: 630,
+    alt: "Rock Paper Scissors: Hand Duel, the camera hand game for iPhone",
+  },
+};
+
 export const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -193,4 +204,8 @@ export const SITEMAP_PAGES: { path: string; priority: string; changefreq: string
   { path: "/apps/sprigly/privacy", priority: "0.3", changefreq: "yearly" },
   { path: "/apps/sprigly/support", priority: "0.3", changefreq: "monthly" },
   { path: "/apps/sprigly/terms", priority: "0.3", changefreq: "yearly" },
+  { path: "/apps/hand-duel", priority: "0.7", changefreq: "weekly" },
+  { path: "/apps/hand-duel/privacy", priority: "0.3", changefreq: "yearly" },
+  { path: "/apps/hand-duel/support", priority: "0.3", changefreq: "monthly" },
+  { path: "/apps/hand-duel/terms", priority: "0.3", changefreq: "yearly" },
 ];

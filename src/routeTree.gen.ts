@@ -26,6 +26,10 @@ import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/do
 import { Route as AppsAstraaiPrivacyRouteImport } from './routes/apps/astraai/privacy'
 import { Route as AppsAstraaiSupportRouteImport } from './routes/apps/astraai/support'
 import { Route as AppsAstraaiTermsRouteImport } from './routes/apps/astraai/terms'
+import { Route as AppsHandDuelIndexRouteImport } from './routes/apps/hand-duel/index'
+import { Route as AppsHandDuelPrivacyRouteImport } from './routes/apps/hand-duel/privacy'
+import { Route as AppsHandDuelSupportRouteImport } from './routes/apps/hand-duel/support'
+import { Route as AppsHandDuelTermsRouteImport } from './routes/apps/hand-duel/terms'
 import { Route as AppsInsectscanIndexRouteImport } from './routes/apps/insectscan/index'
 import { Route as AppsInsectscanPrivacyRouteImport } from './routes/apps/insectscan/privacy'
 import { Route as AppsInsectscanSupportRouteImport } from './routes/apps/insectscan/support'
@@ -122,6 +126,26 @@ const AppsAstraaiTermsRoute = AppsAstraaiTermsRouteImport.update({
   path: '/apps/astraai/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsHandDuelIndexRoute = AppsHandDuelIndexRouteImport.update({
+  id: '/apps/hand-duel/',
+  path: '/apps/hand-duel/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsHandDuelPrivacyRoute = AppsHandDuelPrivacyRouteImport.update({
+  id: '/apps/hand-duel/privacy',
+  path: '/apps/hand-duel/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsHandDuelSupportRoute = AppsHandDuelSupportRouteImport.update({
+  id: '/apps/hand-duel/support',
+  path: '/apps/hand-duel/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsHandDuelTermsRoute = AppsHandDuelTermsRouteImport.update({
+  id: '/apps/hand-duel/terms',
+  path: '/apps/hand-duel/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppsInsectscanIndexRoute = AppsInsectscanIndexRouteImport.update({
   id: '/apps/insectscan/',
   path: '/apps/insectscan/',
@@ -197,12 +221,16 @@ export interface FileRoutesByFullPath {
   '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
   '/apps/astraai/support': typeof AppsAstraaiSupportRoute
   '/apps/astraai/terms': typeof AppsAstraaiTermsRoute
+  '/apps/hand-duel/privacy': typeof AppsHandDuelPrivacyRoute
+  '/apps/hand-duel/support': typeof AppsHandDuelSupportRoute
+  '/apps/hand-duel/terms': typeof AppsHandDuelTermsRoute
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
   '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
   '/apps/sprigly/support': typeof AppsSpriglySupportRoute
   '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
+  '/apps/hand-duel/': typeof AppsHandDuelIndexRoute
   '/apps/insectscan/': typeof AppsInsectscanIndexRoute
   '/apps/sprigly/': typeof AppsSpriglyIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -226,12 +254,16 @@ export interface FileRoutesByTo {
   '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
   '/apps/astraai/support': typeof AppsAstraaiSupportRoute
   '/apps/astraai/terms': typeof AppsAstraaiTermsRoute
+  '/apps/hand-duel/privacy': typeof AppsHandDuelPrivacyRoute
+  '/apps/hand-duel/support': typeof AppsHandDuelSupportRoute
+  '/apps/hand-duel/terms': typeof AppsHandDuelTermsRoute
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
   '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
   '/apps/sprigly/support': typeof AppsSpriglySupportRoute
   '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
+  '/apps/hand-duel': typeof AppsHandDuelIndexRoute
   '/apps/insectscan': typeof AppsInsectscanIndexRoute
   '/apps/sprigly': typeof AppsSpriglyIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -257,12 +289,16 @@ export interface FileRoutesById {
   '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
   '/apps/astraai/support': typeof AppsAstraaiSupportRoute
   '/apps/astraai/terms': typeof AppsAstraaiTermsRoute
+  '/apps/hand-duel/privacy': typeof AppsHandDuelPrivacyRoute
+  '/apps/hand-duel/support': typeof AppsHandDuelSupportRoute
+  '/apps/hand-duel/terms': typeof AppsHandDuelTermsRoute
   '/apps/insectscan/privacy': typeof AppsInsectscanPrivacyRoute
   '/apps/insectscan/support': typeof AppsInsectscanSupportRoute
   '/apps/insectscan/terms': typeof AppsInsectscanTermsRoute
   '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
   '/apps/sprigly/support': typeof AppsSpriglySupportRoute
   '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
+  '/apps/hand-duel/': typeof AppsHandDuelIndexRoute
   '/apps/insectscan/': typeof AppsInsectscanIndexRoute
   '/apps/sprigly/': typeof AppsSpriglyIndexRoute
   '/api/public/license/activate': typeof ApiPublicLicenseActivateRoute
@@ -288,12 +324,16 @@ export interface FileRouteTypes {
     | '/apps/astraai/privacy'
     | '/apps/astraai/support'
     | '/apps/astraai/terms'
+    | '/apps/hand-duel/privacy'
+    | '/apps/hand-duel/support'
+    | '/apps/hand-duel/terms'
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
     | '/apps/sprigly/privacy'
     | '/apps/sprigly/support'
     | '/apps/sprigly/terms'
+    | '/apps/hand-duel/'
     | '/apps/insectscan/'
     | '/apps/sprigly/'
     | '/api/public/license/activate'
@@ -317,12 +357,16 @@ export interface FileRouteTypes {
     | '/apps/astraai/privacy'
     | '/apps/astraai/support'
     | '/apps/astraai/terms'
+    | '/apps/hand-duel/privacy'
+    | '/apps/hand-duel/support'
+    | '/apps/hand-duel/terms'
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
     | '/apps/sprigly/privacy'
     | '/apps/sprigly/support'
     | '/apps/sprigly/terms'
+    | '/apps/hand-duel'
     | '/apps/insectscan'
     | '/apps/sprigly'
     | '/api/public/license/activate'
@@ -347,12 +391,16 @@ export interface FileRouteTypes {
     | '/apps/astraai/privacy'
     | '/apps/astraai/support'
     | '/apps/astraai/terms'
+    | '/apps/hand-duel/privacy'
+    | '/apps/hand-duel/support'
+    | '/apps/hand-duel/terms'
     | '/apps/insectscan/privacy'
     | '/apps/insectscan/support'
     | '/apps/insectscan/terms'
     | '/apps/sprigly/privacy'
     | '/apps/sprigly/support'
     | '/apps/sprigly/terms'
+    | '/apps/hand-duel/'
     | '/apps/insectscan/'
     | '/apps/sprigly/'
     | '/api/public/license/activate'
@@ -377,12 +425,16 @@ export interface RootRouteChildren {
   AppsAstraaiPrivacyRoute: typeof AppsAstraaiPrivacyRoute
   AppsAstraaiSupportRoute: typeof AppsAstraaiSupportRoute
   AppsAstraaiTermsRoute: typeof AppsAstraaiTermsRoute
+  AppsHandDuelPrivacyRoute: typeof AppsHandDuelPrivacyRoute
+  AppsHandDuelSupportRoute: typeof AppsHandDuelSupportRoute
+  AppsHandDuelTermsRoute: typeof AppsHandDuelTermsRoute
   AppsInsectscanPrivacyRoute: typeof AppsInsectscanPrivacyRoute
   AppsInsectscanSupportRoute: typeof AppsInsectscanSupportRoute
   AppsInsectscanTermsRoute: typeof AppsInsectscanTermsRoute
   AppsSpriglyPrivacyRoute: typeof AppsSpriglyPrivacyRoute
   AppsSpriglySupportRoute: typeof AppsSpriglySupportRoute
   AppsSpriglyTermsRoute: typeof AppsSpriglyTermsRoute
+  AppsHandDuelIndexRoute: typeof AppsHandDuelIndexRoute
   AppsInsectscanIndexRoute: typeof AppsInsectscanIndexRoute
   AppsSpriglyIndexRoute: typeof AppsSpriglyIndexRoute
   ApiPublicLicenseActivateRoute: typeof ApiPublicLicenseActivateRoute
@@ -511,6 +563,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsAstraaiTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps/hand-duel/': {
+      id: '/apps/hand-duel/'
+      path: '/apps/hand-duel'
+      fullPath: '/apps/hand-duel/'
+      preLoaderRoute: typeof AppsHandDuelIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/hand-duel/privacy': {
+      id: '/apps/hand-duel/privacy'
+      path: '/apps/hand-duel/privacy'
+      fullPath: '/apps/hand-duel/privacy'
+      preLoaderRoute: typeof AppsHandDuelPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/hand-duel/support': {
+      id: '/apps/hand-duel/support'
+      path: '/apps/hand-duel/support'
+      fullPath: '/apps/hand-duel/support'
+      preLoaderRoute: typeof AppsHandDuelSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/hand-duel/terms': {
+      id: '/apps/hand-duel/terms'
+      path: '/apps/hand-duel/terms'
+      fullPath: '/apps/hand-duel/terms'
+      preLoaderRoute: typeof AppsHandDuelTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apps/insectscan/': {
       id: '/apps/insectscan/'
       path: '/apps/insectscan'
@@ -619,12 +699,16 @@ const rootRouteChildren: RootRouteChildren = {
   AppsAstraaiPrivacyRoute: AppsAstraaiPrivacyRoute,
   AppsAstraaiSupportRoute: AppsAstraaiSupportRoute,
   AppsAstraaiTermsRoute: AppsAstraaiTermsRoute,
+  AppsHandDuelPrivacyRoute: AppsHandDuelPrivacyRoute,
+  AppsHandDuelSupportRoute: AppsHandDuelSupportRoute,
+  AppsHandDuelTermsRoute: AppsHandDuelTermsRoute,
   AppsInsectscanPrivacyRoute: AppsInsectscanPrivacyRoute,
   AppsInsectscanSupportRoute: AppsInsectscanSupportRoute,
   AppsInsectscanTermsRoute: AppsInsectscanTermsRoute,
   AppsSpriglyPrivacyRoute: AppsSpriglyPrivacyRoute,
   AppsSpriglySupportRoute: AppsSpriglySupportRoute,
   AppsSpriglyTermsRoute: AppsSpriglyTermsRoute,
+  AppsHandDuelIndexRoute: AppsHandDuelIndexRoute,
   AppsInsectscanIndexRoute: AppsInsectscanIndexRoute,
   AppsSpriglyIndexRoute: AppsSpriglyIndexRoute,
   ApiPublicLicenseActivateRoute: ApiPublicLicenseActivateRoute,

@@ -90,4 +90,29 @@ export const products: Product[] = [
     privacyHref: "/apps/sprigly/privacy",
     supportHref: "/apps/sprigly/support",
   },
+  {
+    slug: "hand-duel",
+    name: "Rock Paper Scissors: Hand Duel",
+    tagline: "Rock, paper, scissors. Played with your hand.",
+    description:
+      "Show rock, paper or scissors to your iPhone camera and it reads your hand. Duel Nova, a friend on one camera, or players nearby with live video. First to 3 wins.",
+    icon: "/product/handduel-icon.png",
+    screenshots: {
+      layout: "phone",
+      images: [
+        "/product/handduel-home.jpg",
+        "/product/handduel-arena.jpg",
+        "/product/handduel-moves.jpg",
+        "/product/handduel-round.jpg",
+      ],
+    },
+    platform: "iOS",
+    price: "Free · Remove Ads $2.99",
+    status: "coming-soon",
+    accent: "coral",
+    cta: null,
+    detailHref: "/apps/hand-duel",
+    privacyHref: "/apps/hand-duel/privacy",
+    supportHref: "/apps/hand-duel/support",
+  },
 ];
