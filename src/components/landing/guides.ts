@@ -21,7 +21,7 @@ export type Guide = {
   cta: string;
 };
 
-export const GUIDES_UPDATED = "2026-09-18";
+export const GUIDES_UPDATED = "2026-09-30";
 
 export const guides: Guide[] = [
   {
@@ -153,12 +153,12 @@ export const guides: Guide[] = [
     description:
       "Finder doesn't show folder sizes by default. Here are four ways to see how big every folder is on your Mac: Finder settings, Get Info, Terminal and a disk analyzer.",
     intro:
-      'In Finder\'s list view, folders show "--" in the Size column. That\'s because calculating folder sizes takes time, so macOS skips it unless you ask. Here\'s how to turn it on, and faster ways to see sizes across your whole Mac.',
+      "In Finder's list view, folders show \"--\" in the Size column. That's because calculating folder sizes takes time, so macOS skips it unless you ask. Here's how to turn it on, and faster ways to see sizes across your whole Mac.",
     sections: [
       {
-        heading: "1. Turn on \"Calculate all sizes\" in Finder",
+        heading: '1. Turn on "Calculate all sizes" in Finder',
         paragraphs: [
-          "Open a Finder window, switch to list view (⌘2), then press ⌘J to open View Options. Tick \"Calculate all sizes\". Click \"Use as Defaults\" to apply it to every folder. Sizes can take a moment to appear in large folders.",
+          'Open a Finder window, switch to list view (⌘2), then press ⌘J to open View Options. Tick "Calculate all sizes". Click "Use as Defaults" to apply it to every folder. Sizes can take a moment to appear in large folders.',
         ],
       },
       {
@@ -201,7 +201,7 @@ export const guides: Guide[] = [
       {
         heading: "2. Finder search by file size",
         paragraphs: [
-          "Press ⌘F in Finder and choose \"This Mac\". Click the Kind menu, choose Other…, tick File Size, then set it to \"is greater than\" 1 GB. Switch to list view and sort by Size.",
+          'Press ⌘F in Finder and choose "This Mac". Click the Kind menu, choose Other…, tick File Size, then set it to "is greater than" 1 GB. Switch to list view and sort by Size.',
         ],
       },
       {
@@ -233,7 +233,7 @@ export const guides: Guide[] = [
     metaTitle: '"Your Disk Is Almost Full" on Mac: How to Fix It Fast – MacDissect',
     title: '"Your disk is almost full" on Mac: how to fix it fast',
     description:
-      "Seeing the \"Your disk is almost full\" warning? Free up space quickly and safely, find out what filled your disk, and stop the warning from coming back.",
+      'Seeing the "Your disk is almost full" warning? Free up space quickly and safely, find out what filled your disk, and stop the warning from coming back.',
     intro:
       "macOS needs free space for updates, virtual memory and temporary files. When it runs low, apps slow down, updates fail and you see the warning. Here's the fastest safe order to get space back, then how to keep it from happening again.",
     sections: [
@@ -243,13 +243,13 @@ export const guides: Guide[] = [
           "Empty the Trash, including on external drives.",
           "Delete .dmg installers and old downloads in ~/Downloads.",
           "Delete old iPhone and iPad backups in Finder → your device → Manage Backups.",
-          "In System Settings → General → Storage, turn on \"Empty Trash Automatically\".",
+          'In System Settings → General → Storage, turn on "Empty Trash Automatically".',
         ],
       },
       {
         heading: "Find what actually filled the disk",
         paragraphs: [
-          "If the quick wins don't free enough, something large is hiding. Use a disk analyzer or Terminal to find the biggest folders instead of guessing. The usual culprits are video files, \"System Data\" (caches, local Time Machine snapshots, VMs) and developer data such as Xcode, Docker and node_modules.",
+          'If the quick wins don\'t free enough, something large is hiding. Use a disk analyzer or Terminal to find the biggest folders instead of guessing. The usual culprits are video files, "System Data" (caches, local Time Machine snapshots, VMs) and developer data such as Xcode, Docker and node_modules.',
         ],
         code: "du -sh ~/* ~/Library/* 2>/dev/null | sort -h | tail -20",
       },
@@ -263,7 +263,7 @@ export const guides: Guide[] = [
         heading: "Keep it from coming back",
         bullets: [
           "Aim to keep at least 10–15% of your disk free.",
-          "Turn on \"Optimize Storage\" for Apple TV and Mail in Storage settings.",
+          'Turn on "Optimize Storage" for Apple TV and Mail in Storage settings.',
           "Scan every month or two and compare what grew since last time.",
           "Get a warning before space runs out, not after.",
         ],
@@ -408,6 +408,184 @@ export const guides: Guide[] = [
       },
     ],
     cta: "MacDissect shows the Docker Desktop disk image alongside everything else on your Mac, and flags it as your data so it's never selected for cleanup by accident.",
+  },
+  {
+    slug: "find-delete-duplicate-files-mac",
+    metaTitle: "How to Find and Delete Duplicate Files on a Mac – MacDissect",
+    title: "How to find and delete duplicate files on a Mac",
+    description:
+      "Duplicate photos, downloads and exports quietly fill a Mac. Here's where duplicates usually come from, how to find them, and how to remove them safely.",
+    intro:
+      "Macs rarely end up with duplicates on purpose. They pile up from re-imported photos, re-downloaded installers, exported PDFs, and old project checkouts that never got deleted. Here's how to track them down without accidentally deleting something you needed.",
+    sections: [
+      {
+        heading: "Where duplicates usually come from",
+        bullets: [
+          "Photos re-imported from an SD card, phone backup or old external drive.",
+          'Browser downloads folder: the same installer or PDF saved more than once with "(1)" in the name.',
+          "Exported files: a PDF, video or screen recording exported again after a small edit.",
+          'Old project folders cloned or duplicated for a "backup" that was never removed.',
+        ],
+      },
+      {
+        heading: "Photos: use the built-in Duplicates album",
+        paragraphs: [
+          'The Photos app can detect duplicate and near-duplicate photos and videos on its own. Open Photos, go to the Duplicates album in the sidebar (under Utilities), review the pairs it found, and click "Merge" to combine each pair into one, keeping the best quality and metadata from both.',
+        ],
+      },
+      {
+        heading: "Finder: spot duplicates by name and size",
+        paragraphs: [
+          'Finder has no built-in duplicate finder, but sorting by name in a folder makes copies with "(1)", "(2)" or "copy" in the name obvious. For Downloads and Desktop, switch to list view, sort by Name, and scan for repeats.',
+        ],
+      },
+      {
+        heading: "Terminal: find exact duplicates by content",
+        paragraphs: [
+          "Same name isn't the same as same content, and a renamed copy won't show up by name. This checksums every file under a folder and prints groups that are byte-for-byte identical:",
+        ],
+        code: 'find ~/Downloads -type f ! -name ".*" -exec md5 -r {} + | sort | uniq -w32 -D',
+      },
+      {
+        heading: "A disk analyzer narrows down where to look",
+        paragraphs: [
+          "MacDissect doesn't hash-compare files for duplicates, but its treemap and Large Files list make it obvious which folders are bloated: if Downloads or an old export folder is unusually large, that's where copies are hiding, and Large Files sorts everything in it by size so the repeats stand out.",
+        ],
+      },
+      {
+        heading: "Before you delete",
+        bullets: [
+          "Confirm file sizes match exactly before assuming two files are true duplicates.",
+          "Delete to the Trash, not with a command that skips it, so a mistake is recoverable.",
+          "For photos, always use Photos' own merge instead of deleting one copy manually — it preserves edits and albums from both.",
+        ],
+      },
+    ],
+    cta: "MacDissect's free Large Files view and treemap make it obvious which folders are carrying duplicate weight, so you know exactly where to look before you start deleting.",
+  },
+  {
+    slug: "macbook-low-storage-256gb",
+    metaTitle: "Freeing Up Space on a 128GB or 256GB MacBook – MacDissect",
+    title: "Freeing up space on a MacBook with 128GB or 256GB storage",
+    description:
+      "Entry-level MacBooks fill up fast. Here's how to make 128GB or 256GB of storage last, from iCloud Photos settings to what to watch if you write code.",
+    intro:
+      "A base MacBook Air or MacBook Pro with 128GB or 256GB has little room to spare once macOS, apps and a photo library are on it. A few settings changes buy back real space, and knowing your limits early avoids a stressful scramble later.",
+    sections: [
+      {
+        heading: "Let iCloud Photos store originals, not your disk",
+        paragraphs: [
+          'In System Settings → Apple ID → iCloud → Photos, turn on "Optimize Mac Storage". Full-resolution originals stay in iCloud and macOS keeps smaller versions locally, downloading the original only when you open it. A large Photos library is often the single biggest thing on a small Mac.',
+        ],
+      },
+      {
+        heading: "Keep big files in the cloud, not on the disk",
+        paragraphs: [
+          "Videos, disk images and project archives don't need to live locally if you don't touch them daily. iCloud Drive, with its own \"Optimize Mac Storage\" setting, or an external drive for cold storage, both keep your internal disk free for things that need to be fast.",
+        ],
+      },
+      {
+        heading: "If you write code, developer tools add up fast",
+        paragraphs: [
+          "Xcode's DerivedData and simulators, Docker's disk image, and forgotten node_modules folders can outweigh everything else on a 256GB Mac within months. They're also the safest space to reclaim, since all of it rebuilds or reinstalls on demand.",
+        ],
+      },
+      {
+        heading: "Remove apps and their leftovers, not just the app",
+        paragraphs: [
+          "Dragging an app to the Trash usually leaves its settings and caches behind in ~/Library/Application Support and ~/Library/Containers. For apps you're done with for good, check those folders for a matching folder name after uninstalling.",
+        ],
+      },
+      {
+        heading: "Know when 256GB genuinely isn't enough",
+        paragraphs: [
+          "If you regularly edit video, run multiple virtual machines, or keep a Photos library in the hundreds of gigabytes, no amount of cleanup replaces more storage. An external SSD is the practical fix; a higher-storage Mac is the permanent one.",
+        ],
+      },
+    ],
+    cta: "MacDissect's free home-folder scan shows exactly what's eating a small drive, as a treemap you can click straight into, and Smart Cleanup (Pro, one-time $10) clears the developer clutter that hits small Macs hardest.",
+  },
+  {
+    slug: "check-disk-space-mac",
+    metaTitle: "How to Check Disk Space on a Mac (3 Ways) – MacDissect",
+    title: "How to check how much disk space you have on a Mac",
+    description:
+      "Three ways to see how much free space is left on a Mac: About This Mac, Storage settings, and Terminal, plus how to keep an eye on it without checking manually.",
+    intro:
+      "Checking free space takes a few clicks, but macOS spreads the information across a couple of different places depending on how much detail you want.",
+    sections: [
+      {
+        heading: "1. The quick number: About This Mac",
+        paragraphs: [
+          "Click the Apple menu → About This Mac → More Info, or open System Settings → General → About. The Storage row shows how much space is used and how much is free, without a breakdown.",
+        ],
+      },
+      {
+        heading: "2. The full breakdown: Storage settings",
+        paragraphs: [
+          "System Settings → General → Storage shows a colored bar broken down by category (Apps, Documents, System Data and so on) and a Recommendations section with one-click cleanup suggestions like emptying the Trash automatically.",
+        ],
+      },
+      {
+        heading: "3. Terminal: df -h",
+        paragraphs: [
+          "For a plain-text answer, or to check a Mac over SSH, df -h shows every mounted volume with its size, used space and free space:",
+        ],
+        code: "df -h /",
+      },
+      {
+        heading: "Keep an eye on it without checking manually",
+        paragraphs: [
+          "Checking only when macOS warns you means you find out after space is already tight. A menu bar tile that shows free space at a glance, or an alert before you run low, catches it earlier.",
+        ],
+      },
+    ],
+    cta: "MacDissect's free Overview screen shows free and used space at a glance the moment you open it, and Pro adds free space right in the menu bar plus a low-space alert, for a one-time $10.",
+  },
+  {
+    slug: "mac-storage-full-after-update",
+    metaTitle: "Why macOS Updates Fill Up Your Disk (and How to Fix It) – MacDissect",
+    title: "Mac storage full or shrinking after a macOS update? Here's why",
+    description:
+      "macOS updates need a lot of temporary free space and can leave files behind afterward. Here's what actually happens to your disk during an update, and how to get space back.",
+    intro:
+      "It's common for a Mac to feel more cramped right after a macOS update, even though the update itself isn't that large once installed. Here's where the space goes, and how to recover what's no longer needed.",
+    sections: [
+      {
+        heading: "Updates need headroom, not just their own size",
+        paragraphs: [
+          "macOS stages the new system alongside the old one before switching over, so Apple recommends significantly more free space than the download size suggests, especially for a major version upgrade. If your disk was already nearly full, that's when the update warns you it can't proceed.",
+        ],
+      },
+      {
+        heading: "Check for a leftover installer",
+        paragraphs: [
+          'A full macOS installer, named something like "Install macOS Sequoia.app", can end up in /Applications if it was downloaded separately rather than installed straight from Software Update. It\'s several gigabytes and safe to delete once the update is done.',
+        ],
+      },
+      {
+        heading: "Local Time Machine snapshots after the update",
+        paragraphs: [
+          "macOS keeps local snapshots of your disk so you can revert files if something goes wrong soon after an update. They're freed automatically as space is needed, but a lot of them at once can make free space look lower than it will settle at:",
+        ],
+        code: "tmutil listlocalsnapshots /",
+      },
+      {
+        heading: "Find out what actually grew",
+        paragraphs: [
+          "If space still feels tighter days after the update, something else likely grew at the same time; updates are a common moment for background reindexing or a large cache rebuild to happen. Comparing a scan from before the update to one from after shows exactly which folders changed.",
+        ],
+      },
+      {
+        heading: "Before your next major update",
+        bullets: [
+          "Free at least 20–30 GB before starting a major macOS upgrade, more if you can.",
+          "Delete the installer app after it finishes, if one was downloaded.",
+          "Give it a few days to settle before assuming the update itself is the permanent cause.",
+        ],
+      },
+    ],
+    cta: "MacDissect's History (Pro, one-time $10) saves a summary of every scan, so you can compare before and after an update and see exactly which folders grew instead of guessing.",
   },
 ];
 
