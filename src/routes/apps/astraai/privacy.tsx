@@ -2,12 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { AppPageShell } from "@/components/site/AppPageShell";
 import { Reveal } from "@/components/site/motion";
-import { pageHead } from "@/lib/seo";
+import { ASTRAAI_SOCIAL, pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/apps/astraai/privacy")({
   head: () =>
     pageHead({
-      siteName: "AstraAI",
+      ...ASTRAAI_SOCIAL,
       path: "/apps/astraai/privacy",
       title: "Privacy Policy – AstraAI: Astrology & Kundli",
       description:
@@ -22,11 +22,7 @@ const EMAIL = "pawha1996@gmail.com";
 const sections: { title: string; body: ReactNode }[] = [
   {
     title: "No account needed",
-    body: (
-      <p>
-        AstraAI works without an account. You never give us an email address or password.
-      </p>
-    ),
+    body: <p>AstraAI works without an account. You never give us an email address or password.</p>,
   },
   {
     title: "What stays on your iPhone",
@@ -39,8 +35,8 @@ const sections: { title: string; body: ReactNode }[] = [
           and tarot draws are calculated on the device.
         </p>
         <p>
-          To turn a birthplace into coordinates and a time zone, the place name you type is looked up
-          with Apple's location services.
+          To turn a birthplace into coordinates and a time zone, the place name you type is looked
+          up with Apple's location services.
         </p>
       </>
     ),
@@ -67,8 +63,8 @@ const sections: { title: string; body: ReactNode }[] = [
     title: "Daily horoscopes",
     body: (
       <p>
-        The horoscopes for each zodiac sign are fetched from public horoscope services
-        (ohmanda.com and horoscope-app-api.vercel.app). Only the sign's name is sent.
+        The horoscopes for each zodiac sign are fetched from public horoscope services (ohmanda.com
+        and horoscope-app-api.vercel.app). Only the sign's name is sent.
       </p>
     ),
   },
@@ -76,8 +72,8 @@ const sections: { title: string; body: ReactNode }[] = [
     title: "Subscriptions",
     body: (
       <p>
-        AstraAI Pro is sold through Apple. Purchase status is managed by RevenueCat, which receives an
-        anonymous ID and your purchase history so Pro can be restored. We never see your payment
+        AstraAI Pro is sold through Apple. Purchase status is managed by RevenueCat, which receives
+        an anonymous ID and your purchase history so Pro can be restored. We never see your payment
         details.
       </p>
     ),
@@ -106,11 +102,17 @@ const sections: { title: string; body: ReactNode }[] = [
   },
   {
     title: "Children",
-    body: <p>AstraAI is not directed at children under 13, and we don't knowingly collect their data.</p>,
+    body: (
+      <p>
+        AstraAI is not directed at children under 13, and we don't knowingly collect their data.
+      </p>
+    ),
   },
   {
     title: "Changes to this policy",
-    body: <p>If we change how AstraAI handles data, we'll update this page and the date at the top.</p>,
+    body: (
+      <p>If we change how AstraAI handles data, we'll update this page and the date at the top.</p>
+    ),
   },
 ];
 
@@ -131,7 +133,9 @@ function AstraAIPrivacyPage() {
         {sections.map((s) => (
           <Reveal key={s.title}>
             <h2 className="font-display text-2xl font-bold">{s.title}</h2>
-            <div className="mt-3 space-y-3 text-[1.05rem] leading-relaxed text-ink/75">{s.body}</div>
+            <div className="mt-3 space-y-3 text-[1.05rem] leading-relaxed text-ink/75">
+              {s.body}
+            </div>
           </Reveal>
         ))}
       </div>

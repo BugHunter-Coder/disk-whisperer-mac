@@ -12,7 +12,7 @@ export const Route = createFileRoute("/products")({
       path: "/products",
       title: "Products – MacDissect",
       description:
-        "Every app we make: MacDissect for Mac disk cleanup, InsectScan for identifying insects, plants and animals from a photo, Sprigly, the AI calorie counter for iPhone, and Rock Paper Scissors: Hand Duel, the camera hand game.",
+        "Every app we make: MacDissect for Mac disk cleanup, InsectScan for identifying insects, plants and animals from a photo, Sprigly, the AI calorie counter for iPhone, Rock Paper Scissors: Hand Duel, the camera hand game, and AstraAI, the AI astrologer for iPhone.",
     }),
   component: ProductsPage,
 });
@@ -169,7 +169,8 @@ function ProductsPage() {
           <div className="flex items-center gap-3">
             <ShieldCheck className="size-6 text-mint" />
             <p className="max-w-md text-cream/75">
-              Every app we make keeps your data on your device by default, and we never sell your data.
+              Every app we make keeps your data on your device by default, and we never sell your
+              data.
             </p>
           </div>
         </div>

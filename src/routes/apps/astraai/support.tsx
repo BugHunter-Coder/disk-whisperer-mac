@@ -4,12 +4,12 @@ import type { Faq } from "@/components/landing/content";
 import { AppPageShell } from "@/components/site/AppPageShell";
 import { FaqList } from "@/components/site/FaqList";
 import { Reveal } from "@/components/site/motion";
-import { pageHead } from "@/lib/seo";
+import { ASTRAAI_SOCIAL, pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/apps/astraai/support")({
   head: () =>
     pageHead({
-      siteName: "AstraAI",
+      ...ASTRAAI_SOCIAL,
       path: "/apps/astraai/support",
       title: "Support – AstraAI: Astrology & Kundli",
       description:
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/apps/astraai/support")({
 const faqs: Faq[] = [
   {
     q: "I don't know my exact birth time. Can I still use AstraAI?",
-    a: "Yes. Turn off \"I know my birth time\" when entering your details. Planets and signs stay accurate; your rising sign, houses and Vedic lagna are skipped because they depend on the exact time.",
+    a: 'Yes. Turn off "I know my birth time" when entering your details. Planets and signs stay accurate; your rising sign, houses and Vedic lagna are skipped because they depend on the exact time.',
   },
   {
     q: "My rising sign looks wrong.",

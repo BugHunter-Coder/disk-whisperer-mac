@@ -91,6 +91,16 @@ export const HANDDUEL_SOCIAL = {
   },
 };
 
+export const ASTRAAI_SOCIAL = {
+  siteName: "AstraAI",
+  image: {
+    url: `${SITE_URL}/product/astraai-og.png`,
+    width: 1200,
+    height: 630,
+    alt: "AstraAI, the AI astrologer for iPhone: horoscope, kundli, tarot and compatibility",
+  },
+};
+
 export const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",

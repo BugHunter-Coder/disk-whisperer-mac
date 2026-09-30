@@ -2,15 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { AppPageShell } from "@/components/site/AppPageShell";
 import { Reveal } from "@/components/site/motion";
-import { pageHead } from "@/lib/seo";
+import { ASTRAAI_SOCIAL, pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/apps/astraai/terms")({
   head: () =>
     pageHead({
-      siteName: "AstraAI",
+      ...ASTRAAI_SOCIAL,
       path: "/apps/astraai/terms",
       title: "Terms of Use – AstraAI: Astrology & Kundli",
-      description: "The terms of use and subscription terms for AstraAI, the AI astrologer for iPhone.",
+      description:
+        "The terms of use and subscription terms for AstraAI, the AI astrologer for iPhone.",
     }),
   component: AstraAITermsPage,
 });
@@ -34,16 +35,16 @@ const sections: { title: string; body: ReactNode }[] = [
     body: (
       <>
         <p>
-          AstraAI is free to use with today's horoscope, your birth charts, daily sign horoscopes, the
-          card of the day, and 3 astrologer questions a day. AstraAI Pro (monthly, or yearly with a
-          1-week free trial) unlocks weekly, monthly and yearly forecasts, full chart and
+          AstraAI is free to use with today's horoscope, your birth charts, daily sign horoscopes,
+          the card of the day, and 3 astrologer questions a day. AstraAI Pro (monthly, or yearly
+          with a 1-week free trial) unlocks weekly, monthly and yearly forecasts, full chart and
           compatibility readings, all tarot spreads, and up to 20 astrologer questions a day.
         </p>
         <p>
           Payment is charged to your Apple ID when you confirm the purchase, or when a free trial
-          ends. Subscriptions renew automatically at the same price unless cancelled at least 24 hours
-          before the end of the current period. You can manage or cancel in Settings → your name →
-          Subscriptions. Any unused part of a free trial ends when you buy a subscription.
+          ends. Subscriptions renew automatically at the same price unless cancelled at least 24
+          hours before the end of the current period. You can manage or cancel in Settings → your
+          name → Subscriptions. Any unused part of a free trial ends when you buy a subscription.
         </p>
       </>
     ),

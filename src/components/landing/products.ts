@@ -115,4 +115,30 @@ export const products: Product[] = [
     privacyHref: "/apps/hand-duel/privacy",
     supportHref: "/apps/hand-duel/support",
   },
+  {
+    slug: "astraai",
+    name: "AstraAI",
+    tagline: "Your personal AI astrologer.",
+    description:
+      "Daily horoscopes from your own birth chart, a Vedic kundli with dashas and Panchang, tarot, compatibility and AI astrologers you can ask anything, all calculated precisely on your iPhone.",
+    icon: "/product/astraai-icon.png",
+    screenshots: {
+      layout: "phone",
+      images: [
+        "/product/astraai-today.jpg",
+        "/product/astraai-chart.jpg",
+        "/product/astraai-kundli.jpg",
+        "/product/astraai-ask.jpg",
+        "/product/astraai-tarot.jpg",
+      ],
+    },
+    platform: "iOS",
+    price: "Free · Pro $34.99/year",
+    status: "coming-soon",
+    accent: "coral",
+    cta: null,
+    detailHref: "/apps/astraai",
+    privacyHref: "/apps/astraai/privacy",
+    supportHref: "/apps/astraai/support",
+  },
 ];

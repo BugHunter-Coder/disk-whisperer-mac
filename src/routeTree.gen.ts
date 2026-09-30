@@ -23,6 +23,7 @@ import { Route as CompareSlugRouteImport } from './routes/compare/$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides/$slug'
 import { Route as ApiPublicDodoWebhookRouteImport } from './routes/api/public/dodo-webhook'
+import { Route as AppsAstraaiIndexRouteImport } from './routes/apps/astraai/index'
 import { Route as AppsAstraaiPrivacyRouteImport } from './routes/apps/astraai/privacy'
 import { Route as AppsAstraaiSupportRouteImport } from './routes/apps/astraai/support'
 import { Route as AppsAstraaiTermsRouteImport } from './routes/apps/astraai/terms'
@@ -109,6 +110,11 @@ const GuidesSlugRoute = GuidesSlugRouteImport.update({
 const ApiPublicDodoWebhookRoute = ApiPublicDodoWebhookRouteImport.update({
   id: '/api/public/dodo-webhook',
   path: '/api/public/dodo-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsAstraaiIndexRoute = AppsAstraaiIndexRouteImport.update({
+  id: '/apps/astraai/',
+  path: '/apps/astraai/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppsAstraaiPrivacyRoute = AppsAstraaiPrivacyRouteImport.update({
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
   '/apps/sprigly/support': typeof AppsSpriglySupportRoute
   '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
+  '/apps/astraai/': typeof AppsAstraaiIndexRoute
   '/apps/hand-duel/': typeof AppsHandDuelIndexRoute
   '/apps/insectscan/': typeof AppsInsectscanIndexRoute
   '/apps/sprigly/': typeof AppsSpriglyIndexRoute
@@ -263,6 +270,7 @@ export interface FileRoutesByTo {
   '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
   '/apps/sprigly/support': typeof AppsSpriglySupportRoute
   '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
+  '/apps/astraai': typeof AppsAstraaiIndexRoute
   '/apps/hand-duel': typeof AppsHandDuelIndexRoute
   '/apps/insectscan': typeof AppsInsectscanIndexRoute
   '/apps/sprigly': typeof AppsSpriglyIndexRoute
@@ -298,6 +306,7 @@ export interface FileRoutesById {
   '/apps/sprigly/privacy': typeof AppsSpriglyPrivacyRoute
   '/apps/sprigly/support': typeof AppsSpriglySupportRoute
   '/apps/sprigly/terms': typeof AppsSpriglyTermsRoute
+  '/apps/astraai/': typeof AppsAstraaiIndexRoute
   '/apps/hand-duel/': typeof AppsHandDuelIndexRoute
   '/apps/insectscan/': typeof AppsInsectscanIndexRoute
   '/apps/sprigly/': typeof AppsSpriglyIndexRoute
@@ -333,6 +342,7 @@ export interface FileRouteTypes {
     | '/apps/sprigly/privacy'
     | '/apps/sprigly/support'
     | '/apps/sprigly/terms'
+    | '/apps/astraai/'
     | '/apps/hand-duel/'
     | '/apps/insectscan/'
     | '/apps/sprigly/'
@@ -366,6 +376,7 @@ export interface FileRouteTypes {
     | '/apps/sprigly/privacy'
     | '/apps/sprigly/support'
     | '/apps/sprigly/terms'
+    | '/apps/astraai'
     | '/apps/hand-duel'
     | '/apps/insectscan'
     | '/apps/sprigly'
@@ -400,6 +411,7 @@ export interface FileRouteTypes {
     | '/apps/sprigly/privacy'
     | '/apps/sprigly/support'
     | '/apps/sprigly/terms'
+    | '/apps/astraai/'
     | '/apps/hand-duel/'
     | '/apps/insectscan/'
     | '/apps/sprigly/'
@@ -434,6 +446,7 @@ export interface RootRouteChildren {
   AppsSpriglyPrivacyRoute: typeof AppsSpriglyPrivacyRoute
   AppsSpriglySupportRoute: typeof AppsSpriglySupportRoute
   AppsSpriglyTermsRoute: typeof AppsSpriglyTermsRoute
+  AppsAstraaiIndexRoute: typeof AppsAstraaiIndexRoute
   AppsHandDuelIndexRoute: typeof AppsHandDuelIndexRoute
   AppsInsectscanIndexRoute: typeof AppsInsectscanIndexRoute
   AppsSpriglyIndexRoute: typeof AppsSpriglyIndexRoute
@@ -540,6 +553,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/dodo-webhook'
       fullPath: '/api/public/dodo-webhook'
       preLoaderRoute: typeof ApiPublicDodoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/astraai/': {
+      id: '/apps/astraai/'
+      path: '/apps/astraai'
+      fullPath: '/apps/astraai/'
+      preLoaderRoute: typeof AppsAstraaiIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/apps/astraai/privacy': {
@@ -708,6 +728,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppsSpriglyPrivacyRoute: AppsSpriglyPrivacyRoute,
   AppsSpriglySupportRoute: AppsSpriglySupportRoute,
   AppsSpriglyTermsRoute: AppsSpriglyTermsRoute,
+  AppsAstraaiIndexRoute: AppsAstraaiIndexRoute,
   AppsHandDuelIndexRoute: AppsHandDuelIndexRoute,
   AppsInsectscanIndexRoute: AppsInsectscanIndexRoute,
   AppsSpriglyIndexRoute: AppsSpriglyIndexRoute,
