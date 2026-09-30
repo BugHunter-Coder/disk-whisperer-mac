@@ -587,6 +587,148 @@ export const guides: Guide[] = [
     ],
     cta: "MacDissect's History (Pro, one-time $10) saves a summary of every scan, so you can compare before and after an update and see exactly which folders grew instead of guessing.",
   },
+  {
+    slug: "purgeable-space-mac",
+    metaTitle: "What Is Purgeable Space on a Mac, and How Do You Clear It? – MacDissect",
+    title: "What is purgeable space on a Mac, and how do you clear it?",
+    description:
+      "Storage settings count purgeable space as free, but it's really files macOS hasn't deleted yet. Here's what it actually is, why the numbers look off, and how to reclaim it.",
+    intro:
+      'Open System Settings → General → Storage and the free-space number sometimes looks better than it should. That\'s because part of it is "purgeable": data macOS is holding onto but has already promised to delete the moment you actually need the room.',
+    sections: [
+      {
+        heading: "Why your free space and the Storage bar don't match",
+        paragraphs: [
+          "macOS counts purgeable data as \"available\" because it can delete it automatically under space pressure. Until that happens, though, it's still real files sitting on the disk, which is why a Mac can feel full even when Storage settings say there's room.",
+        ],
+      },
+      {
+        heading: "What's usually inside it",
+        bullets: [
+          "Local Time Machine snapshots, kept so you can restore recent files even while your backup disk is disconnected.",
+          "iCloud Photos and iCloud Drive originals that were evicted locally under Optimize Storage, then partly re-cached.",
+          "Temporary files left over from installers and system updates.",
+          "App caches macOS considers safe to clear on its own.",
+        ],
+      },
+      {
+        heading: "The fastest way to clear it: use the space",
+        paragraphs: [
+          "macOS purges this data automatically once something actually needs the room, not on a schedule. Restarting can trigger some cleanup, and copying a large file or emptying the Trash both count as real demand for space, but there's no guaranteed manual button for all of it.",
+        ],
+      },
+      {
+        heading: "Check local snapshots directly",
+        paragraphs: [
+          "Time Machine local snapshots are usually the biggest chunk of purgeable space. List them in Terminal:",
+        ],
+        code: "tmutil listlocalsnapshots /",
+      },
+      {
+        heading: "When it keeps coming right back",
+        paragraphs: [
+          "If purgeable space refills the moment you clear it, the usual cause is iCloud Photos or iCloud Drive re-downloading originals you keep opening while Optimize Storage is on, or a Time Machine disk that's connected often enough that macOS keeps fresh snapshots around.",
+        ],
+      },
+    ],
+    cta: "Purgeable space isn't ordinary files, so no disk analyzer can dissolve it directly. What MacDissect's free Overview does is separate what's genuinely used from what's free, so you can tell whether shrinking space is large files you added or purgeable data macOS hasn't cleared yet, instead of guessing.",
+  },
+  {
+    slug: "uninstall-apps-completely-mac",
+    metaTitle: "How to Completely Uninstall Apps on a Mac (Remove Leftover Files) – MacDissect",
+    title: "How to completely uninstall apps on a Mac",
+    description:
+      "Dragging an app to the Trash removes the app but leaves its settings, caches and support files behind. Here's how to remove an app and everything it left, safely.",
+    intro:
+      "Most Mac apps aren't self-contained: alongside the .app in Applications, they scatter preferences, caches and support files across ~/Library. Deleting just the app is fine for freeing a little space fast, but the leftovers add up over years of installing and removing apps.",
+    sections: [
+      {
+        heading: "Quit the app and check for a built-in uninstaller",
+        paragraphs: [
+          "Some apps, especially larger suites, ship their own uninstaller. Check the app's own folder in Applications or its original installer disk image before doing it manually.",
+        ],
+      },
+      {
+        heading: "Remove the app itself",
+        paragraphs: [
+          "Open Finder → Applications, select the app, press ⌘⌫ to move it to the Trash, then empty the Trash.",
+        ],
+      },
+      {
+        heading: "Find what it left behind",
+        paragraphs: ["Leftovers are usually named after the app or its developer, inside:"],
+        bullets: [
+          "~/Library/Application Support",
+          "~/Library/Caches",
+          "~/Library/Containers and ~/Library/Group Containers",
+          "~/Library/Preferences (a .plist file per app)",
+          "~/Library/Logs",
+          "~/Library/LaunchAgents, for apps that ran background helpers",
+        ],
+      },
+      {
+        heading: "Search all of them at once",
+        paragraphs: [
+          "Press ⇧⌘G in Finder and go to ~/Library, or search from Terminal for anything matching the app's name across the usual folders:",
+        ],
+        code: 'find ~/Library/{"Application Support",Caches,Containers,Preferences,Logs} -iname "*appname*" 2>/dev/null',
+      },
+      {
+        heading: "What not to delete",
+        bullets: [
+          "Anything you don't recognize by name; look it up before removing it.",
+          "Shared frameworks or helpers that other apps might depend on.",
+          "System-owned folders outside your home directory, which need Full Disk Access to even see properly.",
+        ],
+      },
+    ],
+    cta: "MacDissect doesn't uninstall apps for you, but its treemap sizes ~/Library like any other folder instead of hiding it the way Finder does, so leftover Application Support and Container folders from apps you removed months ago show up by size instead of staying buried.",
+  },
+  {
+    slug: "why-is-my-mac-slow",
+    metaTitle: "Why Is My Mac Slow? How to Check What's Using CPU, Memory and Disk – MacDissect",
+    title: "Why is my Mac slow? How to check what's using CPU, memory and disk",
+    description:
+      "A full disk and a maxed-out CPU cause different kinds of slowness. Here's how to tell which is happening and find the app or process responsible.",
+    intro:
+      '"Slow" can mean several different things on a Mac: a pegged CPU, memory pressure forcing swaps to disk, or so little free space left that macOS has nowhere to put virtual memory. Each has a different fix, so the first step is telling them apart.',
+    sections: [
+      {
+        heading: "Open Activity Monitor first",
+        paragraphs: [
+          "Applications → Utilities → Activity Monitor. The CPU tab sorted by %CPU shows what's actively working the processor; the Memory tab and its Memory Pressure graph at the bottom show whether you're genuinely low on RAM.",
+        ],
+      },
+      {
+        heading: "Check disk space separately from CPU",
+        paragraphs: [
+          "A nearly full disk slows a Mac down in ways that look like an app problem but aren't: macOS needs free space for virtual memory and temporary files, and with too little left, everything gets sluggish at once rather than one app spiking.",
+        ],
+      },
+      {
+        heading: "Watch it happen live, not just a snapshot",
+        paragraphs: [
+          "Activity Monitor shows a moment in time. Slowness that comes and goes is easier to catch with something running in the background that you can glance at, showing CPU, memory, disk and network activity as they happen.",
+        ],
+      },
+      {
+        heading: "Common causes worth ruling out",
+        bullets: [
+          "Spotlight reindexing after moving or restoring a lot of files at once.",
+          "A backup running in the background, whether Time Machine or a cloud sync client.",
+          "Dozens of open browser tabs, especially with video or ads.",
+          "Low free disk space, forcing heavier swapping than usual.",
+        ],
+      },
+      {
+        heading: "When it's not software",
+        paragraphs: [
+          "On older or fanless Macs, thermal throttling under sustained load can look identical to a software problem. If performance drops during heavy use and recovers after a break, that's a hardware limit, not something to keep troubleshooting in Activity Monitor.",
+        ],
+      },
+    ],
+    cta: "MacDissect's free Live Stats view (⌘7) shows CPU, memory, network and disk activity as it happens, plus the apps working your Mac hardest, right alongside the same free-space check.",
+  },
 ];
 
 export const findGuide = (slug: string) => guides.find((g) => g.slug === slug);
