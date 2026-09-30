@@ -38,7 +38,7 @@ export const Route = createFileRoute("/compare/$slug")({
 
 function ReasonList({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="h-full rounded-3xl border border-ink/10 bg-cream p-7">
+    <div className="rounded-3xl border border-ink/10 bg-cream p-7">
       <h3 className="font-display text-xl font-bold">{title}</h3>
       <ul className="mt-4 space-y-3">
         {items.map((item) => (
@@ -91,7 +91,7 @@ function ComparePage() {
           </dl>
         </section>
 
-        <section className="mt-12 grid gap-4 md:grid-cols-2">
+        <section className="mt-12 grid items-start gap-4 md:grid-cols-2">
           <ReasonList title={`Choose ${c.name} if…`} items={c.chooseThem} />
           <ReasonList title="Choose MacDissect if…" items={c.chooseUs} />
         </section>

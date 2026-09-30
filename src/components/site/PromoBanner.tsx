@@ -44,15 +44,15 @@ export function PromoBanner() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
-          className="mx-auto mb-2 flex max-w-6xl items-center gap-2 rounded-2xl bg-ink py-1.5 pr-1.5 pl-4 text-cream shadow-[4px_4px_0_0_#FFC93C]"
+          className="mx-auto mb-2 flex max-w-6xl flex-wrap items-center gap-2 rounded-2xl bg-ink py-1.5 pr-1.5 pl-4 text-cream shadow-[4px_4px_0_0_#FFC93C]"
           role="region"
           aria-label="Launch offer"
         >
           <Gift className="size-4 shrink-0 text-sun" />
-          <p className="min-w-0 flex-1 truncate text-xs font-semibold sm:text-sm">
+          <p className="min-w-0 flex-1 text-xs font-semibold sm:text-sm">
             <span className="text-sun">Launch offer:</span> MacDissect Pro free for life for the
             first {offer.limit} people
-            <span className="hidden sm:inline">
+            <span className="inline">
               {" "}
               · <strong className="tabular-nums">{offer.remaining}</strong> left
             </span>
@@ -60,7 +60,7 @@ export function PromoBanner() {
           <Link
             to="/pricing"
             hash="buy"
-            className="group inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-sun px-3 py-1.5 text-xs font-bold text-ink sm:text-sm"
+            className="group inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-sun px-3 py-1.5 text-xs font-bold text-ink sm:text-sm"
           >
             Claim
             <span className="sm:hidden tabular-nums">({offer.remaining} left)</span>
