@@ -21,6 +21,31 @@ export function adminClient(): SupabaseClient {
   });
 }
 
+function siteOrigin(): string {
+  return (
+    process.env["SITE_URL"] ?? "https://project--8213ab52-6526-4d49-8898-7f68c648d679.lovable.app"
+  );
+}
+
+/**
+ * Gets this email a signed-in account and an email in its inbox, in one step. A license row
+ * alone is invisible to its owner until they can sign in to /account, and the old flow left that
+ * entirely to them (find /auth, notice the "Create account" tab, confirm a second, separate
+ * email). `signInWithOtp` creates the account if it doesn't exist yet and always sends a
+ * magic-link email through Supabase's own mailer — the same one signup confirmation already
+ * depends on, so this adds no new email dependency. One click in that email signs them straight
+ * into /account, where their license key and download link already render.
+ * Best-effort: never throws. A failure here must not undo a license that's already issued.
+ */
+export async function sendLicenseAccountEmail(email: string): Promise<void> {
+  const supabase = adminClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: `${siteOrigin()}/account` },
+  });
+  if (error) console.error("License account email failed for", email, error.message);
+}
+
 /**
  * Creates a license for a subscription bought before Pro became a lifetime purchase.
  * Idempotent: a subscription that already has a key keeps the same key. Those licenses are
@@ -185,6 +210,8 @@ export async function claimFreeLicense(params: {
     status: "active",
   });
   if (insertError) throw new Error(`License insert failed: ${insertError.message}`);
+
+  await sendLicenseAccountEmail(params.email);
   return true;
 }
 

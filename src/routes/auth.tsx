@@ -163,6 +163,14 @@ function AuthPage() {
                 className="mt-1.5 w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-medium normal-case transition-colors outline-none focus:border-ink/40 focus:bg-cream"
               />
             </label>
+            {mode === "signin" && (
+              <Link
+                to="/reset-password"
+                className="mt-2 block text-right text-xs font-semibold text-ink/55 normal-case underline-offset-4 hover:text-ink hover:underline"
+              >
+                Forgot password?
+              </Link>
+            )}
 
             <motion.button
               type="submit"

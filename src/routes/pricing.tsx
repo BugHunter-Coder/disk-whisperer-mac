@@ -179,8 +179,8 @@ function PricingPage() {
           >
             <PartyPopper className="size-5 shrink-0" />
             <span className="flex-1">
-              You've got MacDissect Pro for life! Sign in with the same email to get your license
-              key.
+              You've got MacDissect Pro for life! We've sent a sign-in link to{" "}
+              {email || "your email"} — open it to see your license key and download.
             </span>
             <Link to="/auth" className="rounded-xl bg-ink px-4 py-2 text-sm text-cream">
               Sign in
