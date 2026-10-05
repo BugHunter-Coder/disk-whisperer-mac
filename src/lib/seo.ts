@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import type { Faq } from "@/components/landing/content";
 import { comparisons } from "@/components/landing/compare";
-import { guides } from "@/components/landing/guides";
+import { guides, GUIDES_UPDATED } from "@/components/landing/guides";
 import { DOWNLOAD } from "@/lib/download";
 
 export const SITE_URL = "https://macdissect.com";
@@ -192,30 +192,88 @@ export function articleJsonLd({
   };
 }
 
+/** Comparison pages share one template; bump this when compare/$slug.tsx or compare.ts changes. */
+export const COMPARISONS_UPDATED = "2026-09-30";
+
 /** Public pages listed in the sitemap. Sign-in, account and activation pages are excluded. */
-export const SITEMAP_PAGES: { path: string; priority: string; changefreq: string }[] = [
-  { path: "/", priority: "1.0", changefreq: "weekly" },
-  { path: "/download", priority: "0.9", changefreq: "weekly" },
-  { path: "/pricing", priority: "0.8", changefreq: "monthly" },
-  { path: "/guides", priority: "0.7", changefreq: "weekly" },
-  ...guides.map((g) => ({ path: `/guides/${g.slug}`, priority: "0.7", changefreq: "monthly" })),
+export const SITEMAP_PAGES: {
+  path: string;
+  priority: string;
+  changefreq: string;
+  lastmod: string;
+}[] = [
+  { path: "/", priority: "1.0", changefreq: "weekly", lastmod: "2026-09-17" },
+  { path: "/download", priority: "0.9", changefreq: "weekly", lastmod: "2026-09-17" },
+  { path: "/pricing", priority: "0.8", changefreq: "monthly", lastmod: "2026-10-05" },
+  { path: "/guides", priority: "0.7", changefreq: "weekly", lastmod: GUIDES_UPDATED },
+  ...guides.map((g) => ({
+    path: `/guides/${g.slug}`,
+    priority: "0.7",
+    changefreq: "monthly",
+    lastmod: GUIDES_UPDATED,
+  })),
   ...comparisons.map((c) => ({
     path: `/compare/${c.slug}`,
     priority: "0.6",
     changefreq: "monthly",
+    lastmod: COMPARISONS_UPDATED,
   })),
-  { path: "/privacy", priority: "0.4", changefreq: "yearly" },
-  { path: "/products", priority: "0.6", changefreq: "monthly" },
-  { path: "/apps/insectscan", priority: "0.5", changefreq: "monthly" },
-  { path: "/apps/insectscan/privacy", priority: "0.3", changefreq: "yearly" },
-  { path: "/apps/insectscan/support", priority: "0.3", changefreq: "monthly" },
-  { path: "/apps/insectscan/terms", priority: "0.3", changefreq: "yearly" },
-  { path: "/apps/sprigly", priority: "0.7", changefreq: "weekly" },
-  { path: "/apps/sprigly/privacy", priority: "0.3", changefreq: "yearly" },
-  { path: "/apps/sprigly/support", priority: "0.3", changefreq: "monthly" },
-  { path: "/apps/sprigly/terms", priority: "0.3", changefreq: "yearly" },
-  { path: "/apps/hand-duel", priority: "0.7", changefreq: "weekly" },
-  { path: "/apps/hand-duel/privacy", priority: "0.3", changefreq: "yearly" },
-  { path: "/apps/hand-duel/support", priority: "0.3", changefreq: "monthly" },
-  { path: "/apps/hand-duel/terms", priority: "0.3", changefreq: "yearly" },
+  { path: "/privacy", priority: "0.4", changefreq: "yearly", lastmod: "2026-09-17" },
+  { path: "/products", priority: "0.6", changefreq: "monthly", lastmod: "2026-09-30" },
+  { path: "/apps/insectscan", priority: "0.5", changefreq: "monthly", lastmod: "2026-09-21" },
+  {
+    path: "/apps/insectscan/privacy",
+    priority: "0.3",
+    changefreq: "yearly",
+    lastmod: "2026-09-21",
+  },
+  {
+    path: "/apps/insectscan/support",
+    priority: "0.3",
+    changefreq: "monthly",
+    lastmod: "2026-09-21",
+  },
+  {
+    path: "/apps/insectscan/terms",
+    priority: "0.3",
+    changefreq: "yearly",
+    lastmod: "2026-09-21",
+  },
+  { path: "/apps/sprigly", priority: "0.7", changefreq: "weekly", lastmod: "2026-09-27" },
+  { path: "/apps/sprigly/privacy", priority: "0.3", changefreq: "yearly", lastmod: "2026-09-24" },
+  {
+    path: "/apps/sprigly/support",
+    priority: "0.3",
+    changefreq: "monthly",
+    lastmod: "2026-09-24",
+  },
+  { path: "/apps/sprigly/terms", priority: "0.3", changefreq: "yearly", lastmod: "2026-09-24" },
+  { path: "/apps/hand-duel", priority: "0.7", changefreq: "weekly", lastmod: "2026-09-28" },
+  {
+    path: "/apps/hand-duel/privacy",
+    priority: "0.3",
+    changefreq: "yearly",
+    lastmod: "2026-09-28",
+  },
+  {
+    path: "/apps/hand-duel/support",
+    priority: "0.3",
+    changefreq: "monthly",
+    lastmod: "2026-09-28",
+  },
+  {
+    path: "/apps/hand-duel/terms",
+    priority: "0.3",
+    changefreq: "yearly",
+    lastmod: "2026-09-28",
+  },
+  { path: "/apps/astraai", priority: "0.7", changefreq: "weekly", lastmod: "2026-09-30" },
+  { path: "/apps/astraai/privacy", priority: "0.3", changefreq: "yearly", lastmod: "2026-09-30" },
+  {
+    path: "/apps/astraai/support",
+    priority: "0.3",
+    changefreq: "monthly",
+    lastmod: "2026-09-30",
+  },
+  { path: "/apps/astraai/terms", priority: "0.3", changefreq: "yearly", lastmod: "2026-09-30" },
 ];
