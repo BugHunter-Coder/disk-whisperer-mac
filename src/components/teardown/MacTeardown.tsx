@@ -432,7 +432,7 @@ export function MacTeardown() {
   const barProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section ref={ref} className="relative h-[900vh] bg-paper" aria-label="MacDissect teardown">
+    <section ref={ref} className="relative h-[400vh] bg-paper" aria-label="MacDissect teardown">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div
           aria-hidden

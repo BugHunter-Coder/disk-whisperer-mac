@@ -7,6 +7,7 @@ import {
   CtaBand,
   FaqSection,
   FeaturesSection,
+  MarqueeSection,
   MonitorSection,
   PrivacyTeaser,
   ScreenshotsSection,
@@ -40,6 +41,7 @@ function Index() {
   return (
     <PageShell>
       <MacTeardown />
+      <MarqueeSection />
       <ScreenshotsSection />
       <FeaturesSection />
       <CleanupSection />

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import type { Faq } from "@/components/landing/content";
-import { comparisons } from "@/components/landing/compare";
+import { comparisons, COMPARE_UPDATED } from "@/components/landing/compare";
 import { guides, GUIDES_UPDATED } from "@/components/landing/guides";
 import { DOWNLOAD } from "@/lib/download";
 
@@ -192,9 +192,6 @@ export function articleJsonLd({
   };
 }
 
-/** Comparison pages share one template; bump this when compare/$slug.tsx or compare.ts changes. */
-export const COMPARISONS_UPDATED = "2026-09-30";
-
 /** Public pages listed in the sitemap. Sign-in, account and activation pages are excluded. */
 export const SITEMAP_PAGES: {
   path: string;
@@ -216,7 +213,7 @@ export const SITEMAP_PAGES: {
     path: `/compare/${c.slug}`,
     priority: "0.6",
     changefreq: "monthly",
-    lastmod: COMPARISONS_UPDATED,
+    lastmod: COMPARE_UPDATED,
   })),
   { path: "/privacy", priority: "0.4", changefreq: "yearly", lastmod: "2026-09-17" },
   { path: "/products", priority: "0.6", changefreq: "monthly", lastmod: "2026-09-30" },

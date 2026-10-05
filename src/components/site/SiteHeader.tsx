@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
-import { Download, LogIn, LogOut, Menu, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Download, LogIn, LogOut, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { LiveVisitorBadge } from "@/components/site/LiveVisitorBadge";
 import { PromoBanner } from "@/components/site/PromoBanner";
+import { products } from "@/components/landing/products";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -23,9 +24,69 @@ const links = [
   { to: "/", hash: "features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
   { to: "/guides", label: "Guides" },
-  { to: "/products", label: "Products" },
   { to: "/privacy", label: "Privacy" },
 ] as const;
+
+/** Desktop-only hover menu: every app in the lineup, one click away instead of buried on /products. */
+function ProductsMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="relative hidden md:block"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <Link
+        to="/products"
+        className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-ink/65 transition-colors hover:bg-ink/5 hover:text-ink"
+        activeProps={{ className: "text-ink" }}
+        activeOptions={{ exact: true, includeHash: false }}
+      >
+        Products
+        <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+      </Link>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ type: "spring", visualDuration: 0.25, bounce: 0.1 }}
+            className="absolute top-full left-1/2 mt-2 w-80 -translate-x-1/2 overflow-hidden rounded-2xl border border-ink/10 bg-cream/95 p-2 shadow-xl backdrop-blur-xl"
+          >
+            {products.map((p) => (
+              <Link
+                key={p.slug}
+                to={p.detailHref}
+                className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-ink/5"
+              >
+                <img src={p.icon} alt="" className="size-9 shrink-0 rounded-[10px]" />
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-sm font-bold">
+                    {p.name}
+                    {p.status === "coming-soon" && (
+                      <span className="rounded-full bg-sun/30 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-ink/70 uppercase">
+                        Soon
+                      </span>
+                    )}
+                  </span>
+                  <span className="block truncate text-xs text-ink/50">{p.tagline}</span>
+                </span>
+              </Link>
+            ))}
+            <Link
+              to="/products"
+              className="group mt-1 flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold text-ink/70 transition-colors hover:bg-ink/5 hover:text-ink"
+            >
+              See all products
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 /** The signed-in visitor's email (null when signed out), updating on sign-in and sign-out. */
 function useAccountEmail() {
@@ -84,7 +145,20 @@ export function SiteHeader() {
         >
           <Logo />
           <nav className="hidden items-center gap-1 md:flex">
-            {links.map((l) => (
+            {links.slice(0, 3).map((l) => (
+              <Link
+                key={l.label}
+                to={l.to}
+                {...("hash" in l ? { hash: l.hash } : {})}
+                className="rounded-full px-4 py-2 text-sm font-semibold text-ink/65 transition-colors hover:bg-ink/5 hover:text-ink"
+                activeProps={{ className: "text-ink" }}
+                activeOptions={{ exact: true, includeHash: false }}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <ProductsMenu />
+            {links.slice(3).map((l) => (
               <Link
                 key={l.label}
                 to={l.to}

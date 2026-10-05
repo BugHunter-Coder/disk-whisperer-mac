@@ -42,7 +42,7 @@ export function ProfileCard({
         </p>
         <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink/60">
           {emailVerified && (
-            <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-700">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-mint">
               <BadgeCheck className="size-4" /> Email verified
             </span>
           )}
@@ -70,10 +70,10 @@ export function LicenseDetails({ license }: { license: MyLicense }) {
       value: (
         <span
           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${
-            active ? "bg-mint/30 text-emerald-800" : "bg-coral/25 text-ink"
+            active ? "bg-mint/30 text-ink" : "bg-coral/25 text-ink"
           }`}
         >
-          <span className={`size-1.5 rounded-full ${active ? "bg-emerald-600" : "bg-coral"}`} />
+          <span className={`size-1.5 rounded-full ${active ? "bg-mint" : "bg-coral"}`} />
           {status.replace(/_/g, " ")}
         </span>
       ),

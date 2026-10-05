@@ -20,63 +20,121 @@ function SectionHeading({
   title,
   body,
   center,
+  invert,
 }: {
   eyebrow: string;
   title: string;
   body?: string;
   center?: boolean;
+  invert?: boolean;
 }) {
   return (
     <Reveal className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
-      <span className="text-xs font-bold tracking-[0.2em] text-ink/45 uppercase">{eyebrow}</span>
+      <span
+        className={`text-xs font-bold tracking-[0.2em] uppercase ${invert ? "text-cream/45" : "text-ink/45"}`}
+      >
+        {eyebrow}
+      </span>
       <h2 className="mt-3 font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.02] font-extrabold tracking-tight">
         {title}
       </h2>
-      {body && <p className="mt-4 text-lg text-ink/65">{body}</p>}
+      {body && <p className={`mt-4 text-lg ${invert ? "text-cream/65" : "text-ink/65"}`}>{body}</p>}
     </Reveal>
   );
 }
 
+/** Bento-style asymmetric grid: the first and fourth cards claim extra room. */
+const bentoSpan: Record<number, string> = {
+  0: "sm:col-span-2 sm:row-span-2",
+  3: "lg:col-span-2",
+};
+
 export function FeaturesSection() {
   return (
-    <section id="features" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
-      <SectionHeading
-        eyebrow="Seven views"
-        title="One very clear picture of your disk."
-        body="Scan your home folder, any folder you pick, or the whole Mac. Then jump between views from the sidebar or the keyboard."
-      />
-      <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" gap={0.07}>
-        {sections.map((s) => {
-          const tint = tintClasses[s.tint];
-          return (
-            <StaggerItem key={s.title} className={s.wide ? "sm:col-span-2" : ""}>
-              <motion.div
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", visualDuration: 0.3, bounce: 0.3 }}
-                className={`group relative h-full overflow-hidden rounded-3xl border border-ink/10 bg-cream p-7 ring-2 ring-transparent transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(25,25,37,0.35)] ${tint.ring}`}
-              >
-                <div
-                  className={`absolute -top-16 -right-16 size-44 rounded-full opacity-60 blur-2xl transition-transform duration-500 group-hover:scale-125 ${tint.soft}`}
-                />
-                <div className="relative flex items-center justify-between">
-                  <kbd
-                    className={`grid h-10 min-w-10 place-items-center rounded-xl px-2 font-display text-sm font-extrabold text-ink ${tint.solid}`}
-                  >
-                    {s.shortcut}
-                  </kbd>
-                  {s.pro && (
-                    <span className="rounded-full bg-ink px-2.5 py-1 text-[10px] font-bold tracking-wider text-cream">
-                      PRO
-                    </span>
-                  )}
-                </div>
-                <h3 className="relative mt-6 font-display text-2xl font-bold">{s.title}</h3>
-                <p className="relative mt-2 text-ink/65">{s.body}</p>
-              </motion.div>
-            </StaggerItem>
-          );
-        })}
-      </Stagger>
+    <section id="features" className="scroll-mt-24 bg-void py-24 text-cream">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading
+            eyebrow="Seven views"
+            title="One very clear picture of your disk."
+            body="Scan your home folder, any folder you pick, or the whole Mac. Then jump between views from the sidebar or the keyboard."
+            invert
+          />
+          <span className="font-display text-7xl font-extrabold text-cream/10 select-none md:text-8xl">
+            07
+          </span>
+        </div>
+        <Stagger
+          className="mt-12 grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          gap={0.07}
+        >
+          {sections.map((s, i) => {
+            const tint = tintClasses[s.tint];
+            return (
+              <StaggerItem key={s.title} className={bentoSpan[i] ?? ""}>
+                <motion.div
+                  whileHover={{ y: -6 }}
+                  transition={{ type: "spring", visualDuration: 0.3, bounce: 0.3 }}
+                  className={`group relative flex h-full min-h-[11rem] flex-col overflow-hidden rounded-3xl border border-cream/10 bg-cream/[0.04] p-7 ring-2 ring-transparent transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.6)] ${tint.ring}`}
+                >
+                  <div
+                    className={`absolute -top-16 -right-16 size-44 rounded-full opacity-40 blur-2xl transition-transform duration-500 group-hover:scale-125 ${tint.soft}`}
+                  />
+                  <div className="relative flex items-center justify-between">
+                    <kbd
+                      className={`grid h-10 min-w-10 place-items-center rounded-xl px-2 font-display text-sm font-extrabold text-ink ${tint.solid}`}
+                    >
+                      {s.shortcut}
+                    </kbd>
+                    {s.pro && (
+                      <span className="rounded-full bg-cream px-2.5 py-1 text-[10px] font-bold tracking-wider text-ink">
+                        PRO
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="relative mt-6 font-display text-2xl font-bold">{s.title}</h3>
+                  <p className="relative mt-2 text-cream/65">{s.body}</p>
+                </motion.div>
+              </StaggerItem>
+            );
+          })}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+/** Oversized horizontal ticker of everything MacDissect can find — the "weird" layout beat. */
+export function MarqueeSection() {
+  const words = [
+    "Xcode DerivedData",
+    "node_modules",
+    "Docker images",
+    "iOS Simulators",
+    "Build artifacts",
+    "Package caches",
+    "Old backups",
+    "Disk images",
+    "Large media",
+    "Forgotten VMs",
+  ];
+  const track = [...words, ...words];
+  return (
+    <section
+      aria-hidden
+      className="overflow-hidden border-y border-ink/10 bg-paper py-8 select-none"
+    >
+      <div className="flex w-max gap-10 animate-marquee">
+        {track.map((w, i) => (
+          <span
+            key={`${w}-${i}`}
+            className="flex items-center gap-10 font-display text-3xl font-extrabold tracking-tight text-ink/15 sm:text-5xl"
+          >
+            {w}
+            <span className="text-coral/40">•</span>
+          </span>
+        ))}
+      </div>
     </section>
   );
 }
@@ -111,7 +169,7 @@ export function CleanupSection() {
     });
 
   return (
-    <section id="cleanup" className="scroll-mt-24 bg-ink py-24 text-cream">
+    <section id="cleanup" className="scroll-mt-24 border-t border-cream/5 bg-ink py-24 text-cream">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <Reveal>
@@ -416,7 +474,7 @@ export function CtaBand() {
             animate={{ x: [0, -50, 0], y: [0, -40, 0] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
-          <h2 className="relative font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-[1] font-extrabold tracking-tight">
+          <h2 className="text-mega relative font-display font-extrabold">
             Ready to dissect your disk?
           </h2>
           <p className="relative mx-auto mt-5 max-w-md text-lg text-ink/75">

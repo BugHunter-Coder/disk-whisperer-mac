@@ -205,7 +205,11 @@ function PricingPage() {
           </span>
           <h2 className="mt-5 font-display text-2xl font-bold">Free</h2>
           <p className="mt-1 text-ink/60">What keeps working without Pro.</p>
-          <p className="mt-6 font-display text-5xl font-extrabold">Included</p>
+          <div className="mt-6 flex items-baseline gap-3">
+            <span className="font-display text-5xl font-extrabold tracking-tight">$0</span>
+            <span className="text-ink/60">forever</span>
+          </div>
+          <p className="mt-1 text-sm text-ink/50">No account, no card, nothing to renew</p>
           <ul className="mt-6 space-y-3 text-sm">
             {plans
               .filter((p) => p.free)
@@ -218,9 +222,6 @@ function PricingPage() {
           </ul>
           <div className="mt-auto pt-8">
             <DownloadButton variant="light" label="Download free" />
-            <p className="mt-3 text-sm text-ink/50">
-              These features are free forever, no plan needed.
-            </p>
           </div>
         </motion.div>
 

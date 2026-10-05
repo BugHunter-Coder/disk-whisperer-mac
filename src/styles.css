@@ -6,6 +6,7 @@
 
 @theme {
   --color-ink: #191925;
+  --color-void: #0b0b12;
   --color-paper: #fdf3e7;
   --color-cream: #fff9f1;
   --color-mint: #34d399;
@@ -16,6 +17,30 @@
   --color-peach: #ffd8a8;
   --font-display: "Bricolage Grotesque", sans-serif;
   --font-sans: "Space Grotesk", sans-serif;
+}
+
+@layer utilities {
+  /* Horizontally-scrolling ticker used by the marquee band. */
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-marquee {
+    animation: marquee 32s linear infinite;
+  }
+  .animate-marquee-slow {
+    animation: marquee 55s linear infinite;
+  }
+  /* Editorial oversized display scale, used for the loudest headlines on the page. */
+  .text-mega {
+    font-size: clamp(2.75rem, 8vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+  }
 }
 
 /*

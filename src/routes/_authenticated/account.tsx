@@ -217,8 +217,8 @@ function AccountPage() {
                               <p className="font-semibold">{d.deviceName ?? "Unnamed Mac"}</p>
                               <p className="font-mono text-xs text-ink/45">Mac ID {d.deviceId}</p>
                             </div>
-                            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-mint/30 px-2.5 py-1 text-xs font-bold text-emerald-800">
-                              <span className="size-1.5 rounded-full bg-emerald-600" /> Key in use
+                            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-mint/30 px-2.5 py-1 text-xs font-bold text-ink">
+                              <span className="size-1.5 rounded-full bg-mint" /> Key in use
                             </span>
                           </div>
                           <dl className="mt-3 grid gap-x-6 gap-y-1 border-t border-ink/10 pt-3 text-sm sm:grid-cols-2">
