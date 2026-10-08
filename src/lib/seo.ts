@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import type { Faq } from "@/components/landing/content";
 import { comparisons, COMPARE_UPDATED } from "@/components/landing/compare";
 import { guides, GUIDES_UPDATED } from "@/components/landing/guides";
+import { BLOG_UPDATED, posts } from "@/components/landing/blog";
 import { DOWNLOAD } from "@/lib/download";
 
 export const SITE_URL = "https://macdissect.com";
@@ -172,20 +173,24 @@ export function articleJsonLd({
   title,
   description,
   updated,
+  published = updated,
+  type = "Article",
 }: {
   path: string;
   title: string;
   description: string;
   updated: string;
+  published?: string;
+  type?: "Article" | "BlogPosting";
 }) {
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": type,
     headline: title,
     description,
     url: `${SITE_URL}${path}`,
     image: OG_IMAGE.url,
-    datePublished: updated,
+    datePublished: published,
     dateModified: updated,
     author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
@@ -208,6 +213,13 @@ export const SITEMAP_PAGES: {
     priority: "0.7",
     changefreq: "monthly",
     lastmod: GUIDES_UPDATED,
+  })),
+  { path: "/blog", priority: "0.7", changefreq: "weekly", lastmod: BLOG_UPDATED },
+  ...posts.map((p) => ({
+    path: `/blog/${p.slug}`,
+    priority: "0.7",
+    changefreq: "monthly",
+    lastmod: p.updated,
   })),
   ...comparisons.map((c) => ({
     path: `/compare/${c.slug}`,

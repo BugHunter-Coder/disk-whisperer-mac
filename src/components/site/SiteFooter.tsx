@@ -50,6 +50,11 @@ export function SiteFooter() {
                 Disk space guides
               </Link>
             </li>
+            <li>
+              <Link to="/blog" className="hover:text-ink">
+                Blog: iOS &amp; macOS updates
+              </Link>
+            </li>
             {comparisons.map((c) => (
               <li key={c.slug}>
                 <Link to="/compare/$slug" params={{ slug: c.slug }} className="hover:text-ink">

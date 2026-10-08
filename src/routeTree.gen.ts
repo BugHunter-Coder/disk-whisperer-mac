@@ -20,6 +20,8 @@ import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CompareSlugRouteImport } from './routes/compare/$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides/$slug'
@@ -97,6 +99,16 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CompareSlugRoute = CompareSlugRouteImport.update({
   id: '/compare/$slug',
@@ -227,8 +239,10 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/guides/': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
@@ -262,8 +276,10 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/guides': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
@@ -299,8 +315,10 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/guides/': typeof GuidesIndexRoute
   '/api/public/dodo-webhook': typeof ApiPublicDodoWebhookRoute
   '/apps/astraai/privacy': typeof AppsAstraaiPrivacyRoute
@@ -336,8 +354,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/account'
+    | '/blog/$slug'
     | '/compare/$slug'
     | '/guides/$slug'
+    | '/blog/'
     | '/guides/'
     | '/api/public/dodo-webhook'
     | '/apps/astraai/privacy'
@@ -371,8 +391,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/account'
+    | '/blog/$slug'
     | '/compare/$slug'
     | '/guides/$slug'
+    | '/blog'
     | '/guides'
     | '/api/public/dodo-webhook'
     | '/apps/astraai/privacy'
@@ -407,8 +429,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/_authenticated/account'
+    | '/blog/$slug'
     | '/compare/$slug'
     | '/guides/$slug'
+    | '/blog/'
     | '/guides/'
     | '/api/public/dodo-webhook'
     | '/apps/astraai/privacy'
@@ -443,8 +467,10 @@ export interface RootRouteChildren {
   ProductsRoute: typeof ProductsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CompareSlugRoute: typeof CompareSlugRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   ApiPublicDodoWebhookRoute: typeof ApiPublicDodoWebhookRoute
   AppsAstraaiPrivacyRoute: typeof AppsAstraaiPrivacyRoute
@@ -546,6 +572,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/account'
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/compare/$slug': {
       id: '/compare/$slug'
@@ -733,8 +773,10 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsRoute: ProductsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CompareSlugRoute: CompareSlugRoute,
   GuidesSlugRoute: GuidesSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   ApiPublicDodoWebhookRoute: ApiPublicDodoWebhookRoute,
   AppsAstraaiPrivacyRoute: AppsAstraaiPrivacyRoute,

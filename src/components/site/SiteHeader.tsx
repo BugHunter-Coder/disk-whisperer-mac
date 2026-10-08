@@ -24,6 +24,7 @@ const links = [
   { to: "/", hash: "features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
   { to: "/guides", label: "Guides" },
+  { to: "/blog", label: "Blog" },
   { to: "/privacy", label: "Privacy" },
 ] as const;
 
