@@ -27,6 +27,122 @@ export type BlogPost = {
 
 export const posts: BlogPost[] = [
   {
+    slug: "removemacai-delete-apple-intelligence-models",
+    metaTitle: "RemoveMacAI: Delete Apple Intelligence Models and Free 12 GB+ – MacDissect",
+    title: "RemoveMacAI deletes Apple Intelligence from macOS 27 for 12 GB+. Should you run it?",
+    description:
+      "A free open-source tool removes Apple Intelligence's models from macOS 27 and blocks them from coming back. What it frees, what stops working, the risks, and safer space to clear first.",
+    published: "2026-10-09",
+    updated: "2026-10-09",
+    tag: "macOS 27",
+    intro:
+      "macOS 27 downloads Apple Intelligence's models whether you use them or not, and Apple removed the switch that turned them off. This week a free open-source tool called RemoveMacAI went viral for doing what Apple won't: deleting those models and keeping them gone. MacRumors, Ars Technica, The Verge and others covered it, and users report getting back 12 GB or more. Here's what it actually does, what you give up, and whether it's the right fix for a full disk.",
+    sections: [
+      {
+        heading: "What RemoveMacAI does",
+        bullets: [
+          "Turns off Apple Intelligence through a configuration profile, the same mechanism companies use to manage Macs.",
+          "Deletes the downloaded models through Apple's own asset service. It doesn't disable System Integrity Protection or delete files from protected system folders by hand.",
+          "Blocks the models from downloading again by pointing those downloads at a closed local port. The profile reportedly survives macOS updates.",
+          "Shows what it will change before it changes anything, and “removemacai revert” undoes all of it.",
+          "It comes as a Mac app and a command-line tool, and has grown into a general debloater: analytics, ads, pop-ups, background updaters and a storage cleaner.",
+        ],
+      },
+      {
+        heading: "How much space you get back",
+        paragraphs: [
+          "Around 12 GB is typical, and some users report more, depending on which models were installed. That lines up with what reviewers measured for Apple Intelligence on macOS 27: Apple says up to 14 GB on M3-or-later Macs, while MacRumors and Ars Technica measured 20 GB or more on some machines.",
+          "Run “removemacai status” first. It lists each Apple Intelligence feature and the size of its models, so you know what you'd save before you commit.",
+        ],
+        code: "# See each feature and the size of its models (changes nothing)\nremovemacai status\n\n# Turn it off (shows the change and asks first)\nremovemacai off\n\n# Undo everything RemoveMacAI changed\nremovemacai revert",
+      },
+      {
+        heading: "What stops working",
+        bullets: [
+          "The new Siri AI features and the ChatGPT integration.",
+          "Writing Tools, Genmoji and Image Playground.",
+          "Summaries and smart replies in Mail, Messages, Safari, Notes and notifications.",
+          "Inline predictions, Photos Clean Up and Spatial Photos.",
+          "Xcode's predictive code completion.",
+          "Dictation keeps working. You can also keep individual features with “removemacai off --keep”.",
+        ],
+      },
+      {
+        heading: "The risks",
+        bullets: [
+          "It's a third-party script. Installing it means running code from GitHub with admin rights. It's open source, so read it or wait for others to, and MacRumors explicitly says it doesn't endorse it.",
+          "The app isn't notarized, so macOS warns you the first time you open it.",
+          "It may break later. The developer notes that some of the profile settings it relies on were deprecated in macOS 26.4. They still work on macOS 27.0.1, but a future update could stop honouring them, and the models would come back.",
+          "If you use Siri or Writing Tools even occasionally, you'll miss them. This is a trade, not free space.",
+        ],
+      },
+      {
+        heading: "Clear the safe stuff first",
+        paragraphs: [
+          "Removing Apple Intelligence is the only way to shrink that 12–20 GB, but it's rarely the biggest thing on a full Mac. Before you trade away features, look at what you can delete with no downside at all:",
+        ],
+        bullets: [
+          "Old iPhone and iPad backups (Finder → Manage Backups), often 10–50 GB each.",
+          "macOS installers left in /Applications and old .dmg and .pkg files in Downloads.",
+          "Xcode DerivedData, device support files and old simulator runtimes, which can top 50 GB.",
+          "Docker images, node_modules folders and other developer caches.",
+          "Local Time Machine snapshots left over from the macOS 27 update.",
+        ],
+      },
+      {
+        heading: "Also this week: Full Disk Access is getting stricter",
+        paragraphs: [
+          "On October 2, Apple said it will add “additional controls” to the Full Disk Access setting because of risks from AI agents, and that granting it will take a very explicit action from the user. Apple hasn't said when, or in which macOS version.",
+          "Full Disk Access is what lets backup tools and disk analyzers see your whole drive. When the change lands, expect apps like these to ask you to confirm access again. MacDissect only reads file sizes and metadata, and nothing leaves your Mac.",
+        ],
+      },
+      {
+        heading: "The short version",
+        paragraphs: [
+          "If you never use Apple Intelligence and you're on a 256 GB Mac, RemoveMacAI is a reasonable, reversible way to get 12 GB or more back, as long as you're comfortable running an unofficial tool that a future update could break. Everyone else should clear backups, installers and caches first. That's usually more space, with nothing given up.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is RemoveMacAI safe?",
+        a: "It's open source, shows every change before applying it, uses a configuration profile rather than deleting protected system files, and can undo everything with “removemacai revert”. It's still an unofficial tool that runs with admin rights, and MacRumors says it doesn't endorse it, so use it at your own risk.",
+      },
+      {
+        q: "How much space does removing Apple Intelligence free on macOS 27?",
+        a: "About 12 GB is typical, and some users report more depending on which models were installed. “removemacai status” shows the size on your own Mac before you change anything.",
+      },
+      {
+        q: "Can I get Apple Intelligence back after removing it?",
+        a: "Yes. “removemacai on” turns Apple Intelligence back on, and “removemacai revert” undoes every change the tool made. The models then download again.",
+      },
+      {
+        q: "Will a macOS update bring the models back?",
+        a: "The profile reportedly survives updates. But some of the settings it relies on were deprecated in macOS 26.4, so a future macOS version could stop honouring them and the models could return.",
+      },
+    ],
+    sources: [
+      {
+        label: "MacRumors: Mac users reclaim 12GB+ of storage with Apple Intelligence removal tool",
+        url: "https://www.macrumors.com/2026/10/05/apple-intelligence-removal-tool-frees-mac-storage/",
+      },
+      {
+        label: "Ars Technica: Command-line tool quickly removes Apple Intelligence from macOS 27",
+        url: "https://arstechnica.com/apple/2026/10/command-line-tool-quickly-removes-apple-intelligence-from-macos-27/",
+      },
+      {
+        label: "RemoveMacAI on GitHub",
+        url: "https://github.com/omlahore/RemoveMacAI",
+      },
+      {
+        label: "MacRumors: Apple announces Full Disk Access changes on macOS due to AI agents",
+        url: "https://www.macrumors.com/2026/10/02/apple-announces-macos-full-disk-access-changes/",
+      },
+    ],
+    relatedGuides: ["macbook-low-storage-256gb", "mac-system-data-storage", "clear-xcode-derived-data"],
+    cta: "Before you give up features for space, see where it really went. MacDissect's treemap shows every folder sized at a glance, and Smart Cleanup finds old iPhone backups, installers and developer caches you can delete with nothing lost. Scans never leave your Mac.",
+  },
+  {
     slug: "macos-27-golden-gate-storage",
     metaTitle: "macOS 27 Golden Gate Storage: Where Your Disk Space Went – MacDissect",
     title: "macOS 27 Golden Gate ate my disk space: where it went and how to get it back",
